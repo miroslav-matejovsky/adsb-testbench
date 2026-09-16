@@ -13,7 +13,7 @@ AIS engine's one-second reporting schedule.
 
 ## Dependencies and evidence
 
-- [Backlog 02](../../backlog/02-deterministic-engine.md): intended behavior and acceptance.
+- Backlog item 02, now implemented and removed: intended behavior and acceptance.
 - [Codec documentation](../../../internal/adsb/doc.go): actual APIs, representable
   ranges, timing guidance, reference rules, and error behavior.
 - [Codec fixtures](../../../internal/adsb/testdata/README.md): externally sourced
@@ -75,8 +75,7 @@ observable frames and snapshots; internal fixtures are limited to otherwise
 unreachable counter-exhaustion and late-failure states. No sleep, real clock,
 network service, or statistically flaky distribution assertion is required.
 
-This planning task performs only Markdown structure/link and change-scope
-checks. It does not run test/build/lint commands or `task all`.
+The implementation ran these checks, including `task all`.
 
 ## Rollback
 

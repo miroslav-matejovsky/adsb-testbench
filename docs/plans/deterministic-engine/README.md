@@ -2,14 +2,14 @@
 
 ## Status and source
 
-Detailed implementation plan for
-[backlog 02](../../backlog/02-deterministic-engine.md).
-Implementation is not started. This planning change adds documentation only.
-No build, test, lint, or `task all` execution is part of preparing this plan.
-Commands below are acceptance checks for the subsequent implementation.
+Detailed implementation plan for the deterministic engine, originally backlog
+item 02. Implementation is complete and the backlog item has been removed.
+Step-by-step status is recorded in [progress.md](progress.md).
+The commands listed per step were run as acceptance checks.
 
-Baseline reviewed: `bf221890eb71c9915b7e8829119bdb0fd17de827`.
-The public `simulation` package currently contains only `doc.go`.
+Baseline reviewed: `bf221890eb71c9915b7e8829119bdb0fd17de827`, when the public
+`simulation` package contained only `doc.go`. The implemented package is
+documented in [simulation/doc.go](../../../simulation/doc.go).
 The existing [codec](../../../internal/adsb/doc.go) supplies frame encoding,
 CRC, field validation, and CPR. Its public API was inspected with `go doc`.
 
@@ -41,9 +41,9 @@ observations. Backlog 05 owns wall-clock pacing and serialization with elapsed
 real time. Aircraft heading, wind, routes, surface movement, and unavailable
 navigation scenarios are outside this increment.
 
-## Public contract to implement
+## Public contract
 
-All identifiers below are proposed APIs, not existing code.
+The identifiers below are the implemented public API.
 
 | API | Contract |
 | --- | --- |
@@ -163,6 +163,8 @@ requires the same control changes at the same virtual instants.
 
 ## Implementation sequence
 
+All steps are complete; see [progress.md](progress.md).
+
 | Step | Deliverable |
 | --- | --- |
 | [01](01-contract-and-configuration.md) | Public value types, documented bounds, validation, errors |
@@ -185,5 +187,4 @@ unfinished public method bodies out of earlier steps.
   mixed time operations, pauses, and failed-command retry scenarios.
 - No library API exposes an `internal/adsb` or third-party type.
 - Root and package documentation describe the implemented engine honestly.
-- Subsequent implementation passes the commands in step 07, including
-  `task all`; do not run them for this documentation-only planning task.
+- The implementation passes the commands in step 07, including `task all`.

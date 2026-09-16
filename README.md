@@ -7,8 +7,19 @@ and inspect decoded observations for development and testing.
 The raw ADS-B codec is implemented in [internal/adsb](internal/adsb/doc.go).
 It encodes and decodes identification, barometric airborne position, and
 velocity, and reconstructs airborne CPR positions with explicit age and
-reference checks. The remaining packages are skeletons. Application commands
-and HTTP APIs are planned in [docs/backlog](docs/backlog/README.md).
+reference checks.
+
+The deterministic traffic engine is implemented in
+[simulation](simulation/doc.go). It creates synthetic aircraft from explicit
+configuration, moves them in three dimensions, schedules each message family
+independently in virtual time, and returns complete frame batches for
+caller-supplied durations. Aircraft motion is a documented synthetic spherical
+model, not WGS-84 navigation, and altitude is pressure altitude relative to
+1013.25 hPa. The engine reads no wall clock and runs no background driver.
+
+The remaining packages are skeletons. Application commands, the simulator
+runtime, stations, observation history, the display backend, and the UI are
+planned in [docs/backlog](docs/backlog/README.md).
 
 ## Inspiration and scope
 
@@ -49,15 +60,15 @@ Each package documents its purpose in `doc.go`. Allowed dependencies
 are recorded in [.go-arch-lint.yml](.go-arch-lint.yml).
 
 The manager will control aircraft, simulation speed, and stations through the
-simulator. The simulator will own aircraft truth and produce frames, station
-receptions, and bounded histories. The display will derive tracks from received
+simulator. The engine already owns aircraft truth, generated frames, and a
+bounded transmission history; stations and receptions remain planned. The display will derive tracks from received
 frames, with independently aged identity, position, and velocity fields.
 
 Combined mode will pass observations in process. Separate mode will use the
 same contract over HTTP, with browsers calling their own backend. Both paths
-will share validation and decoding. The engine will accept explicit configuration
+will share validation and decoding. The engine accepts explicit configuration
 and caller-supplied elapsed time; the runtime will own wall-clock pacing.
-Time scaling will change virtual time, not reported aircraft speed.
+Time scaling changes virtual time, not reported aircraft speed.
 
 ## Development
 
@@ -69,7 +80,8 @@ integration and local CPR implementation. Dependencies are pinned in
 
 ```text
 go doc -all ./internal/adsb
-go test ./internal/adsb
+go doc -all ./simulation
+go test ./internal/adsb ./simulation
 ```
 
 Use the Go version in `go.mod`, Task, PowerShell, golangci-lint, deadcode,

@@ -2,7 +2,7 @@
 value: "High"
 effort: "M"
 complexity: "medium"
-dependencies: ["02-deterministic-engine.md"]
+dependencies: []
 ---
 
 # Real-time driver and simulator lifecycle
@@ -21,4 +21,6 @@ Use a fake clock without sleeps to test delayed ticks, pause, speed changes, cat
 
 ## Dependencies
 
-- [02-deterministic-engine](02-deterministic-engine.md)
+Use the implemented [simulation engine](../../simulation/doc.go), including its
+virtual clock, speed scaling, atomic mutations, and bounded transmission
+history.

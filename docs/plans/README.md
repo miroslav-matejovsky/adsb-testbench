@@ -45,4 +45,4 @@ A plan is complete only when all implementation tasks are finished, all tests pa
 
 | Plan | Implementation status | Backlog |
 | --- | --- | --- |
-| [Deterministic aircraft engine and virtual time](deterministic-engine/README.md) | Planned; implementation not started | [02 - Deterministic engine](../backlog/02-deterministic-engine.md) |
+| [Deterministic aircraft engine and virtual time](deterministic-engine/README.md) | Implemented; see [progress](deterministic-engine/progress.md) | Completed and removed from the backlog |

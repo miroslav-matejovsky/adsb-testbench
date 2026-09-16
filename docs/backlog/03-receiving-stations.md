@@ -2,7 +2,7 @@
 value: "High"
 effort: "L"
 complexity: "hard"
-dependencies: ["02-deterministic-engine.md"]
+dependencies: []
 ---
 
 # Receiving stations and altitude-aware reception
@@ -21,4 +21,6 @@ Test station disablement, reproducible reception decisions, altitude and sensiti
 
 ## Dependencies
 
-- [02-deterministic-engine](02-deterministic-engine.md)
+Use the implemented [simulation engine](../../simulation/doc.go), including its
+virtual clock, speed scaling, atomic mutations, and bounded transmission
+history.

@@ -12,11 +12,11 @@ filenames). External prerequisites are described in the item.
 
 | Rank | Item | Effort | Value |
 | ---: | --- | :---: | :---: |
-| 1 | [Deterministic aircraft engine and virtual time](02-deterministic-engine.md) | L | Critical |
-| 2 | [Real-time driver and simulator lifecycle](05-runtime-and-lifecycle.md) | M | High |
-| 3 | [Receiving stations and altitude-aware reception](03-receiving-stations.md) | L | High |
-| 4 | [Received observations and bounded history](04-observation-history.md) | L | High |
-| 5 | [Simulator contract and HTTP API](06-simulator-contract-and-api.md) | L | High |
+| 1 | [Real-time driver and simulator lifecycle](05-runtime-and-lifecycle.md) | M | High |
+| 2 | [Receiving stations and altitude-aware reception](03-receiving-stations.md) | L | High |
+| 3 | [Received observations and bounded history](04-observation-history.md) | L | High |
+| 4 | [Simulator contract and HTTP API](06-simulator-contract-and-api.md) | L | High |
+| 5 | [Display sources and received-track decoding](07-display-backend.md) | L | High |
 
 ## Index
 
@@ -24,7 +24,6 @@ filenames). External prerequisites are described in the item.
 
 | Item | Effort | Value |
 | --- | :---: | :---: |
-| [Deterministic aircraft engine and virtual time](02-deterministic-engine.md) | L | Critical |
 | [Receiving stations and altitude-aware reception](03-receiving-stations.md) | L | High |
 | [Received observations and bounded history](04-observation-history.md) | L | High |
 
