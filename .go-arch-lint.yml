@@ -1,3 +1,5 @@
+# Planned package boundaries, enforced by task arch-lint.
+# Standard library imports are allowed. External dependencies need explicit entries.
 version: 3
 workdir: .
 allow:
@@ -5,24 +7,46 @@ allow:
   deepScan: true
 
 exclude:
-  - "examples"
-  - "test"
   - "vendor"
   - ".tmp"
+  - ".test-results"
 
 excludeFiles:
   - "^.*_test\\.go$"
-  - "^.*\/test\/.*$"
 
-vendors:
-  # TODO just an example
-  x-sync: { in: "golang.org/x/sync/**" }
- 
 components:
-  # TODO: just an example for now
-  buildid: { in: internal/buildid }
+  cmd-adsb-testbench: { in: cmd/adsb-testbench }
+  cmd-simulator: { in: cmd/simulator }
+  cmd-display: { in: cmd/display }
+  simulation: { in: simulation }
+  simulator: { in: simulator }
+  simulatorapi: { in: simulatorapi }
+  display: { in: display }
+  testbench: { in: testbench }
+  ui: { in: ui }
+  ui-assets: { in: ui/internal/assets }
+  adsb: { in: internal/adsb }
+  simdriver: { in: internal/simdriver }
+  cli: { in: internal/cli }
+  httpserver: { in: internal/httpserver }
+  urlpath: { in: internal/urlpath }
 
 deps:
-  some-component:
-    canUse: [x-sync]
-    mayDependOn: [some-other-component]
+  cmd-adsb-testbench:
+    mayDependOn: [testbench, simulator, cli, urlpath]
+  cmd-simulator:
+    mayDependOn: [simulator, cli, urlpath]
+  cmd-display:
+    mayDependOn: [display, cli, urlpath]
+  simulation:
+    mayDependOn: [adsb]
+  simulator:
+    mayDependOn: [simulation, simdriver, simulatorapi, ui, httpserver, urlpath]
+  simdriver:
+    mayDependOn: [simulation]
+  display:
+    mayDependOn: [adsb, simulatorapi, ui, httpserver, urlpath]
+  testbench:
+    mayDependOn: [simulation, simulator, display, ui, httpserver, urlpath]
+  ui:
+    mayDependOn: [ui-assets, urlpath]

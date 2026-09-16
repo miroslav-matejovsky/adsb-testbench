@@ -72,19 +72,11 @@ tasks:
       - task tidy
       - task vet
       - task fmt
-      - task deadcode
+      # Enable task deadcode when command entry points exist (backlog item 10).
       - task arch-lint
       - task lint
       - task test
       - echo all done
-
-# ---- running stuff ----
-
-  run:
-    desc: Run the application (for development)
-    silent: true
-    cmds:
-      - go run ./cmd/...
 
 # ---- maintenance tasks ----
 
