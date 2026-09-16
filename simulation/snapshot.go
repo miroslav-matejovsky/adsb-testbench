@@ -26,6 +26,7 @@ func (e *Engine) Snapshot() Snapshot {
 		Now:      e.state.clock.now(),
 		Elapsed:  e.state.clock.elapsed,
 		Aircraft: fleet,
+		Stations: e.state.stations.snapshot(e.state.clock.start),
 		History:  e.state.history.snapshot(),
 	}
 }

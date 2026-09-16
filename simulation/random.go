@@ -7,13 +7,18 @@ import (
 	"math/rand/v2"
 )
 
-// Domain tags separate the independent random streams of one aircraft.
+// Domain tags separate the independent random streams of the run.
 // They are part of the documented seed derivation and must not change.
+//
+// Aircraft ordinals and station ordinals are independent counters, so the tag
+// is what keeps an aircraft stream and a station stream disjoint even when the
+// two ordinals coincide.
 const (
 	birthDomain          byte = 0
 	identificationDomain byte = 1
 	positionDomain       byte = 2
 	velocityDomain       byte = 3
+	stationDomain        byte = 4
 )
 
 // newSource derives an explicitly seeded PCG generator for one aircraft

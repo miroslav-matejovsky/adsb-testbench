@@ -20,8 +20,18 @@ const (
 	MaxAdvance = 60 * time.Second
 	// MaxBatchFrames is the largest number of transmissions one mutation may
 	// emit. It is a safety bound above the worst case reachable within
-	// MaxAdvance and MaxAircraft.
+	// MaxAdvance and MaxAircraft. Receptions have their own derived bound,
+	// MaxBatchReceptions.
 	MaxBatchFrames = 32000
+	// MaxStations is the largest number of simultaneously active receiving
+	// stations. Removing a station frees an active slot but never releases its
+	// identifier.
+	MaxStations = 8
+	// MaxBatchReceptions is the largest number of receptions one mutation may
+	// return. Reception fan-out is at most one per active station per
+	// transmission, so this bound is a guard that MaxBatchFrames always
+	// reaches first.
+	MaxBatchReceptions = MaxBatchFrames * MaxStations
 )
 
 // Error categories are available through errors.Is.
@@ -30,10 +40,18 @@ const (
 // context.Canceled or context.DeadlineExceeded.
 var (
 	// ErrInvalid identifies caller values outside their documented domain.
+	// A duplicate station identifier, or one already used and removed in this
+	// run, is an ErrInvalid case: the identifier is outside the domain of
+	// identifiers the run still accepts.
 	ErrInvalid = errors.New("invalid simulation input")
 	// ErrLimit identifies a well-formed request that exceeds representable
-	// time, identity, sequence, or batch capacity.
+	// time, identity, sequence, batch, or station capacity.
 	ErrLimit = errors.New("simulation limit exceeded")
+	// ErrNotFound identifies a command naming a station that does not exist.
+	ErrNotFound = errors.New("simulation station not found")
+	// ErrConflict identifies a station command whose supplied revision differs
+	// from the current one, so another edit has intervened.
+	ErrConflict = errors.New("simulation revision conflict")
 )
 
 // MessageKind identifies the ADS-B message family of a transmission.
@@ -166,6 +184,52 @@ type Transmission struct {
 	Frame [14]byte
 }
 
+// Reception is one transmission as heard by one station.
+//
+// It is self contained, so a consumer never has to join it against the
+// transmission slice of the same batch. Receptions carry no sequence of their
+// own: TransmissionSequence together with StationID identifies one.
+type Reception struct {
+	// TransmissionSequence is the Sequence of the transmission that was heard.
+	TransmissionSequence uint64
+	// StationID is the identifier of the receiving station.
+	StationID string
+	// StationRevision is the revision in effect when the decision was made,
+	// which is the provenance of the settings that produced it.
+	StationRevision uint64
+	// ICAO is the address of the emitting aircraft.
+	ICAO uint32
+	// Kind is the message family.
+	Kind MessageKind
+	// Timestamp is the virtual instant of reception. No propagation delay is
+	// modelled, so it equals the transmission timestamp.
+	Timestamp time.Time
+	// Frame is the complete 14-byte DF17 frame including CRC, exactly as
+	// transmitted.
+	Frame [14]byte
+	// SlantRangeNauticalMiles is the straight-line distance between the
+	// station antenna and the aircraft. Synthetic model output.
+	SlantRangeNauticalMiles float64
+	// ReceivedPowerDBm is the modelled power arriving at the receiver.
+	// Synthetic model output, not a calibrated measurement.
+	ReceivedPowerDBm float64
+}
+
+// Batch is everything one mutation produced.
+//
+// A successful mutation returns both slices allocated, empty when nothing was
+// emitted. A failed or canceled mutation returns the zero value.
+// Transmissions are ordered by sequence; receptions are ordered by
+// transmission sequence, then by station creation order.
+type Batch struct {
+	// Transmissions are the frames the aircraft emitted, complete even when
+	// history has already evicted their tail.
+	Transmissions []Transmission
+	// Receptions are the per-station copies of those transmissions that the
+	// reception model accepted. They are returned, not retained.
+	Receptions []Reception
+}
+
 // HistorySnapshot is the retained transmission history of an engine.
 type HistorySnapshot struct {
 	// Messages are the retained transmissions, oldest first.
@@ -191,6 +255,8 @@ type Snapshot struct {
 	Elapsed time.Duration
 	// Aircraft are the active aircraft in creation order, evaluated at Now.
 	Aircraft []Aircraft
+	// Stations are the active receiving stations in creation order.
+	Stations []Station
 	// History is the retained transmission history.
 	History HistorySnapshot
 }

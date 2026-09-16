@@ -17,9 +17,18 @@ caller-supplied durations. Aircraft motion is a documented synthetic spherical
 model, not WGS-84 navigation, and altitude is pressure altitude relative to
 1013.25 hPa. The engine reads no wall clock and runs no background driver.
 
+The same package owns receiving stations and decides which of them hears each
+generated transmission, using a radio horizon driven by aircraft altitude and
+antenna height together with a 1090 MHz link budget driven by range, gain,
+system loss, and receiver sensitivity. Stations are created, edited, disabled,
+and removed through revision-checked commands, and the model parameters and the
+coverage they imply are published for an explicit reference altitude. Reception
+is synthetic model output, not a calibrated RF prediction, and station changes
+never alter the frames a run generates.
+
 The remaining packages are skeletons. Application commands, the simulator
-runtime, stations, observation history, the display backend, and the UI are
-planned in [docs/backlog](docs/backlog/README.md).
+runtime, retained per-station observation history, the display backend, and the
+UI are planned in [docs/backlog](docs/backlog/README.md).
 
 ## Inspiration and scope
 
@@ -60,8 +69,9 @@ Each package documents its purpose in `doc.go`. Allowed dependencies
 are recorded in [.go-arch-lint.yml](.go-arch-lint.yml).
 
 The manager will control aircraft, simulation speed, and stations through the
-simulator. The engine already owns aircraft truth, generated frames, and a
-bounded transmission history; stations and receptions remain planned. The display will derive tracks from received
+simulator. The engine already owns aircraft truth, generated frames, a bounded
+transmission history, receiving stations, and per-transmission reception
+decisions; retained per-station observation history remains planned. The display will derive tracks from received
 frames, with independently aged identity, position, and velocity fields.
 
 Combined mode will pass observations in process. Separate mode will use the

@@ -14,11 +14,24 @@
 //   - [Engine.Elapse] converts a supplied real duration at the current speed.
 //   - [Engine.SetCount] changes the number of active aircraft.
 //   - [Engine.SetSpeed] changes virtual time per real time.
+//   - [Engine.AddStation], [Engine.UpdateStation], and
+//     [Engine.RemoveStation] manage receiving stations.
 //   - [Engine.Snapshot] returns one detached, coherent view.
+//   - [Model] and [EstimateCoverage] publish the reception model and the
+//     coverage it implies, without needing an engine.
 //
-// Every successful mutation returns an allocated, possibly empty slice; a
-// failed one returns nil. Mutations are atomic: nothing is committed unless
-// encoding, bounds checks, and the final cancellation check all pass.
+// [Engine.Advance], [Engine.Elapse], and [Engine.SetCount] return a [Batch]
+// holding the frames the aircraft emitted and the [Reception] records the
+// active stations produced from them. A successful mutation returns both
+// slices allocated and possibly empty; a failed or canceled one returns the
+// zero Batch. Mutations are atomic: nothing is committed unless encoding,
+// bounds checks, and the final cancellation check all pass.
+//
+// Station commands emit no frames and settle no time, exactly like
+// [Engine.SetSpeed]. They change station state only: they never touch aircraft
+// records, deadlines, aircraft generators, the clock, the fractional carry,
+// identity allocation, sequences, or the transmission history, so adding,
+// editing, or removing a station cannot change the frames a run generates.
 //
 // # Configuration
 //
@@ -54,10 +67,37 @@
 //     UTC with its monotonic component removed.
 //   - ID must contain a non-whitespace character and is preserved exactly.
 //
+// # Station configuration
+//
+// [StationConfig] is complete and explicit in the same way [Config] is.
+// Nothing fills a missing field and nothing is normalized, so an accepted
+// configuration is stored exactly as supplied. Zero values are meaningful:
+// 0 dBi gain, 0 dB system loss, 0 m antenna height, 0 m site elevation, and
+// frame loss probability 0 are all valid settings, and Enabled false is a
+// fully configured station that receives nothing.
+//
+//   - ID is 1 to 64 bytes of ASCII letters, digits, hyphen, or underscore.
+//     It is compared case sensitively, preserved exactly, must be unique
+//     within a run, and is never reused once its station has been removed.
+//   - LatitudeDegrees is within [-90,90] and LongitudeDegrees within
+//     [-180,180], in degrees.
+//   - SiteElevationMetres is metres above the model sphere, within
+//     [-500,9000]. AntennaHeightMetres is metres above that site elevation,
+//     within [0,500].
+//   - AntennaGainDBi is within [-10,40] dBi.
+//   - SensitivityDBm is the lowest accepted received power, within [-140,0].
+//   - SystemLossDB is fixed receive-path loss within [0,30] dB.
+//   - FrameLossProbability is within [0,1].
+//
+// [Station] pairs an accepted configuration with a Revision and the virtual
+// CreatedAt instant. Revision starts at 1 and increments on every accepted
+// update, including one that assigns identical settings.
+//
 // # Engine policy
 //
-// [MaxAircraft], [HistoryLimit], [MaxAdvance], and [MaxBatchFrames] are fixed
-// limits of this package, not values inserted into configuration.
+// [MaxAircraft], [HistoryLimit], [MaxAdvance], [MaxBatchFrames], and
+// [MaxStations] are fixed limits of this package, not values inserted into
+// configuration.
 //
 // Addresses are allocated monotonically from 000001 to FFFFFE and are never
 // reused within a run, including after a count reduction. A callsign is TB
@@ -117,22 +157,66 @@
 // constants; the engine claims no calibrated navigation integrity and no
 // complete ADS-B operational-status profile.
 //
+// # Reception model
+//
+// Whether a station hears a transmission is decided by two documented limits,
+// evaluated against the aircraft truth at the exact transmission instant.
+// [Model] publishes the fixed parameters both limits use.
+//
+//   - Radio horizon. The limit in metres is HorizonMetresPerSqrtMetre times
+//     the sum of the square roots of the antenna height and the aircraft
+//     height, both in metres above the model sphere. Heights below the sphere
+//     contribute nothing. The great-circle surface distance must not exceed
+//     it. This is what makes reception altitude aware.
+//   - Link budget. Free space path loss is 20*log10(slant metres) plus
+//     FreeSpacePathLossConstantDB. Received power is TransmitPowerDBm plus
+//     AntennaGainDBi minus SystemLossDB minus that loss, and must reach
+//     SensitivityDBm. The slant distance is the straight-line chord between
+//     the two points.
+//
+// A station that passes both limits then draws one random value and drops the
+// transmission with its configured FrameLossProbability.
+//
+// [EstimateCoverage] inverts the same two limits into great-circle surface
+// radii at an explicit reference altitude, without needing an engine, so a
+// caller can preview settings before applying them. Chord length grows
+// strictly with angular separation for fixed heights, so a slant limit maps to
+// exactly one surface radius and Coverage.EffectiveRadiusNauticalMiles is the
+// exact reception boundary rather than an approximation.
+//
+// The model is synthetic. Coverage radii, slant ranges, and received powers
+// are output of this testbench, not calibrated RF predictions and not claims
+// about any real receiver. Pressure altitude is used directly as geometric
+// height above the model sphere. Terrain, obstructions, antenna patterns,
+// multipath, interference, message-rate limits, propagation delay, and Doppler
+// are not modelled, and transmit power is one fixed value for every aircraft.
+//
 // # Determinism
 //
 // Randomness comes from math/rand/v2 PCG generators seeded explicitly. Each
 // aircraft holds four independent streams, one for birth and one per message
-// family. Their two seed words are the first 16 bytes of SHA-256 over the
-// binary tuple of the run seed (8 bytes, little-endian), the aircraft creation
-// ordinal (8 bytes, little-endian), and a domain tag (one byte: 0 birth,
-// 1 identification, 2 position, 3 velocity), read as little-endian words.
-// Every birth field consumes exactly one 53-bit fraction, including exact
-// ranges, so range widths never shift a stream.
+// family, and each station holds one. Their two seed words are the first 16
+// bytes of SHA-256 over the binary tuple of the run seed (8 bytes,
+// little-endian), the creation ordinal (8 bytes, little-endian), and a domain
+// tag (one byte: 0 birth, 1 identification, 2 position, 3 velocity,
+// 4 station), read as little-endian words. Aircraft ordinals and station
+// ordinals are independent counters, so the tag is what keeps the two kinds of
+// stream disjoint, and no station can disturb aircraft generation.
 //
-// Identical bytes are promised for the same engine implementation, Go
-// toolchain, platform, configuration, and ordered operations. Split-call
-// equivalence also requires the same control changes at the same virtual
-// instants. No cross-platform floating-point or future-version byte
-// equivalence is claimed.
+// Every birth field consumes exactly one 53-bit fraction, including exact
+// ranges, so range widths never shift a stream. A station likewise draws
+// exactly one fraction per transmission it has already accepted on both
+// deterministic limits, whatever its configured FrameLossProbability, so
+// editing only that value cannot shift its stream. A disabled station
+// evaluates nothing and draws nothing, which freezes its stream until it is
+// enabled again.
+//
+// Identical bytes and identical reception decisions are promised for the same
+// engine implementation, Go toolchain, platform, configuration, and ordered
+// operations, including ordered station commands. Split-call equivalence also
+// requires the same control changes at the same virtual instants. No
+// cross-platform floating-point or future-version byte equivalence is claimed,
+// and no RF calibration or real receiver behavior is claimed.
 //
 // # History and ownership
 //
@@ -144,23 +228,35 @@
 // lost retention when its last processed sequence plus one is below
 // HistorySnapshot.OldestSequence within the same run ID.
 //
+// Receptions are returned but not retained: this package keeps one shared
+// transmission history and no per-station history. A station therefore hears
+// only what is emitted while it exists, and a transmission it missed is never
+// redelivered.
+//
 // A [Transmission] timestamp is the virtual instant of that emission, which is
 // not the current snapshot time; compare a historical frame with truth
-// evaluated at its own timestamp. Snapshots copy every slice and frame array
-// they expose, so editing a returned snapshot or batch cannot change engine
-// state or later output.
+// evaluated at its own timestamp. A [Reception] timestamp is the same instant,
+// because no propagation delay is modelled. Snapshots copy every slice and
+// frame array they expose, so editing a returned snapshot or batch cannot
+// change engine state or later output.
 //
 // # Concurrency and errors
 //
-// One mutex serializes mutations and snapshot reads. Concurrent callers get
-// safety, not a promised operation order; callers needing reproducibility must
-// order their own calls. The engine stores no context. Cancellation is checked
+// One mutex serializes mutations, station commands, and snapshot reads.
+// Concurrent callers get safety, not a promised operation order; callers
+// needing reproducibility must order their own calls. A station edit carries
+// the revision the caller last observed, so two concurrent editors cannot
+// silently overwrite each other. The engine stores no context. Cancellation is checked
 // after the lock is taken, during staged work, and immediately before commit;
 // cancellation arriving after that final check may accompany a successful
 // return, as with any context-aware API.
 //
-// Caller values outside their domain wrap [ErrInvalid]. Well-formed requests
-// beyond representable time, identity, sequence, or batch capacity wrap
-// [ErrLimit]. Context failures are returned unchanged, so errors.Is still
-// matches context.Canceled and context.DeadlineExceeded.
+// Caller values outside their domain wrap [ErrInvalid], including a station
+// identifier that is already in use or was used earlier in the run.
+// Well-formed requests beyond representable time, identity, sequence, batch,
+// or station capacity wrap [ErrLimit]. A command naming a station that does
+// not exist wraps [ErrNotFound], and one whose supplied revision differs from
+// the current revision wraps [ErrConflict] and changes nothing. Context
+// failures are returned unchanged, so errors.Is still matches
+// context.Canceled and context.DeadlineExceeded.
 package simulation

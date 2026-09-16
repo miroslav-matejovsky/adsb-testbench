@@ -1,6 +1,9 @@
 package simulation
 
-import "time"
+import (
+	"math"
+	"time"
+)
 
 // fixtureStart is the virtual start instant shared by package tests.
 var fixtureStart = time.Date(2024, time.March, 5, 12, 0, 0, 0, time.UTC)
@@ -44,4 +47,81 @@ func stationaryConfig() Config {
 			VerticalRateFeetPerMinute: Range{Min: 0, Max: 0},
 		},
 	}
+}
+
+// validStationConfig returns a complete station configuration with every field
+// assigned explicitly. It sits in the middle of the validConfig spawn box, so
+// aircraft created by that configuration are comfortably inside its coverage.
+// Tests copy it and change only the field under test.
+func validStationConfig() StationConfig {
+	return StationConfig{
+		ID:                   "primary",
+		Enabled:              true,
+		LatitudeDegrees:      50.5,
+		LongitudeDegrees:     14.5,
+		SiteElevationMetres:  100,
+		AntennaHeightMetres:  30,
+		AntennaGainDBi:       3,
+		SensitivityDBm:       -95,
+		SystemLossDB:         2,
+		FrameLossProbability: 0,
+	}
+}
+
+// insensitiveStationConfig returns a station whose poor sensitivity makes the
+// link budget bind well inside the radio horizon.
+func insensitiveStationConfig() StationConfig {
+	cfg := validStationConfig()
+	cfg.ID = "insensitive"
+	cfg.SensitivityDBm = -85
+	return cfg
+}
+
+// disabledStationConfig returns a fully configured station that is switched
+// off, which must hear nothing at all.
+func disabledStationConfig() StationConfig {
+	cfg := validStationConfig()
+	cfg.ID = "disabled"
+	cfg.Enabled = false
+	return cfg
+}
+
+// Fixed geometry fixture. The aircraft sits at one exact coordinate with no
+// motion, so a station placed at a known great-circle distance along the same
+// meridian has an exactly known range.
+const (
+	fixedLatitudeDegrees  = 50.0
+	fixedLongitudeDegrees = 14.0
+)
+
+// fixedGeometryConfig returns a single stationary aircraft at the fixed
+// coordinate and the given pressure altitude. Every spawn range is degenerate,
+// so the aircraft truth needs no tolerance.
+func fixedGeometryConfig(altitudeFeet float64) Config {
+	return Config{
+		ID:                   "fixed-geometry",
+		StartTime:            fixtureStart,
+		Seed:                 11,
+		InitialAircraftCount: 1,
+		SpeedHundredths:      100,
+		Spawn: SpawnConfig{
+			LatitudeDegrees:           Range{Min: fixedLatitudeDegrees, Max: fixedLatitudeDegrees},
+			LongitudeDegrees:          Range{Min: fixedLongitudeDegrees, Max: fixedLongitudeDegrees},
+			AltitudeFeet:              Range{Min: altitudeFeet, Max: altitudeFeet},
+			GroundSpeedKnots:          Range{Min: 0, Max: 0},
+			TrackDegrees:              Range{Min: 0, Max: 0},
+			VerticalRateFeetPerMinute: Range{Min: 0, Max: 0},
+		},
+	}
+}
+
+// stationAtDistance places a station due south of the fixed coordinate, so the
+// aircraft of fixedGeometryConfig is exactly surfaceMetres away along the
+// model sphere.
+func stationAtDistance(id string, surfaceMetres float64) StationConfig {
+	cfg := validStationConfig()
+	cfg.ID = id
+	cfg.LongitudeDegrees = fixedLongitudeDegrees
+	cfg.LatitudeDegrees = fixedLatitudeDegrees - (surfaceMetres/earthRadiusMetres)*180/math.Pi
+	return cfg
 }

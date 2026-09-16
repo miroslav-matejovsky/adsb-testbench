@@ -2,7 +2,7 @@
 value: "High"
 effort: "L"
 complexity: "hard"
-dependencies: ["03-receiving-stations.md"]
+dependencies: []
 ---
 
 # Received observations and bounded history
@@ -21,4 +21,6 @@ Test loss of one CPR frame, independent field expiry, station selection and dedu
 
 ## Dependencies
 
-- [03-receiving-stations](03-receiving-stations.md)
+Use the implemented [simulation engine](../../simulation/doc.go), including its
+stations, revision-checked station commands, published reception model, and the
+per-transmission reception records returned with every mutation batch.

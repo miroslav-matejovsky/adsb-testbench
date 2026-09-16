@@ -13,10 +13,10 @@ filenames). External prerequisites are described in the item.
 | Rank | Item | Effort | Value |
 | ---: | --- | :---: | :---: |
 | 1 | [Real-time driver and simulator lifecycle](05-runtime-and-lifecycle.md) | M | High |
-| 2 | [Receiving stations and altitude-aware reception](03-receiving-stations.md) | L | High |
-| 3 | [Received observations and bounded history](04-observation-history.md) | L | High |
-| 4 | [Simulator contract and HTTP API](06-simulator-contract-and-api.md) | L | High |
-| 5 | [Display sources and received-track decoding](07-display-backend.md) | L | High |
+| 2 | [Received observations and bounded history](04-observation-history.md) | L | High |
+| 3 | [Simulator contract and HTTP API](06-simulator-contract-and-api.md) | L | High |
+| 4 | [Display sources and received-track decoding](07-display-backend.md) | L | High |
+| 5 | [Manager controls and embedded assets](08-manager-ui.md) | L | High |
 
 ## Index
 
@@ -24,7 +24,6 @@ filenames). External prerequisites are described in the item.
 
 | Item | Effort | Value |
 | --- | :---: | :---: |
-| [Receiving stations and altitude-aware reception](03-receiving-stations.md) | L | High |
 | [Received observations and bounded history](04-observation-history.md) | L | High |
 
 ### Runtime and contracts

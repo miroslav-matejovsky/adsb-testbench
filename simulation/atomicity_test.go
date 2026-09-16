@@ -133,7 +133,7 @@ func TestAtomicityCancellation(t *testing.T) {
 
 		batch, err := subject.Advance(ctx, 5*time.Second)
 		require.ErrorIs(t, err, context.Canceled)
-		require.Nil(t, batch)
+		require.Equal(t, Batch{}, batch)
 		requireIdenticalFuture(t, subject, control)
 	})
 
@@ -146,7 +146,7 @@ func TestAtomicityCancellation(t *testing.T) {
 
 		batch, err := subject.SetCount(ctx, 6)
 		require.ErrorIs(t, err, context.DeadlineExceeded)
-		require.Nil(t, batch)
+		require.Equal(t, Batch{}, batch)
 		requireIdenticalFuture(t, subject, control)
 	})
 
@@ -158,7 +158,7 @@ func TestAtomicityCancellation(t *testing.T) {
 			subject, control := controlPair(t, validConfig(), prelude)
 			batch, err := subject.Advance(newCountingContext(depth, context.Canceled), 20*time.Second)
 			require.ErrorIs(t, err, context.Canceled)
-			require.Nil(t, batch)
+			require.Equal(t, Batch{}, batch)
 			requireIdenticalFuture(t, subject, control)
 		})
 
@@ -168,7 +168,7 @@ func TestAtomicityCancellation(t *testing.T) {
 			subject, control := controlPair(t, validConfig(), prelude)
 			batch, err := subject.SetCount(newCountingContext(depth, context.DeadlineExceeded), MaxAircraft)
 			require.ErrorIs(t, err, context.DeadlineExceeded)
-			require.Nil(t, batch)
+			require.Equal(t, Batch{}, batch)
 			requireIdenticalFuture(t, subject, control)
 		})
 	}
@@ -188,7 +188,7 @@ func TestAtomicityExhaustion(t *testing.T) {
 
 		batch, err := engine.Advance(context.Background(), 10*time.Second)
 		require.ErrorIs(t, err, ErrLimit)
-		require.Nil(t, batch)
+		require.Equal(t, Batch{}, batch)
 		require.Equal(t, before, engine.Snapshot())
 		require.Equal(t, beforeState.fleet, engine.state.fleet)
 		require.Equal(t, beforeState.lastSequence, engine.state.lastSequence)
@@ -206,7 +206,7 @@ func TestAtomicityExhaustion(t *testing.T) {
 
 		batch, err := engine.SetCount(context.Background(), 3)
 		require.ErrorIs(t, err, ErrLimit)
-		require.Nil(t, batch)
+		require.Equal(t, Batch{}, batch)
 		require.Equal(t, before, engine.Snapshot())
 		require.Equal(t, beforeIdentity, engine.state.identity)
 		require.Len(t, engine.state.fleet, 1)
@@ -221,7 +221,7 @@ func TestAtomicityExhaustion(t *testing.T) {
 
 		batch, err := engine.Advance(context.Background(), 2*time.Second)
 		require.ErrorIs(t, err, ErrLimit)
-		require.Nil(t, batch)
+		require.Equal(t, Batch{}, batch)
 		require.Equal(t, before, engine.Snapshot())
 	})
 
@@ -235,7 +235,7 @@ func TestAtomicityExhaustion(t *testing.T) {
 
 		batch, err := engine.Advance(context.Background(), 2*time.Second)
 		require.ErrorIs(t, err, ErrLimit)
-		require.Nil(t, batch)
+		require.Equal(t, Batch{}, batch)
 		require.Equal(t, before, engine.Snapshot())
 
 		// The remaining representable time is still usable.
@@ -247,9 +247,9 @@ func TestAtomicityExhaustion(t *testing.T) {
 		t.Parallel()
 
 		engine := newEngine(t, validConfig())
-		var batch []Transmission
+		batch := newBatch()
 		for range MaxBatchFrames {
-			batch = append(batch, Transmission{})
+			batch.Transmissions = append(batch.Transmissions, Transmission{})
 		}
 		err := engine.state.record(&engine.state.fleet[0], PositionMessage,
 			engine.state.fleet[0].navAt(0), false, 0, &batch)
@@ -274,7 +274,7 @@ func TestAtomicityCodecFailure(t *testing.T) {
 
 	batch, err := engine.Advance(context.Background(), 10*time.Second)
 	require.Error(t, err)
-	require.Nil(t, batch)
+	require.Equal(t, Batch{}, batch)
 	require.ErrorContains(t, err, "identification report")
 	require.ErrorContains(t, err, "not a valid callsign")
 

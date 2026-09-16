@@ -77,8 +77,9 @@ func TestHistoryCompleteBatch(t *testing.T) {
 	cfg.InitialAircraftCount = 10
 	engine := newEngine(t, cfg)
 
-	batch, err := engine.Advance(t.Context(), MaxAdvance)
+	got, err := engine.Advance(t.Context(), MaxAdvance)
 	require.NoError(t, err)
+	batch := got.Transmissions
 	require.Greater(t, len(batch), HistoryLimit)
 	require.LessOrEqual(t, len(batch), MaxBatchFrames)
 

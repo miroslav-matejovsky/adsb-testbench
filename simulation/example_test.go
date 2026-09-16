@@ -3,6 +3,7 @@ package simulation_test
 import (
 	"context"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"time"
 
@@ -75,8 +76,8 @@ func ExampleEngine_Advance() {
 		panic(err)
 	}
 
-	fmt.Println("frames:", len(batch))
-	fmt.Println("first:", batch[0].Kind, batch[0].Timestamp.Format(time.RFC3339Nano))
+	fmt.Println("frames:", len(batch.Transmissions))
+	fmt.Println("first:", batch.Transmissions[0].Kind, batch.Transmissions[0].Timestamp.Format(time.RFC3339Nano))
 	fmt.Println("elapsed:", engine.Snapshot().Elapsed)
 
 	// Splitting the same total produces exactly the same frames.
@@ -90,9 +91,9 @@ func ExampleEngine_Advance() {
 		if err != nil {
 			panic(err)
 		}
-		parts = append(parts, part...)
+		parts = append(parts, part.Transmissions...)
 	}
-	fmt.Println("split matches:", len(parts) == len(batch) && parts[len(parts)-1] == batch[len(batch)-1])
+	fmt.Println("split matches:", len(parts) == len(batch.Transmissions) && parts[len(parts)-1] == batch.Transmissions[len(batch.Transmissions)-1])
 
 	// Output:
 	// frames: 14
@@ -133,14 +134,14 @@ func ExampleEngine_SetSpeed() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("paused frames:", len(paused), "elapsed:", engine.Snapshot().Elapsed)
+	fmt.Println("paused frames:", len(paused.Transmissions), "elapsed:", engine.Snapshot().Elapsed)
 
 	// Direct stepping still works while paused.
 	stepped, err := engine.Advance(context.Background(), time.Second)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("stepped frames:", len(stepped) > 0, "elapsed:", engine.Snapshot().Elapsed)
+	fmt.Println("stepped frames:", len(stepped.Transmissions) > 0, "elapsed:", engine.Snapshot().Elapsed)
 
 	if err := engine.SetSpeed(context.Background(), 100); err != nil {
 		panic(err)
@@ -170,7 +171,7 @@ func ExampleEngine_SetCount() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("creation reports:", len(added))
+	fmt.Println("creation reports:", len(added.Transmissions))
 	for _, craft := range engine.Snapshot().Aircraft {
 		fmt.Println(craft.Callsign, "created at", craft.CreatedAt.Format(time.RFC3339))
 	}
@@ -180,7 +181,7 @@ func ExampleEngine_SetCount() {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("removal reports:", len(removed))
+	fmt.Println("removal reports:", len(removed.Transmissions))
 	for _, craft := range engine.Snapshot().Aircraft {
 		fmt.Println("kept", craft.Callsign)
 	}
@@ -220,4 +221,117 @@ func ExampleEngine_Snapshot() {
 	// run: example
 	// retained: 1000 of 1000
 	// gap: true
+}
+
+// demoStation returns a complete station configuration with every field
+// assigned explicitly, sitting at the demo aircraft spawn point.
+func demoStation(id string) simulation.StationConfig {
+	return simulation.StationConfig{
+		ID:                   id,
+		Enabled:              true,
+		LatitudeDegrees:      50,
+		LongitudeDegrees:     14,
+		SiteElevationMetres:  100,
+		AntennaHeightMetres:  30,
+		AntennaGainDBi:       3,
+		SensitivityDBm:       -95,
+		SystemLossDB:         2,
+		FrameLossProbability: 0,
+	}
+}
+
+// A station hears the transmissions emitted after it is created.
+func ExampleEngine_AddStation() {
+	engine, err := simulation.New(demoConfig())
+	if err != nil {
+		panic(err)
+	}
+
+	station, err := engine.AddStation(context.Background(), demoStation("eddf"))
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("station:", station.Config.ID, "revision:", station.Revision)
+
+	batch, err := engine.Advance(context.Background(), 2*time.Second)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("frames:", len(batch.Transmissions), "receptions:", len(batch.Receptions))
+
+	first := batch.Receptions[0]
+	fmt.Println("heard:", first.StationID, first.Kind, "from", fmt.Sprintf("%06X", first.ICAO))
+	fmt.Println("same bytes:", hex.EncodeToString(first.Frame[:]) ==
+		hex.EncodeToString(batch.Transmissions[0].Frame[:]))
+
+	// Output:
+	// station: eddf revision: 1
+	// frames: 14 receptions: 14
+	// heard: eddf position from 000002
+	// same bytes: true
+}
+
+// Editing a station uses the revision the caller last observed, so a stale
+// edit is rejected instead of overwriting a concurrent change.
+func ExampleEngine_UpdateStation() {
+	engine, err := simulation.New(demoConfig())
+	if err != nil {
+		panic(err)
+	}
+	station, err := engine.AddStation(context.Background(), demoStation("eddf"))
+	if err != nil {
+		panic(err)
+	}
+
+	off := station.Config
+	off.Enabled = false
+	disabled, err := engine.UpdateStation(context.Background(), station.Revision, off)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("revision:", disabled.Revision, "enabled:", disabled.Config.Enabled)
+
+	batch, err := engine.Advance(context.Background(), 2*time.Second)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("receptions while disabled:", len(batch.Receptions))
+
+	// The first revision is stale now.
+	_, err = engine.UpdateStation(context.Background(), station.Revision, station.Config)
+	fmt.Println("stale edit rejected:", errors.Is(err, simulation.ErrConflict))
+
+	// Output:
+	// revision: 2 enabled: false
+	// receptions while disabled: 0
+	// stale edit rejected: true
+}
+
+// The reception model and the coverage it implies are published, so a caller
+// can preview settings before applying them.
+func ExampleEstimateCoverage() {
+	model := simulation.Model()
+	fmt.Printf("transmit %.0f dBm at %.0f MHz\n", model.TransmitPowerDBm, model.FrequencyMHz)
+
+	coverage, err := simulation.EstimateCoverage(demoStation("eddf"), 35000)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("at %.0f ft: horizon %.0f NM, link budget %.0f NM, effective %.0f NM\n",
+		coverage.ReferenceAltitudeFeet,
+		coverage.HorizonRadiusNauticalMiles,
+		coverage.LinkBudgetRadiusNauticalMiles,
+		coverage.EffectiveRadiusNauticalMiles)
+
+	low, err := simulation.EstimateCoverage(demoStation("eddf"), 5000)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Printf("at %.0f ft: effective %.0f NM\n",
+		low.ReferenceAltitudeFeet, low.EffectiveRadiusNauticalMiles)
+
+	// Output:
+	// transmit 51 dBm at 1090 MHz
+	// at 35000 ft: horizon 255 NM, link budget 264 NM, effective 255 NM
+	// at 5000 ft: effective 112 NM
 }

@@ -45,4 +45,3 @@ A plan is complete only when all implementation tasks are finished, all tests pa
 
 | Plan | Implementation status | Backlog |
 | --- | --- | --- |
-| [Receiving stations and altitude-aware reception](receiving-stations/README.md) | Planned; implementation not started | [03 - Receiving stations](../backlog/03-receiving-stations.md) |

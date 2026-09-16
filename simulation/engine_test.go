@@ -18,6 +18,17 @@ func newEngine(t testing.TB, cfg Config) *Engine {
 	return engine
 }
 
+// requireEmptyBatch asserts the documented shape of a successful mutation that
+// emitted nothing: both slices allocated and empty, never nil.
+func requireEmptyBatch(t testing.TB, batch Batch) {
+	t.Helper()
+
+	require.NotNil(t, batch.Transmissions)
+	require.Empty(t, batch.Transmissions)
+	require.NotNil(t, batch.Receptions)
+	require.Empty(t, batch.Receptions)
+}
+
 // kindsOf lists the message families of a batch in order.
 func kindsOf(batch []Transmission) []MessageKind {
 	kinds := make([]MessageKind, len(batch))
@@ -105,11 +116,12 @@ func TestEngineAdvanceEmitsOrderedFrames(t *testing.T) {
 
 	batch, err := engine.Advance(t.Context(), 10*time.Second)
 	require.NoError(t, err)
-	require.NotEmpty(t, batch)
+	require.NotEmpty(t, batch.Transmissions)
+	require.Empty(t, batch.Receptions, "an engine without stations hears nothing")
 
 	previousSequence := before.History.LatestSequence
 	previousTime := before.Now
-	for _, report := range batch {
+	for _, report := range batch.Transmissions {
 		require.Equal(t, previousSequence+1, report.Sequence)
 		previousSequence = report.Sequence
 		require.False(t, report.Timestamp.Before(previousTime))
@@ -139,7 +151,7 @@ func TestEngineAlternatesPositionParity(t *testing.T) {
 
 	wantOdd := true
 	positions := 0
-	for _, report := range batch {
+	for _, report := range batch.Transmissions {
 		if report.Kind != PositionMessage {
 			continue
 		}
@@ -161,13 +173,11 @@ func TestEngineZeroDurationIsANoOp(t *testing.T) {
 
 	batch, err := engine.Advance(t.Context(), 0)
 	require.NoError(t, err)
-	require.NotNil(t, batch)
-	require.Empty(t, batch)
+	requireEmptyBatch(t, batch)
 
 	batch, err = engine.Elapse(t.Context(), 0)
 	require.NoError(t, err)
-	require.NotNil(t, batch)
-	require.Empty(t, batch)
+	requireEmptyBatch(t, batch)
 
 	require.Equal(t, before, engine.Snapshot())
 	require.Equal(t, beforeState.fleet, engine.state.fleet)
@@ -201,8 +211,8 @@ func TestEngineSetCountAddsAndRemoves(t *testing.T) {
 
 	added, err := engine.SetCount(t.Context(), 5)
 	require.NoError(t, err)
-	require.Len(t, added, 9)
-	for _, report := range added {
+	require.Len(t, added.Transmissions, 9)
+	for _, report := range added.Transmissions {
 		require.True(t, report.Timestamp.Equal(now))
 	}
 
@@ -216,8 +226,7 @@ func TestEngineSetCountAddsAndRemoves(t *testing.T) {
 	survivors := snapshot.Aircraft[:3]
 	removed, err := engine.SetCount(t.Context(), 3)
 	require.NoError(t, err)
-	require.NotNil(t, removed)
-	require.Empty(t, removed)
+	requireEmptyBatch(t, removed)
 
 	reduced := engine.Snapshot()
 	require.Equal(t, survivors, reduced.Aircraft)
@@ -233,8 +242,7 @@ func TestEngineSetCountNoOpChangesNothing(t *testing.T) {
 
 	batch, err := engine.SetCount(t.Context(), len(before.fleet))
 	require.NoError(t, err)
-	require.NotNil(t, batch)
-	require.Empty(t, batch)
+	requireEmptyBatch(t, batch)
 
 	require.Equal(t, before.fleet, engine.state.fleet)
 	require.Equal(t, before.identity, engine.state.identity)
@@ -250,7 +258,7 @@ func TestEngineSetCountRejectsOutOfRange(t *testing.T) {
 	for _, count := range []int{-1, MaxAircraft + 1} {
 		batch, err := engine.SetCount(t.Context(), count)
 		require.ErrorIs(t, err, ErrInvalid)
-		require.Nil(t, batch)
+		require.Equal(t, Batch{}, batch)
 	}
 	require.Equal(t, before, engine.Snapshot())
 }
@@ -288,12 +296,12 @@ func TestEnginePauseAndResume(t *testing.T) {
 
 	batch, err := engine.Elapse(t.Context(), time.Minute)
 	require.NoError(t, err)
-	require.Empty(t, batch)
+	requireEmptyBatch(t, batch)
 	require.Equal(t, time.Duration(0), engine.Snapshot().Elapsed)
 
 	batch, err = engine.Advance(t.Context(), 2*time.Second)
 	require.NoError(t, err)
-	require.NotEmpty(t, batch)
+	require.NotEmpty(t, batch.Transmissions)
 	require.Equal(t, 2*time.Second, engine.Snapshot().Elapsed)
 
 	require.NoError(t, engine.SetSpeed(t.Context(), 100))
@@ -310,19 +318,19 @@ func TestEngineRejectsInvalidDurations(t *testing.T) {
 
 	batch, err := engine.Advance(t.Context(), -time.Nanosecond)
 	require.ErrorIs(t, err, ErrInvalid)
-	require.Nil(t, batch)
+	require.Equal(t, Batch{}, batch)
 
 	batch, err = engine.Advance(t.Context(), MaxAdvance+time.Nanosecond)
 	require.ErrorIs(t, err, ErrLimit)
-	require.Nil(t, batch)
+	require.Equal(t, Batch{}, batch)
 
 	batch, err = engine.Elapse(t.Context(), -time.Second)
 	require.ErrorIs(t, err, ErrInvalid)
-	require.Nil(t, batch)
+	require.Equal(t, Batch{}, batch)
 
 	batch, err = engine.Elapse(t.Context(), time.Hour)
 	require.ErrorIs(t, err, ErrLimit)
-	require.Nil(t, batch)
+	require.Equal(t, Batch{}, batch)
 
 	require.Equal(t, before, engine.Snapshot())
 }
@@ -338,15 +346,15 @@ func TestEngineCancelledContext(t *testing.T) {
 
 	batch, err := engine.Advance(ctx, time.Second)
 	require.ErrorIs(t, err, context.Canceled)
-	require.Nil(t, batch)
+	require.Equal(t, Batch{}, batch)
 
 	batch, err = engine.Elapse(ctx, time.Second)
 	require.ErrorIs(t, err, context.Canceled)
-	require.Nil(t, batch)
+	require.Equal(t, Batch{}, batch)
 
 	batch, err = engine.SetCount(ctx, 1)
 	require.ErrorIs(t, err, context.Canceled)
-	require.Nil(t, batch)
+	require.Equal(t, Batch{}, batch)
 
 	require.ErrorIs(t, engine.SetSpeed(ctx, 50), context.Canceled)
 	require.Equal(t, before, engine.Snapshot())

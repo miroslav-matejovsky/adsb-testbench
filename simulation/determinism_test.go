@@ -15,69 +15,75 @@ import (
 // two independently constructed engines must produce identical output.
 type operation struct {
 	name  string
-	apply func(*Engine) ([]Transmission, error)
+	apply func(*Engine) (Batch, error)
 }
 
 func advanceOp(d time.Duration) operation {
-	return operation{"advance " + d.String(), func(e *Engine) ([]Transmission, error) {
+	return operation{"advance " + d.String(), func(e *Engine) (Batch, error) {
 		return e.Advance(context.Background(), d)
 	}}
 }
 
 func elapseOp(d time.Duration) operation {
-	return operation{"elapse " + d.String(), func(e *Engine) ([]Transmission, error) {
+	return operation{"elapse " + d.String(), func(e *Engine) (Batch, error) {
 		return e.Elapse(context.Background(), d)
 	}}
 }
 
 func countOp(count int) operation {
-	return operation{"set count", func(e *Engine) ([]Transmission, error) {
+	return operation{"set count", func(e *Engine) (Batch, error) {
 		return e.SetCount(context.Background(), count)
 	}}
 }
 
 func speedOp(speed uint16) operation {
-	return operation{"set speed", func(e *Engine) ([]Transmission, error) {
-		return nil, e.SetSpeed(context.Background(), speed)
+	return operation{"set speed", func(e *Engine) (Batch, error) {
+		return newBatch(), e.SetSpeed(context.Background(), speed)
 	}}
 }
 
+// appendBatch concatenates one batch onto another, preserving order.
+func appendBatch(dst *Batch, src Batch) {
+	dst.Transmissions = append(dst.Transmissions, src.Transmissions...)
+	dst.Receptions = append(dst.Receptions, src.Receptions...)
+}
+
 // runScript applies every operation and returns the concatenated output.
-func runScript(t testing.TB, engine *Engine, script []operation) []Transmission {
+func runScript(t testing.TB, engine *Engine, script []operation) Batch {
 	t.Helper()
 
-	all := []Transmission{}
+	all := newBatch()
 	for _, op := range script {
 		batch, err := engine.apply(op)
 		require.NoError(t, err, op.name)
-		all = append(all, batch...)
+		appendBatch(&all, batch)
 	}
 	return all
 }
 
-func (e *Engine) apply(op operation) ([]Transmission, error) { return op.apply(e) }
+func (e *Engine) apply(op operation) (Batch, error) { return op.apply(e) }
 
 // partition splits total into the durations of a fixed plan.
-func advanceAll(t testing.TB, engine *Engine, parts []time.Duration) []Transmission {
+func advanceAll(t testing.TB, engine *Engine, parts []time.Duration) Batch {
 	t.Helper()
 
-	all := []Transmission{}
+	all := newBatch()
 	for _, part := range parts {
 		batch, err := engine.Advance(context.Background(), part)
 		require.NoError(t, err)
-		all = append(all, batch...)
+		appendBatch(&all, batch)
 	}
 	return all
 }
 
-func elapseAll(t testing.TB, engine *Engine, parts []time.Duration) []Transmission {
+func elapseAll(t testing.TB, engine *Engine, parts []time.Duration) Batch {
 	t.Helper()
 
-	all := []Transmission{}
+	all := newBatch()
 	for _, part := range parts {
 		batch, err := engine.Elapse(context.Background(), part)
 		require.NoError(t, err)
-		all = append(all, batch...)
+		appendBatch(&all, batch)
 	}
 	return all
 }
@@ -155,7 +161,7 @@ func TestDeterminismVirtualPartitions(t *testing.T) {
 		require.Equal(t, want, split.Snapshot(), "plan %v", plan)
 	}
 
-	requireBothParities(t, combined)
+	requireBothParities(t, combined.Transmissions)
 }
 
 // requireBothParities asserts that position reports alternate per aircraft
@@ -240,14 +246,14 @@ func TestDeterminismControls(t *testing.T) {
 	require.NoError(t, engine.SetSpeed(context.Background(), 0))
 	batch, err := engine.Elapse(context.Background(), time.Hour)
 	require.NoError(t, err)
-	require.Empty(t, batch)
+	require.Empty(t, batch.Transmissions)
 	require.Equal(t, int64(37), engine.state.clock.carry)
 	require.Equal(t, time.Duration(0), engine.Snapshot().Elapsed)
 
 	// Direct stepping works while paused and preserves the carry.
 	stepped, err := engine.Advance(context.Background(), 2*time.Second)
 	require.NoError(t, err)
-	require.NotEmpty(t, stepped)
+	require.NotEmpty(t, stepped.Transmissions)
 	require.Equal(t, int64(37), engine.state.clock.carry)
 
 	// SetCount emits creation reports but settles no time.
@@ -268,7 +274,7 @@ func TestDeterminismControls(t *testing.T) {
 	require.NoError(t, paused.SetSpeed(context.Background(), 0))
 	pausedBatch, err := paused.Elapse(context.Background(), 5*time.Second)
 	require.NoError(t, err)
-	require.Empty(t, pausedBatch)
+	require.Empty(t, pausedBatch.Transmissions)
 
 	untouched := newEngine(t, cfg)
 	require.Equal(t, untouched.Snapshot().History, paused.Snapshot().History)
@@ -314,8 +320,8 @@ func TestDeterminismSurvivors(t *testing.T) {
 	reducedBatch, err := reduced.Advance(context.Background(), 20*time.Second)
 	require.NoError(t, err)
 
-	survivors := byAircraft(reducedBatch)
-	full := byAircraft(controlBatch)
+	survivors := byAircraft(reducedBatch.Transmissions)
+	full := byAircraft(controlBatch.Transmissions)
 	require.Len(t, survivors, 2)
 	for icao, got := range survivors {
 		require.Equal(t, full[icao], got, "survivor %06X", icao)
@@ -331,7 +337,7 @@ func TestDeterminismSurvivors(t *testing.T) {
 	}
 	added, err := reduced.SetCount(context.Background(), 5)
 	require.NoError(t, err)
-	require.Len(t, added, 9)
+	require.Len(t, added.Transmissions, 9)
 	for _, craft := range reduced.Snapshot().Aircraft[2:] {
 		require.False(t, used[craft.ICAO], "address %06X was reused", craft.ICAO)
 	}
@@ -347,18 +353,17 @@ func TestEngineZeroAircraft(t *testing.T) {
 
 	batch, err := engine.Advance(context.Background(), 45*time.Second)
 	require.NoError(t, err)
-	require.NotNil(t, batch)
-	require.Empty(t, batch)
+	requireEmptyBatch(t, batch)
 	require.Equal(t, 45*time.Second, engine.Snapshot().Elapsed)
 
 	batch, err = engine.Elapse(context.Background(), 5*time.Second)
 	require.NoError(t, err)
-	require.Empty(t, batch)
+	requireEmptyBatch(t, batch)
 
 	now := engine.Snapshot().Now
 	created, err := engine.SetCount(context.Background(), 2)
 	require.NoError(t, err)
-	require.Len(t, created, 6)
+	require.Len(t, created.Transmissions, 6)
 	for _, craft := range engine.Snapshot().Aircraft {
 		require.True(t, craft.CreatedAt.Equal(now))
 	}
@@ -369,7 +374,7 @@ func TestEngineZeroAircraft(t *testing.T) {
 	require.NoError(t, err)
 	batch, err = engine.Advance(context.Background(), 10*time.Second)
 	require.NoError(t, err)
-	require.Empty(t, batch)
+	requireEmptyBatch(t, batch)
 	require.Equal(t, retained, engine.Snapshot().History.Messages)
 }
 

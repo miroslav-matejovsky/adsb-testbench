@@ -14,7 +14,7 @@ func TestSnapshotOwnership(t *testing.T) {
 	engine := newEngine(t, validConfig())
 	batch, err := engine.Advance(t.Context(), 5*time.Second)
 	require.NoError(t, err)
-	require.NotEmpty(t, batch)
+	require.NotEmpty(t, batch.Transmissions)
 
 	original := engine.Snapshot()
 	mutated := engine.Snapshot()
@@ -28,8 +28,8 @@ func TestSnapshotOwnership(t *testing.T) {
 	mutated.History.Messages[0].Frame[0] = 0
 	mutated.Elapsed = time.Hour
 
-	batch[0].Frame[3] = 0xff
-	batch[0].Sequence = 999999
+	batch.Transmissions[0].Frame[3] = 0xff
+	batch.Transmissions[0].Sequence = 999999
 
 	require.Equal(t, original, engine.Snapshot())
 

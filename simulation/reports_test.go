@@ -373,8 +373,9 @@ func TestReportPayloadsMatchTruth(t *testing.T) {
 	engine := newEngine(t, cfg)
 	craft := engine.state.fleet[0]
 
-	batch, err := engine.Advance(t.Context(), 20*time.Second)
+	got, err := engine.Advance(t.Context(), 20*time.Second)
 	require.NoError(t, err)
+	batch := got.Transmissions
 	require.NotEmpty(t, batch)
 
 	var (
