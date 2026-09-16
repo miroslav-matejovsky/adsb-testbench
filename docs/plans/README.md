@@ -40,3 +40,9 @@ Forbidden:
 - Acceptance criteria that require subjective judgment
 
 A plan is complete only when all implementation tasks are finished, all tests pass, all acceptance criteria are verified, and the deliverables exist in the codebase.
+
+## Plan index
+
+| Plan | Implementation status | Backlog |
+| --- | --- | --- |
+| [Deterministic aircraft engine and virtual time](deterministic-engine/README.md) | Planned; implementation not started | [02 - Deterministic engine](../backlog/02-deterministic-engine.md) |
