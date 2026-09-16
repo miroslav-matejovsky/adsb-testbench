@@ -1,3 +1,3 @@
-module github.com/miroslav-matejovsky/todo
+module github.com/miroslav-matejovsky/adsb-testbench
 
-go 1.27.0
+go 1.27.1

@@ -61,6 +61,7 @@
     ]
   },
   "cSpell.words": [
+    "adsb",
     "buildid",
     "deadcode",
     "fe3dback",
@@ -77,6 +78,7 @@
     "miroslav",
     "overcomplicate",
     "pkgname",
-    "taskfile"
+    "taskfile",
+    "testbench"
   ]
 }
