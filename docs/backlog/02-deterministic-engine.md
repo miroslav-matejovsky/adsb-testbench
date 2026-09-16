@@ -2,7 +2,7 @@
 value: "Critical"
 effort: "L"
 complexity: "hard"
-dependencies: ["01-adsb-codec.md"]
+dependencies: []
 ---
 
 # Deterministic aircraft engine and virtual time
@@ -21,4 +21,5 @@ Test identical config and ordered calls producing identical frames; split and co
 
 ## Dependencies
 
-- [01-adsb-codec](01-adsb-codec.md)
+Use the implemented [ADS-B codec](../../internal/adsb/doc.go), including its
+documented independent message schedules and even/odd CPR rules.

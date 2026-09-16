@@ -2,7 +2,7 @@
 value: "High"
 effort: "L"
 complexity: "hard"
-dependencies: ["01-adsb-codec.md","06-simulator-contract-and-api.md"]
+dependencies: ["06-simulator-contract-and-api.md"]
 ---
 
 # Display sources and received-track decoding
@@ -21,5 +21,6 @@ Test both sources with the same fixtures; corrupt frames and contracts; timeouts
 
 ## Dependencies
 
-- [01-adsb-codec](01-adsb-codec.md)
+- Implemented [ADS-B codec](../../internal/adsb/doc.go), including explicit
+  unavailable/over-range values and CPR age/reference requirements.
 - [06-simulator-contract-and-api](06-simulator-contract-and-api.md)

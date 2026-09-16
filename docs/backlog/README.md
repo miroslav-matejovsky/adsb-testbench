@@ -1,6 +1,6 @@
 # Backlog
 
-Open implementation work for the ADS-B skeleton, grouped by subsystem.
+Open implementation work for ADS-B TestBench, grouped by subsystem.
 Each item is self-contained and records value, effort, complexity, dependencies,
 scope, and acceptance criteria. Remove completed items from this index.
 
@@ -12,11 +12,11 @@ filenames). External prerequisites are described in the item.
 
 | Rank | Item | Effort | Value |
 | ---: | --- | :---: | :---: |
-| 1 | [ADS-B frame codec](01-adsb-codec.md) | L | Critical |
-| 2 | [Deterministic aircraft engine and virtual time](02-deterministic-engine.md) | L | Critical |
-| 3 | [Real-time driver and simulator lifecycle](05-runtime-and-lifecycle.md) | M | High |
-| 4 | [Receiving stations and altitude-aware reception](03-receiving-stations.md) | L | High |
-| 5 | [Received observations and bounded history](04-observation-history.md) | L | High |
+| 1 | [Deterministic aircraft engine and virtual time](02-deterministic-engine.md) | L | Critical |
+| 2 | [Real-time driver and simulator lifecycle](05-runtime-and-lifecycle.md) | M | High |
+| 3 | [Receiving stations and altitude-aware reception](03-receiving-stations.md) | L | High |
+| 4 | [Received observations and bounded history](04-observation-history.md) | L | High |
+| 5 | [Simulator contract and HTTP API](06-simulator-contract-and-api.md) | L | High |
 
 ## Index
 
@@ -24,7 +24,6 @@ filenames). External prerequisites are described in the item.
 
 | Item | Effort | Value |
 | --- | :---: | :---: |
-| [ADS-B frame codec](01-adsb-codec.md) | L | Critical |
 | [Deterministic aircraft engine and virtual time](02-deterministic-engine.md) | L | Critical |
 | [Receiving stations and altitude-aware reception](03-receiving-stations.md) | L | High |
 | [Received observations and bounded history](04-observation-history.md) | L | High |

@@ -4,9 +4,11 @@ A planned local ADS-B simulator with a live aircraft map and a manager UI.
 Generate reproducible synthetic air traffic, model what receiving stations hear,
 and inspect decoded observations for development and testing.
 
-This repository is a skeleton. Go packages contain only purpose documentation
-and package declarations. Commands and APIs are planned in
-[docs/backlog](docs/backlog/README.md).
+The raw ADS-B codec is implemented in [internal/adsb](internal/adsb/doc.go).
+It encodes and decodes identification, barometric airborne position, and
+velocity, and reconstructs airborne CPR positions with explicit age and
+reference checks. The remaining packages are skeletons. Application commands
+and HTTP APIs are planned in [docs/backlog](docs/backlog/README.md).
 
 ## Inspiration and scope
 
@@ -17,12 +19,13 @@ process composition.
 
 The initial target is 1090 MHz ADS-B extended squitter with synthetic ICAO
 aircraft addresses, identification, airborne position, altitude, and velocity.
-Protocol details and independent fixtures belong to the codec backlog.
+Protocol details are documented in [the codec](internal/adsb/doc.go), with
+[independent frame fixtures](internal/adsb/testdata/README.md).
 Aircraft need three-dimensional motion and position reconstruction from
 received frames. Coverage depends on aircraft altitude. AIS vessel identifiers,
 channel rules, and reporting schedules must be replaced with ADS-B behavior.
 
-## Planned architecture
+## Package structure
 
 | Package | Responsibility |
 | --- | --- |
@@ -42,7 +45,7 @@ channel rules, and reporting schedules must be replaced with ADS-B behavior.
 | `internal/httpserver` | HTTP lifecycle |
 | `internal/urlpath` | Public URL validation |
 
-Each package documents its purpose in `doc.go`. Allowed future dependencies
+Each package documents its purpose in `doc.go`. Allowed dependencies
 are recorded in [.go-arch-lint.yml](.go-arch-lint.yml).
 
 The manager will control aircraft, simulation speed, and stations through the
@@ -58,6 +61,17 @@ Time scaling will change virtual time, not reported aircraft speed.
 
 ## Development
 
+The codec reuses [go-adsb](https://github.com/cjkreklow/go-adsb) v0.4.1 for
+field access, parity, callsigns, and altitude. The
+[dependency evaluation](docs/evaluations/2026-09-16-go-adsb.md) explains the
+integration and local CPR implementation. Dependencies are pinned in
+`go.mod` and `go.sum`.
+
+```text
+go doc -all ./internal/adsb
+go test ./internal/adsb
+```
+
 Use the Go version in `go.mod`, Task, PowerShell, golangci-lint, deadcode,
 go-arch-lint, and gotestsum. Run repository checks with:
 
@@ -66,7 +80,8 @@ task all
 ```
 
 Command reachability checks require entry points, so `task all` omits deadcode
-until backlog item 10 adds runnable commands. Package checks remain enabled.
+until backlog item 10 adds runnable commands. Codec tests and package checks
+remain enabled.
 
 Runnable commands are tracked in the backlog. Future behavior requires
 deterministic tests and explicit, documented configuration without defaults.

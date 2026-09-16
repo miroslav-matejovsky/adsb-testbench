@@ -14,6 +14,9 @@ exclude:
 excludeFiles:
   - "^.*_test\\.go$"
 
+vendors:
+  go-adsb: { in: "kreklow.us/go/go-adsb/adsb" }
+
 components:
   cmd-adsb-testbench: { in: cmd/adsb-testbench }
   cmd-simulator: { in: cmd/simulator }
@@ -32,6 +35,8 @@ components:
   urlpath: { in: internal/urlpath }
 
 deps:
+  adsb:
+    canUse: [go-adsb]
   cmd-adsb-testbench:
     mayDependOn: [testbench, simulator, cli, urlpath]
   cmd-simulator:
