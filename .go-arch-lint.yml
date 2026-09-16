@@ -1,0 +1,28 @@
+version: 3
+workdir: .
+allow:
+  depOnAnyVendor: false
+  deepScan: true
+
+exclude:
+  - "examples"
+  - "test"
+  - "vendor"
+  - ".tmp"
+
+excludeFiles:
+  - "^.*_test\\.go$"
+  - "^.*\/test\/.*$"
+
+vendors:
+  # TODO just an example
+  x-sync: { in: "golang.org/x/sync/**" }
+ 
+components:
+  # TODO: just an example for now
+  buildid: { in: internal/buildid }
+
+deps:
+  some-component:
+    canUse: [x-sync]
+    mayDependOn: [some-other-component]
