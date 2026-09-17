@@ -5,6 +5,7 @@ This directory contains implementation plans. A plan is an executable specificat
 Each plan has:
 - `README.md` describing goal, scope, architecture impact, deliverables, and success criteria
 - `assessment.md` describing feasibility, risks, dependencies, validation, and rollback
+- `progress.md` describing the current status by explicitly listing completed and pending steps in simple table format
 - numbered implementation steps (`01-*.md`, `02-*.md`, ...)
 
 Each step contains YAML front matter:
@@ -41,7 +42,7 @@ Forbidden:
 
 A plan is complete only when all implementation tasks are finished, all tests pass, all acceptance criteria are verified, and the deliverables exist in the codebase.
 
-## Plan index
+## Active plan sets
 
-| Plan | Implementation status | Backlog |
-| --- | --- | --- |
+- [Received observations and bounded history](04-observation-history/README.md):
+  reception retention, cursors, selected-station snapshots, and field expiry.
