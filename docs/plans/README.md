@@ -45,13 +45,3 @@ Forbidden:
 - Acceptance criteria that require subjective judgment
 
 A plan is complete only when all implementation tasks are finished, all tests pass, all acceptance criteria are verified, and the deliverables exist in the codebase.
-
-## Active plan sets
-
-None.
-
-## Completed plan sets
-
-| Plan | Scope | Status |
-| --- | --- | --- |
-| [Simulator API and received-aircraft display](06-simulator-api-and-display/README.md) | Combined former backlog items 06 and 07 | Complete |
