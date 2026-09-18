@@ -2,7 +2,7 @@
 value: "High"
 effort: "L"
 complexity: "medium"
-dependencies: ["04-observation-history.md","05-runtime-and-lifecycle.md"]
+dependencies: []
 ---
 
 # Simulator contract and HTTP API
@@ -21,5 +21,4 @@ Test HTTP validation, missing configuration fields including meaningful zero val
 
 ## Dependencies
 
-- [04-observation-history](04-observation-history.md)
-- [05-runtime-and-lifecycle](05-runtime-and-lifecycle.md)
+The implemented observation history and simulator runtime packages.

@@ -62,6 +62,13 @@ type Station struct {
 	CreatedAt time.Time
 }
 
+// ValidateStationConfig checks every station field without changing an engine.
+// Runtime command serializers use it to reject invalid edits before settling
+// elapsed real time.
+func ValidateStationConfig(cfg StationConfig) error {
+	return validateStation(cfg)
+}
+
 // stationDomains lists every numeric StationConfig field with its accepted
 // domain, in declaration order.
 var stationDomains = []struct {

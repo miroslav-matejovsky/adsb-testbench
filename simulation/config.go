@@ -7,9 +7,12 @@ import (
 	"time"
 )
 
-// maxSpeedHundredths is the largest accepted speed scale, one hundred times
-// real time.
-const maxSpeedHundredths = 10000
+const (
+	// MaxSpeedHundredths is the largest accepted speed scale, one hundred
+	// times real time.
+	MaxSpeedHundredths = 10000
+	maxSpeedHundredths = MaxSpeedHundredths
+)
 
 // Representable virtual instants. time.Time can hold wider values, but the
 // engine keeps every timestamp inside the four-digit year range so that

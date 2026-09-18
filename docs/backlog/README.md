@@ -2,7 +2,7 @@
 
 Open implementation work for ADS-B TestBench, grouped by subsystem.
 Each item is self-contained and records value, effort, complexity, dependencies,
-scope, and acceptance criteria. Remove completed items from this index.
+scope, and acceptance criteria. Remove completed item files and index entries.
 
 Front matter uses `value` (Low, Medium, High, Critical), `effort` (S, M, L, XL),
 `complexity` (trivial, easy, medium, hard), and `dependencies` (a list of item
@@ -12,25 +12,18 @@ filenames). External prerequisites are described in the item.
 
 | Rank | Item | Effort | Value |
 | ---: | --- | :---: | :---: |
-| 1 | [Real-time driver and simulator lifecycle](05-runtime-and-lifecycle.md) | M | High |
-| 2 | [Received observations and bounded history](04-observation-history.md) | L | High |
-| 3 | [Simulator contract and HTTP API](06-simulator-contract-and-api.md) | L | High |
-| 4 | [Display sources and received-track decoding](07-display-backend.md) | L | High |
-| 5 | [Manager controls and embedded assets](08-manager-ui.md) | L | High |
+| 1 | [Simulator contract and HTTP API](06-simulator-contract-and-api.md) | L | High |
+| 2 | [Display sources and received-track decoding](07-display-backend.md) | L | High |
+| 3 | [Manager controls and embedded assets](08-manager-ui.md) | L | High |
+| 4 | [Aircraft map and reception inspector](09-aircraft-map-and-inspector.md) | L | High |
+| 5 | [Combined commands and host embedding](10-commands-and-embedding.md) | L | High |
 
 ## Index
-
-### Engine and reception
-
-| Item | Effort | Value |
-| --- | :---: | :---: |
-| [Received observations and bounded history](04-observation-history.md) | L | High |
 
 ### Runtime and contracts
 
 | Item | Effort | Value |
 | --- | :---: | :---: |
-| [Real-time driver and simulator lifecycle](05-runtime-and-lifecycle.md) | M | High |
 | [Simulator contract and HTTP API](06-simulator-contract-and-api.md) | L | High |
 | [Display sources and received-track decoding](07-display-backend.md) | L | High |
 

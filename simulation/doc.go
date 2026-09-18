@@ -17,6 +17,8 @@
 //   - [Engine.AddStation], [Engine.UpdateStation], and
 //     [Engine.RemoveStation] manage receiving stations.
 //   - [Engine.Snapshot] returns one detached, coherent view.
+//   - [Engine.ReceptionHistory] pages one station's retained receptions.
+//   - [Engine.Observations] decodes a selected-station received-data snapshot.
 //   - [Model] and [EstimateCoverage] publish the reception model and the
 //     coverage it implies, without needing an engine.
 //
@@ -95,9 +97,10 @@
 //
 // # Engine policy
 //
-// [MaxAircraft], [HistoryLimit], [MaxAdvance], [MaxBatchFrames], and
-// [MaxStations] are fixed limits of this package, not values inserted into
-// configuration.
+// [MaxAircraft], [MaxSpeedHundredths], [HistoryLimit],
+// [ReceptionHistoryLimit], [MaxHistoryPageSize], [MaxAdvance],
+// [MaxBatchFrames], and [MaxStations] are fixed limits of this package, not
+// values inserted into configuration.
 //
 // Addresses are allocated monotonically from 000001 to FFFFFE and are never
 // reused within a run, including after a count reduction. A callsign is TB
@@ -228,17 +231,35 @@
 // lost retention when its last processed sequence plus one is below
 // HistorySnapshot.OldestSequence within the same run ID.
 //
-// Receptions are returned but not retained: this package keeps one shared
-// transmission history and no per-station history. A station therefore hears
-// only what is emitted while it exists, and a transmission it missed is never
-// redelivered.
+// Each active station also retains its most recent ReceptionHistoryLimit
+// successful receptions. A [Reception] contains the exact frame, virtual time,
+// RF model output, and a value copy of the station settings and revision in
+// effect at reception. Its station-local Sequence advances only for frames that
+// station receives. A missed transmission is never inserted or redelivered.
+// Updating or disabling a station preserves its ring; removing it discards the
+// ring while keeping the station ID reserved for the run.
+//
+// [Engine.ReceptionHistory] pages one active station using a [ReceptionCursor]
+// bound to the run and station. Gap reports that records after a cursor were
+// evicted. An ordinary missed transmission creates no station-sequence gap.
+// Config.ID is the run identity in cursors; callers must assign a fresh ID to
+// each engine lifetime, including a restart with identical settings.
+//
+// [Engine.Observations] unions the retained receptions of explicit selected
+// stations, deduplicates shared transmissions, and decodes partial aircraft
+// state without consulting aircraft truth or generated transmission history.
+// Identification, global CPR position, pressure altitude, and velocity have
+// independent positive expiry durations measured in virtual time. A usable CPR
+// pair may combine halves from different selected stations. Retention eviction
+// can remove evidence before its field expiry; StationRetention makes that
+// truncation visible. Empty station selection means no observations.
 //
 // A [Transmission] timestamp is the virtual instant of that emission, which is
 // not the current snapshot time; compare a historical frame with truth
 // evaluated at its own timestamp. A [Reception] timestamp is the same instant,
-// because no propagation delay is modelled. Snapshots copy every slice and
-// frame array they expose, so editing a returned snapshot or batch cannot
-// change engine state or later output.
+// because no propagation delay is modelled. Snapshots, pages, observations,
+// and batches copy every slice and frame array they expose, so editing a
+// returned value cannot change engine state or later output.
 //
 // # Concurrency and errors
 //

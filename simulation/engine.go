@@ -387,7 +387,12 @@ func (s *state) deliver(t Transmission, nav navState, batch *Batch) error {
 			return fmt.Errorf("%w: one mutation may return at most %d receptions, reached at station %q and transmission %d",
 				ErrLimit, MaxBatchReceptions, current.cfg.ID, t.Sequence)
 		}
-		batch.Receptions = append(batch.Receptions, Reception{
+		if current.lastReceptionSequence == math.MaxUint64 {
+			return fmt.Errorf("%w: reception sequences are exhausted for station %q", ErrLimit, current.cfg.ID)
+		}
+		current.lastReceptionSequence++
+		reception := Reception{
+			Sequence:                current.lastReceptionSequence,
 			TransmissionSequence:    t.Sequence,
 			StationID:               current.cfg.ID,
 			StationRevision:         current.revision,
@@ -397,7 +402,10 @@ func (s *state) deliver(t Transmission, nav navState, batch *Batch) error {
 			Frame:                   t.Frame,
 			SlantRangeNauticalMiles: got.slantMetres / metresPerNauticalMile,
 			ReceivedPowerDBm:        got.receivedPowerDBm,
-		})
+			Receiver:                current.public(s.clock.start),
+		}
+		current.receptions.append(reception)
+		batch.Receptions = append(batch.Receptions, reception)
 	}
 	return nil
 }

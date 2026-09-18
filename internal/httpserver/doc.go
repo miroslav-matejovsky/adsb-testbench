@@ -1,7 +1,7 @@
-// Package httpserver documents the planned internal/httpserver package.
+// Package httpserver supervises HTTP serving and background work.
 //
-// HTTP lifecycle: supervise serving and background work, bound request
-// handling and shutdown, and propagate failures to the process or host.
-//
-// This is a documentation-only skeleton; implementation is planned.
+// Serve applies shared server settings and exposes explicit graceful shutdown.
+// Run coordinates a server with optional background work. On cancellation or
+// failure it drains HTTP requests first, then cancels and joins the work. Serve,
+// shutdown, and work failures are returned with their original causes.
 package httpserver

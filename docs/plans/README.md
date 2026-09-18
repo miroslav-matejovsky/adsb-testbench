@@ -44,5 +44,6 @@ A plan is complete only when all implementation tasks are finished, all tests pa
 
 ## Active plan sets
 
-- [Received observations and bounded history](04-observation-history/README.md):
-  reception retention, cursors, selected-station snapshots, and field expiry.
+None.
+
+## Completed plan sets

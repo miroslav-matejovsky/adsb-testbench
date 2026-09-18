@@ -11,11 +11,13 @@ import (
 // Its generator is stored by value, so a staged copy of engine state shares
 // nothing with the committed engine.
 type station struct {
-	cfg       StationConfig
-	revision  uint64
-	createdAt time.Duration // Creation elapsed time since the run start.
-	ordinal   uint64
-	rng       rand.PCG
+	cfg                   StationConfig
+	revision              uint64
+	createdAt             time.Duration // Creation elapsed time since the run start.
+	ordinal               uint64
+	rng                   rand.PCG
+	lastReceptionSequence uint64
+	receptions            receptionHistory
 }
 
 // public converts private state into the exported record.
@@ -49,6 +51,9 @@ func newStationRegistry() stationRegistry {
 func (r stationRegistry) clone() stationRegistry {
 	copied := r
 	copied.active = append([]station(nil), r.active...)
+	for i := range copied.active {
+		copied.active[i].receptions = copied.active[i].receptions.clone()
+	}
 	copied.reserved = make(map[string]struct{}, len(r.reserved))
 	for id := range r.reserved {
 		copied.reserved[id] = struct{}{}
@@ -93,11 +98,12 @@ func (r *stationRegistry) add(seed uint64, cfg StationConfig, createdAt time.Dur
 	}
 	r.reserved[cfg.ID] = struct{}{}
 	r.active = append(r.active, station{
-		cfg:       cfg,
-		revision:  1,
-		createdAt: createdAt,
-		ordinal:   ordinal,
-		rng:       newSource(seed, ordinal, stationDomain),
+		cfg:        cfg,
+		revision:   1,
+		createdAt:  createdAt,
+		ordinal:    ordinal,
+		rng:        newSource(seed, ordinal, stationDomain),
+		receptions: newReceptionHistory(),
 	})
 	return len(r.active) - 1, nil
 }

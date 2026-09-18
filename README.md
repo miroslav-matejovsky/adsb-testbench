@@ -26,9 +26,10 @@ coverage they imply are published for an explicit reference altitude. Reception
 is synthetic model output, not a calibrated RF prediction, and station changes
 never alter the frames a run generates.
 
-The remaining packages are skeletons. Application commands, the simulator
-runtime, retained per-station observation history, the display backend, and the
-UI are planned in [docs/backlog](docs/backlog/README.md).
+Application commands, the display backend, and the UI remain planned in
+[docs/backlog](docs/backlog/README.md). The simulator runtime owns serialized
+real-time pacing and control, and the shared `simulatorapi` package defines
+transport-safe observation data. HTTP API integration remains planned.
 
 ## Inspiration and scope
 
@@ -69,15 +70,18 @@ Each package documents its purpose in `doc.go`. Allowed dependencies
 are recorded in [.go-arch-lint.yml](.go-arch-lint.yml).
 
 The manager will control aircraft, simulation speed, and stations through the
-simulator. The engine already owns aircraft truth, generated frames, a bounded
-transmission history, receiving stations, and per-transmission reception
-decisions; retained per-station observation history remains planned. The display will derive tracks from received
-frames, with independently aged identity, position, and velocity fields.
+simulator. The engine owns aircraft truth, generated frames, bounded
+transmission and per-station reception histories, and received-aircraft
+snapshots for explicit station selections. Reception cursors include run and
+station identities, and snapshots age identity, CPR position, altitude, and
+velocity independently in virtual time. The display will derive its tracks
+from received frames.
 
 Combined mode will pass observations in process. Separate mode will use the
 same contract over HTTP, with browsers calling their own backend. Both paths
 will share validation and decoding. The engine accepts explicit configuration
-and caller-supplied elapsed time; the runtime will own wall-clock pacing.
+and caller-supplied elapsed time; the runtime owns measured wall-clock pacing,
+settles elapsed time before controls, and bounds catch-up after suspension.
 Time scaling changes virtual time, not reported aircraft speed.
 
 ## Development

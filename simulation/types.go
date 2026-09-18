@@ -15,6 +15,12 @@ const (
 	// engine. Older transmissions are evicted from history but remain complete
 	// in the batch returned by the call that emitted them.
 	HistoryLimit = 1000
+	// ReceptionHistoryLimit is the number of most recent receptions retained
+	// independently by each active station.
+	ReceptionHistoryLimit = 1000
+	// MaxHistoryPageSize is the largest reception-history page a caller may
+	// request. Callers must always supply an explicit positive limit.
+	MaxHistoryPageSize = ReceptionHistoryLimit
 	// MaxAdvance is the largest amount of virtual time one Advance or one
 	// scaled Elapse call may cover. Larger requests are rejected without work.
 	MaxAdvance = 60 * time.Second
@@ -122,8 +128,9 @@ type SpawnConfig struct {
 // so any later file or API parser must enforce field presence itself.
 type Config struct {
 	// ID names the run. It must contain a non-whitespace character and is
-	// preserved exactly. Callers pair it with transmission sequences to tell
-	// runs apart.
+	// preserved exactly. Callers pair it with transmission and reception
+	// sequences to tell runs apart, and must assign a fresh ID to each engine
+	// lifetime, including restarts with otherwise identical configuration.
 	ID string
 	// StartTime is the virtual instant of zero elapsed time. It must be
 	// nonzero and within years 1-9999. The engine normalizes it to UTC and
@@ -187,9 +194,11 @@ type Transmission struct {
 // Reception is one transmission as heard by one station.
 //
 // It is self contained, so a consumer never has to join it against the
-// transmission slice of the same batch. Receptions carry no sequence of their
-// own: TransmissionSequence together with StationID identifies one.
+// transmission slice of the same batch.
 type Reception struct {
+	// Sequence is this station's reception sequence, starting at 1. Pair it
+	// with the run ID and StationID to identify a reception across queries.
+	Sequence uint64
 	// TransmissionSequence is the Sequence of the transmission that was heard.
 	TransmissionSequence uint64
 	// StationID is the identifier of the receiving station.
@@ -197,6 +206,9 @@ type Reception struct {
 	// StationRevision is the revision in effect when the decision was made,
 	// which is the provenance of the settings that produced it.
 	StationRevision uint64
+	// Receiver is a value copy of the complete station record in effect when
+	// the frame was received. It remains unchanged after station edits.
+	Receiver Station
 	// ICAO is the address of the emitting aircraft.
 	ICAO uint32
 	// Kind is the message family.
