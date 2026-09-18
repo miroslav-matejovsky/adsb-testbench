@@ -48,10 +48,10 @@ A plan is complete only when all implementation tasks are finished, all tests pa
 
 ## Active plan sets
 
-| Plan | Scope | Status |
-| --- | --- | --- |
-| [Simulator API and received-aircraft display](06-simulator-api-and-display/README.md) | Combined former backlog items 06 and 07 | Planned; implementation pending |
+None.
 
 ## Completed plan sets
 
-None.
+| Plan | Scope | Status |
+| --- | --- | --- |
+| [Simulator API and received-aircraft display](06-simulator-api-and-display/README.md) | Combined former backlog items 06 and 07 | Complete |

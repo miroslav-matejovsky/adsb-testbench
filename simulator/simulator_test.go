@@ -104,6 +104,15 @@ func TestSimulatorReadMethodsDoNotSettle(t *testing.T) {
 		Expiry:     simulation.ObservationExpiry{Identity: time.Second, Position: time.Second, Altitude: time.Second, Velocity: time.Second},
 	})
 	require.NoError(t, err)
+	snapshot, err := runtime.ReceptionSnapshot(t.Context(), simulation.ReceptionSnapshotRequest{
+		StationIDs: []string{station.Config.ID},
+	})
+	require.NoError(t, err)
+	require.Equal(t, []string{station.Config.ID}, snapshot.StationIDs)
+	require.Empty(t, snapshot.Records)
+	require.Equal(t, before, runtime.Snapshot())
+
+	clock.Add(time.Hour)
 	require.Equal(t, before, runtime.Snapshot())
 }
 

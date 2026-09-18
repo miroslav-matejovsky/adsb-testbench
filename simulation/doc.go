@@ -18,6 +18,8 @@
 //     [Engine.RemoveStation] manage receiving stations.
 //   - [Engine.Snapshot] returns one detached, coherent view.
 //   - [Engine.ReceptionHistory] pages one station's retained receptions.
+//   - [Engine.ReceptionSnapshot] captures all retained receptions of a
+//     selected-station set at one instant.
 //   - [Engine.Observations] decodes a selected-station received-data snapshot.
 //   - [Model] and [EstimateCoverage] publish the reception model and the
 //     coverage it implies, without needing an engine.
@@ -244,6 +246,14 @@
 // evicted. An ordinary missed transmission creates no station-sequence gap.
 // Config.ID is the run identity in cursors; callers must assign a fresh ID to
 // each engine lifetime, including a restart with identical settings.
+//
+// [Engine.ReceptionSnapshot] copies every retained reception of an explicit
+// station selection under one lock, so all records, retention metadata, run
+// identity, and virtual time describe the same instant. It decodes nothing, so
+// it also exposes evidence that has produced no field yet, such as an unpaired
+// CPR sample. Paged history remains available for inspection; independently
+// fetched pages do not share a read instant. At most
+// [MaxSnapshotReceptions] records can be returned.
 //
 // [Engine.Observations] unions the retained receptions of explicit selected
 // stations, deduplicates shared transmissions, and decodes partial aircraft

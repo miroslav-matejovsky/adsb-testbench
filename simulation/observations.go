@@ -33,6 +33,29 @@ type ReceptionPage struct {
 	RetentionLimit int
 }
 
+// ReceptionSnapshotRequest selects the stations whose complete retained
+// receptions are captured. An empty selection deliberately selects nothing.
+type ReceptionSnapshotRequest struct {
+	StationIDs []string
+}
+
+// ReceptionSnapshot is one coherent, detached view of all retained receptions
+// of a station selection. It carries raw evidence only: no decoded field and
+// no aircraft truth.
+type ReceptionSnapshot struct {
+	// RunID identifies the engine lifetime the records belong to.
+	RunID string
+	// Now is the virtual instant of the capture. No record is later.
+	Now time.Time
+	// StationIDs is the deduplicated, sorted selection that was captured.
+	StationIDs []string
+	// Retention describes exactly the records captured for each station.
+	Retention []StationRetention
+	// Records are every captured reception, ordered by transmission sequence
+	// then station identifier.
+	Records []Reception
+}
+
 // ObservationExpiry supplies independent virtual-time lifetimes for received
 // fields. Every duration must be positive. A field remains fresh at exactly
 // its lifetime and expires once its age exceeds that lifetime.

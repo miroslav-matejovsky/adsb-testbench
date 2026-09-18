@@ -26,12 +26,25 @@ coverage they imply are published for an explicit reference altitude. Reception
 is synthetic model output, not a calibrated RF prediction, and station changes
 never alter the frames a run generates.
 
+The [simulator](simulator/doc.go) owns that engine, its serialized real-time
+driver, and one transport-neutral service over both. The service exposes
+manager-facing truth, controls, explicit settings, stations with coverage,
+decoded observations, atomic raw reception snapshots, and paged reception
+history, using the transport-safe data of [simulatorapi](simulatorapi/doc.go).
+`API.Handler` returns relative HTTP routes a host mounts wherever it likes
+with `http.StripPrefix`; the host keeps ownership of listeners, logging, and
+lifecycle.
+
+The [display](display/doc.go) backend builds received-aircraft tracks from raw
+evidence alone. It reads a simulator either in process or over HTTP through
+one `ObservationSource` contract, runs the same semantic validation and codec
+decoding on both paths, and publishes each refresh atomically with field
+availability, age, and receiver provenance.
+
 Application commands and the UI remain planned in
-[docs/backlog](docs/backlog/README.md). The simulator API and display backend
-share a [detailed implementation plan](docs/plans/06-simulator-api-and-display/README.md).
-The simulator runtime owns serialized
-real-time pacing and control, and the shared `simulatorapi` package defines
-transport-safe observation data. HTTP API integration remains planned.
+[docs/backlog](docs/backlog/README.md). Their
+[implementation plan](docs/plans/06-simulator-api-and-display/README.md)
+records how the API and display were built.
 
 ## Inspiration and scope
 
@@ -71,20 +84,29 @@ channel rules, and reporting schedules must be replaced with ADS-B behavior.
 Each package documents its purpose in `doc.go`. Allowed dependencies
 are recorded in [.go-arch-lint.yml](.go-arch-lint.yml).
 
-The manager will control aircraft, simulation speed, and stations through the
-simulator. The engine owns aircraft truth, generated frames, bounded
-transmission and per-station reception histories, and received-aircraft
-snapshots for explicit station selections. Reception cursors include run and
-station identities, and snapshots age identity, CPR position, altitude, and
-velocity independently in virtual time. The display will derive its tracks
-from received frames.
+The manager controls aircraft, simulation speed, and stations through the
+simulator service. Every mutation names the run it was written for, station
+edits carry the revision the caller last observed, and the service validates
+input before the driver settles any elapsed time. The engine owns aircraft
+truth, generated frames, bounded transmission and per-station reception
+histories, and received-aircraft snapshots for explicit station selections.
+Reception cursors include run and station identities.
 
-Combined mode will pass observations in process. Separate mode will use the
-same contract over HTTP, with browsers calling their own backend. Both paths
-will share validation and decoding. The engine accepts explicit configuration
-and caller-supplied elapsed time; the runtime owns measured wall-clock pacing,
-settles elapsed time before controls, and bounds catch-up after suspension.
-Time scaling changes virtual time, not reported aircraft speed.
+The display derives its tracks only from received frames. Combined mode passes
+observations in process; separate mode uses the same contract over HTTP, with
+browsers calling their own backend. Both paths share one validator and one
+decoder, so they produce the same tracks and the same failure categories.
+Identity, global CPR position, altitude, and velocity age independently in the
+source's virtual time, never in wall time, and every refresh rebuilds that
+state from the evidence the simulator still retains.
+
+The engine accepts explicit configuration and caller-supplied elapsed time;
+the runtime owns measured wall-clock pacing, settles elapsed time before
+controls, and bounds catch-up after suspension. Time scaling changes virtual
+time, not reported aircraft speed. No constructor or parser in these packages
+inserts an application default: byte bounds, timeouts, field lifetimes, the
+coverage reference altitude, the HTTP client, and the host error callback are
+all supplied explicitly.
 
 ## Development
 
@@ -97,7 +119,10 @@ integration and local CPR implementation. Dependencies are pinned in
 ```text
 go doc -all ./internal/adsb
 go doc -all ./simulation
-go test ./internal/adsb ./simulation
+go doc -all ./simulatorapi
+go doc -all ./simulator
+go doc -all ./display
+go test ./internal/adsb ./simulation ./simulatorapi ./simulator ./display
 ```
 
 Use the Go version in `go.mod`, Task, PowerShell, golangci-lint, deadcode,

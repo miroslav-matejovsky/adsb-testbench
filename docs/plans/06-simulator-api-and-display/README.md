@@ -3,10 +3,10 @@
 ## Goal and status
 
 Implement one transport-safe simulator API and a received-aircraft backend
-that produces equivalent results from local calls and HTTP. This active plan
-replaces backlog items 06 (simulator contract and HTTP API) and 07 (display
-sources and received-track decoding). Moving those items here does not mean
-their implementation is complete. All implementation steps are pending.
+that produces equivalent results from local calls and HTTP. This plan replaced
+backlog items 06 (simulator contract and HTTP API) and 07 (display sources and
+received-track decoding). All nine steps are implemented and accepted; see
+[progress](progress.md) for the evidence.
 
 ## Existing implementation
 

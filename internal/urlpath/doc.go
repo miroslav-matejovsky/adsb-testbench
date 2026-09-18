@@ -1,7 +1,10 @@
-// Package urlpath documents the planned internal/urlpath package.
+// Package urlpath validates public URLs used to address mounted handlers.
 //
-// Public URL validation: validate route prefixes, API bases, and asset paths
-// while preserving explicit mount prefixes.
+// It implements source base URL validation: an absolute http or https URL
+// with a preserved mount prefix and exactly one trailing slash, so a client
+// can append a relative route path without losing or duplicating a segment.
+// Errors satisfy errors.Is with ErrInvalid.
 //
-// This is a documentation-only skeleton; implementation is planned.
+// Route prefix, API base, and asset path validation for the browser UI remain
+// planned.
 package urlpath

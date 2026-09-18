@@ -1,8 +1,11 @@
 package simulatorapi
 
-// Station is the complete receiver configuration and revision recorded with a
-// reception. Time and uint64 values use strings for exact JSON representation.
-type Station struct {
+// StationSettings is the complete explicit configuration of one receiving
+// station. Every field is required on the wire; there is no partial update
+// and no default. Zero values are meaningful settings.
+//
+// Units are degrees, metres, dBi, dBm, dB, and a probability within [0,1].
+type StationSettings struct {
 	ID                   string  `json:"id"`
 	Enabled              bool    `json:"enabled"`
 	LatitudeDegrees      float64 `json:"latitudeDegrees"`
@@ -13,8 +16,18 @@ type Station struct {
 	SensitivityDBm       float64 `json:"sensitivityDBm"`
 	SystemLossDB         float64 `json:"systemLossDB"`
 	FrameLossProbability float64 `json:"frameLossProbability"`
-	Revision             string  `json:"revision"`
-	CreatedAt            string  `json:"createdAt"`
+}
+
+// Station is one receiving station with its settings, revision, and creation
+// instant. Embedded settings are flattened on the wire, so the JSON object
+// holds the settings keys alongside revision and createdAt.
+//
+// Revision is a canonical decimal string starting at 1. CreatedAt is a UTC
+// RFC3339Nano virtual instant.
+type Station struct {
+	StationSettings
+	Revision  string `json:"revision"`
+	CreatedAt string `json:"createdAt"`
 }
 
 // Reception is one exact received ADS-B frame with reception-time provenance.
@@ -58,6 +71,28 @@ type ReceptionPage struct {
 	Gap            bool            `json:"gap"`
 	HasMore        bool            `json:"hasMore"`
 	RetentionLimit int             `json:"retentionLimit"`
+}
+
+// ReceptionSnapshotRequest selects the stations whose complete retained
+// receptions are captured. An explicit empty array selects no station and is
+// not an omitted field.
+type ReceptionSnapshotRequest struct {
+	StationIDs []string `json:"stationIds"`
+}
+
+// ReceptionSnapshot is every retained reception of an explicit station
+// selection, captured at one virtual instant.
+//
+// Records are ordered by transmission sequence, then station ID. Retention
+// describes exactly the records captured for each selected station. The
+// snapshot carries raw evidence only: it contains no decoded field and no
+// aircraft truth.
+type ReceptionSnapshot struct {
+	RunID      string             `json:"runId"`
+	Now        string             `json:"now"`
+	StationIDs []string           `json:"stationIds"`
+	Retention  []StationRetention `json:"retention"`
+	Records    []Reception        `json:"records"`
 }
 
 // ObservationExpiry uses explicit decimal nanosecond strings.

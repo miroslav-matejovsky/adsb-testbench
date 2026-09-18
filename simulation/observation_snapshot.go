@@ -15,47 +15,21 @@ func (e *Engine) Observations(ctx context.Context, request ObservationRequest) (
 	if err := validateObservationExpiry(request.Expiry); err != nil {
 		return ObservationSnapshot{}, err
 	}
-	stationIDs := append([]string(nil), request.StationIDs...)
-	sort.Strings(stationIDs)
-	stationIDs = uniqueStrings(stationIDs)
-	if len(stationIDs) > MaxStations {
-		return ObservationSnapshot{}, fmt.Errorf("%w: at most %d distinct stations may be selected", ErrInvalid, MaxStations)
-	}
-
-	e.mu.Lock()
-	if err := ctx.Err(); err != nil {
-		e.mu.Unlock()
-		return ObservationSnapshot{}, err
-	}
-	now := e.state.clock.now()
-	runID := e.state.cfg.ID
-	retention := make([]StationRetention, 0, len(stationIDs))
-	recordSets := make([][]Reception, 0, len(stationIDs))
-	for _, id := range stationIDs {
-		if err := validateStationID(id); err != nil {
-			e.mu.Unlock()
-			return ObservationSnapshot{}, err
-		}
-		index := e.state.stations.find(id)
-		if index < 0 {
-			e.mu.Unlock()
-			return ObservationSnapshot{}, fmt.Errorf("%w: station %q", ErrNotFound, id)
-		}
-		station := &e.state.stations.active[index]
-		oldest, latest := station.receptions.bounds()
-		retention = append(retention, StationRetention{
-			StationID: id, OldestSequence: oldest, LatestSequence: latest,
-			Truncated: oldest > 1, Limit: ReceptionHistoryLimit,
-		})
-		recordSets = append(recordSets, station.receptions.records())
-	}
-	e.mu.Unlock()
-
-	evidence, err := mergeObservationEvidence(ctx, recordSets)
+	stationIDs, err := normalizeStationSelection(request.StationIDs)
 	if err != nil {
 		return ObservationSnapshot{}, err
 	}
-	aircraft, err := projectObservations(ctx, evidence, now, request.Expiry)
+
+	capture, err := e.captureStations(ctx, stationIDs)
+	if err != nil {
+		return ObservationSnapshot{}, err
+	}
+
+	evidence, err := mergeObservationEvidence(ctx, capture.recordSets)
+	if err != nil {
+		return ObservationSnapshot{}, err
+	}
+	aircraft, err := projectObservations(ctx, evidence, capture.now, request.Expiry)
 	if err != nil {
 		return ObservationSnapshot{}, err
 	}
@@ -63,8 +37,8 @@ func (e *Engine) Observations(ctx context.Context, request ObservationRequest) (
 		return ObservationSnapshot{}, err
 	}
 	return ObservationSnapshot{
-		RunID: runID, Now: now, StationIDs: stationIDs, Retention: retention,
-		Expiry: request.Expiry, Aircraft: aircraft,
+		RunID: capture.runID, Now: capture.now, StationIDs: stationIDs,
+		Retention: capture.retention, Expiry: request.Expiry, Aircraft: aircraft,
 	}, nil
 }
 

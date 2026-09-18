@@ -80,6 +80,12 @@ func (s *Simulator) ReceptionHistory(ctx context.Context, request simulation.His
 	return s.engine.ReceptionHistory(ctx, request)
 }
 
+// ReceptionSnapshot returns all retained receptions of a station selection at
+// one committed virtual instant, without settling real time.
+func (s *Simulator) ReceptionSnapshot(ctx context.Context, request simulation.ReceptionSnapshotRequest) (simulation.ReceptionSnapshot, error) {
+	return s.engine.ReceptionSnapshot(ctx, request)
+}
+
 // Observations returns decoded received state without settling real time.
 func (s *Simulator) Observations(ctx context.Context, request simulation.ObservationRequest) (simulation.ObservationSnapshot, error) {
 	return s.engine.Observations(ctx, request)
