@@ -2,7 +2,7 @@
 value: "High"
 effort: "L"
 complexity: "medium"
-dependencies: ["06-simulator-contract-and-api.md"]
+dependencies: []
 ---
 
 # Manager controls and embedded assets
@@ -21,4 +21,5 @@ Test rendering, URL configuration, malformed inputs, and API errors. Add browser
 
 ## Dependencies
 
-- [06-simulator-contract-and-api](06-simulator-contract-and-api.md)
+- Simulator contract and HTTP API from steps 01-04 of the active
+  [Simulator API and received-aircraft display plan](../plans/06-simulator-api-and-display/README.md).

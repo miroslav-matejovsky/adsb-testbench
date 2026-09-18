@@ -2,7 +2,7 @@
 value: "High"
 effort: "L"
 complexity: "medium"
-dependencies: ["07-display-backend.md","08-manager-ui.md","09-aircraft-map-and-inspector.md"]
+dependencies: ["08-manager-ui.md","09-aircraft-map-and-inspector.md"]
 ---
 
 # Combined commands and host embedding
@@ -21,6 +21,7 @@ Test combined and separate deployments, prefixed mounts, invalid configuration, 
 
 ## Dependencies
 
-- [07-display-backend](07-display-backend.md)
+- Simulator API, observation sources, and received-aircraft backend from the
+  active [Simulator API and received-aircraft display plan](../plans/06-simulator-api-and-display/README.md).
 - [08-manager-ui](08-manager-ui.md)
 - [09-aircraft-map-and-inspector](09-aircraft-map-and-inspector.md)

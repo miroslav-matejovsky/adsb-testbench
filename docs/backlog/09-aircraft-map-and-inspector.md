@@ -2,7 +2,7 @@
 value: "High"
 effort: "L"
 complexity: "medium"
-dependencies: ["07-display-backend.md","08-manager-ui.md"]
+dependencies: ["08-manager-ui.md"]
 ---
 
 # Aircraft map and reception inspector
@@ -21,5 +21,6 @@ Add browser checks for partial targets, missed position reports, stale/lost trac
 
 ## Dependencies
 
-- [07-display-backend](07-display-backend.md)
+- Received-aircraft backend from steps 05-08 of the active
+  [Simulator API and received-aircraft display plan](../plans/06-simulator-api-and-display/README.md).
 - [08-manager-ui](08-manager-ui.md)

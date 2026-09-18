@@ -3,6 +3,7 @@
 This directory contains implementation plans. A plan is an executable specification, not a discussion document.
 
 Each plan has:
+
 - `README.md` describing goal, scope, architecture impact, deliverables, and success criteria
 - `assessment.md` describing feasibility, risks, dependencies, validation, and rollback
 - `progress.md` describing the current status by explicitly listing completed and pending steps in simple table format
@@ -18,6 +19,7 @@ complexity: "low|medium|high|very_high"
 ```
 
 Each step must contain:
+
 - **Objective**: exact outcome of the step
 - **Target Artifacts**: files, modules, APIs, schemas, configurations, and tests to modify
 - **Implementation Tasks**: ordered, concrete development actions
@@ -27,6 +29,7 @@ Each step must contain:
 - **Non-Goals**: what is explicitly not implemented
 
 Requirements:
+
 - Every task must describe **what to change, where to change it, and how it will be verified**
 - Reference specific files, APIs, classes, methods, database objects, and tests whenever possible
 - Define implementation order explicitly through dependencies
@@ -34,6 +37,7 @@ Requirements:
 - Acceptance criteria must be measurable and independently verifiable
 
 Forbidden:
+
 - Vague work items such as "improve", "enhance", "optimize", "refactor", or "investigate"
 - Open-ended research tasks
 - Future considerations, ideas, or alternatives
@@ -44,6 +48,10 @@ A plan is complete only when all implementation tasks are finished, all tests pa
 
 ## Active plan sets
 
-None.
+| Plan | Scope | Status |
+| --- | --- | --- |
+| [Simulator API and received-aircraft display](06-simulator-api-and-display/README.md) | Combined former backlog items 06 and 07 | Planned; implementation pending |
 
 ## Completed plan sets
+
+None.

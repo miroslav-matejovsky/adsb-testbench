@@ -26,8 +26,10 @@ coverage they imply are published for an explicit reference altitude. Reception
 is synthetic model output, not a calibrated RF prediction, and station changes
 never alter the frames a run generates.
 
-Application commands, the display backend, and the UI remain planned in
-[docs/backlog](docs/backlog/README.md). The simulator runtime owns serialized
+Application commands and the UI remain planned in
+[docs/backlog](docs/backlog/README.md). The simulator API and display backend
+share a [detailed implementation plan](docs/plans/06-simulator-api-and-display/README.md).
+The simulator runtime owns serialized
 real-time pacing and control, and the shared `simulatorapi` package defines
 transport-safe observation data. HTTP API integration remains planned.
 
