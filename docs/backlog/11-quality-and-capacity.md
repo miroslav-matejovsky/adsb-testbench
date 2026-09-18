@@ -2,7 +2,7 @@
 value: "High"
 effort: "M"
 complexity: "medium"
-dependencies: ["10-commands-and-embedding.md"]
+dependencies: []
 ---
 
 # Deterministic fixtures and capacity checks
@@ -21,4 +21,5 @@ Require task all to pass. Record benchmark commands and results; prove response 
 
 ## Dependencies
 
-- [10-commands-and-embedding](10-commands-and-embedding.md)
+- Completed [UI and commands plan](../plans/08-ui-and-commands/README.md),
+  including executable commands and the full validation workflow in steps 10-12.

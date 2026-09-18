@@ -73,6 +73,7 @@ tasks:
       - task vet
       - task fmt
       # Enable task deadcode when command entry points exist (backlog item 10).
+      # - task deadcode
       - task arch-lint
       - task lint
       - task test

@@ -41,10 +41,10 @@ one `ObservationSource` contract, runs the same semantic validation and codec
 decoding on both paths, and publishes each refresh atomically with field
 availability, age, and receiver provenance.
 
-Application commands and the UI remain planned in
-[docs/backlog](docs/backlog/README.md). Their
-[implementation plan](docs/plans/06-simulator-api-and-display/README.md)
-records how the API and display were built.
+Application commands and the UI are specified together in the
+[UI and commands implementation plan](docs/plans/08-ui-and-commands/README.md).
+The simulator API and display backend are already implemented and documented
+in their package documentation linked above.
 
 ## Inspiration and scope
 
@@ -133,9 +133,10 @@ task all
 ```
 
 Command reachability checks require entry points, so `task all` omits deadcode
-until backlog item 10 adds runnable commands. Codec tests and package checks
+until the [UI and commands plan](docs/plans/08-ui-and-commands/README.md) adds
+runnable commands. Codec tests and package checks
 remain enabled.
 
-Runnable commands are tracked in the backlog. Future behavior requires
+Runnable commands are tracked in that plan. Future behavior requires
 deterministic tests and explicit, documented configuration without defaults.
 See [docs](docs/README.md) and [taskfile](taskfile/README.md) for supporting documentation.
