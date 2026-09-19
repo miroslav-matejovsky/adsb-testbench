@@ -1,7 +1,7 @@
 {
   "$comment": "Complete configuration; every key is required and no value is a default. See configs/README.md for every key, unit and range. Units: *Nanoseconds are decimal strings of nanoseconds, *Milliseconds are integers, *Bytes are integers, degrees, feet, metres, knots. server: listenAddress host:port (loopback only here), publicBasePath mount prefix, HTTP timeouts and header bound. logging: level debug|info|warn|error, format text|json. simulator: engine settings; simulation.id is a label and the command appends a random suffix per launch. The run starts paused while the stations below are installed, then runs at speedHundredths (100 = real time). simulatorApi: service byte bounds, timeout and the coverage reference pressure altitude. stations: initial stations. display: field lifetimes and backend bounds. managerUi/aircraftUi: browser settings; URL bases derive from publicBasePath. aircraftUi.tiles null disables map tiles.",
   "server": {
-    "listenAddress": "127.0.0.1:18480",
+    "listenAddress": "127.0.0.1:8000",
     "publicBasePath": "/",
     "readHeaderTimeoutNanoseconds": "5000000000",
     "readTimeoutNanoseconds": "10000000000",

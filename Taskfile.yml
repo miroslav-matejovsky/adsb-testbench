@@ -20,6 +20,14 @@ tasks:
       - go build -o bin/ ./cmd/adsb-testbench ./cmd/simulator ./cmd/display
       - echo build done
 
+  run:
+    desc: Run the combined command with configs/combined.json and a 65536 byte config limit
+    cmds:
+      - task: run-combined
+        vars:
+          CONFIG: configs/combined.json
+          CONFIG_MAX_BYTES: "65536"
+
   run-combined:
     desc: Run the combined command. Requires CONFIG and CONFIG_MAX_BYTES, for example CONFIG=configs/combined.json CONFIG_MAX_BYTES=65536
     requires:

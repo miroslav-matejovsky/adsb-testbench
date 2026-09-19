@@ -59,10 +59,12 @@ task run-simulator CONFIG=configs/simulator.json CONFIG_MAX_BYTES=65536
 task run-display CONFIG=configs/display.json CONFIG_MAX_BYTES=65536
 ```
 
-The combined example serves `http://127.0.0.1:18480/` with links to
+`task run` is a shortcut for the first line.
+
+The combined example serves `http://127.0.0.1:8000/` with links to
 `manager/` and `aircraft/`. The separate examples run together: the simulator
-serves its manager on `127.0.0.1:18481` and the display reads that
-simulator's API and serves its aircraft page on `127.0.0.1:18482`. Every
+serves its manager on `127.0.0.1:8001` and the display reads that
+simulator's API and serves its aircraft page on `127.0.0.1:8002`. Every
 application reports its mode, lifecycle state and effective run ID at
 `status`.
 

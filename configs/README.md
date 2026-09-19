@@ -8,9 +8,9 @@ duplicate keys and trailing values are rejected. Each file carries a nonempty
 
 | File | Command | Listen address |
 | --- | --- | --- |
-| `combined.json` | `adsb-testbench` | `127.0.0.1:18480` |
-| `simulator.json` | `simulator` | `127.0.0.1:18481` |
-| `display.json` | `display` (reads `simulator.json`'s API) | `127.0.0.1:18482` |
+| `combined.json` | `adsb-testbench` | `127.0.0.1:8000` |
+| `simulator.json` | `simulator` | `127.0.0.1:8001` |
+| `display.json` | `display` (reads `simulator.json`'s API) | `127.0.0.1:8002` |
 
 Both command flags are required: `-config PATH` names the file, relative to
 the working directory or absolute, and `-config-max-bytes N` bounds its size.
