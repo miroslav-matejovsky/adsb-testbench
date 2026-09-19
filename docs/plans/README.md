@@ -2,10 +2,10 @@
 
 This directory contains implementation plans. A plan is an executable specification, not a discussion document.
 
-## Completed plans
+## Active plans
 
-- [Manager, aircraft display, commands, and embedding](08-ui-and-commands/README.md):
-  one ordered plan for former backlog items 08, 09, and 10. Implemented.
+None. Implemented plans are removed; the code and its documentation record
+the result.
 
 ## Plan format
 

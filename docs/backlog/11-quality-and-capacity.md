@@ -21,5 +21,4 @@ Require task all to pass. Record benchmark commands and results; prove response 
 
 ## Dependencies
 
-- None. Builds on the completed
-  [UI and commands plan](../plans/08-ui-and-commands/README.md).
+- None. Builds on the implemented commands, UI and `task all` workflow.

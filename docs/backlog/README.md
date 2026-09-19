@@ -12,8 +12,7 @@ Front matter uses `value` (Low, Medium, High, Critical), `effort` (S, M, L, XL),
 filenames). External prerequisites are described in the item.
 
 Manager controls, the aircraft map and reception inspector, commands, and host
-embedding were delivered by the completed
-[UI and commands plan](../plans/08-ui-and-commands/README.md).
+embedding are implemented; see the root [README](../../README.md).
 
 ## Remaining next-work items
 
