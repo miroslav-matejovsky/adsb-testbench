@@ -2,7 +2,7 @@
 value: "Medium"
 effort: "XL"
 complexity: "hard"
-dependencies: ["11-quality-and-capacity.md"]
+dependencies: ["../plans/11-quality-and-capacity/README.md"]
 ---
 
 # Replay, transport output, and richer scenarios
@@ -21,4 +21,4 @@ Test exact replay order and timing, malformed recordings, pause and acceleration
 
 ## Dependencies
 
-- [11-quality-and-capacity](11-quality-and-capacity.md)
+- [Deterministic fixtures and measured capacity](../plans/11-quality-and-capacity/README.md)

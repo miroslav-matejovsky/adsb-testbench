@@ -18,8 +18,10 @@ embedding are implemented; see the root [README](../../README.md).
 
 | Rank | Item | Effort | Value |
 | ---: | --- | :---: | :---: |
-| 1 | [Deterministic fixtures and capacity checks](11-quality-and-capacity.md) | M | High |
-| 2 | [Replay, transport output, and richer scenarios](12-replay-and-traffic-extensions.md) | XL | Medium |
+| 1 | [Replay, transport output, and richer scenarios](12-replay-and-traffic-extensions.md) | XL | Medium |
+
+Deterministic fixtures and capacity checks have moved to the active
+[implementation plan](../plans/11-quality-and-capacity/README.md).
 
 ## Index
 
@@ -27,5 +29,4 @@ embedding are implemented; see the root [README](../../README.md).
 
 | Item | Effort | Value |
 | --- | :---: | :---: |
-| [Deterministic fixtures and capacity checks](11-quality-and-capacity.md) | M | High |
 | [Replay, transport output, and richer scenarios](12-replay-and-traffic-extensions.md) | XL | Medium |

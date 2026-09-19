@@ -4,8 +4,11 @@ This directory contains implementation plans. A plan is an executable specificat
 
 ## Active plans
 
-None. Implemented plans are removed; the code and its documentation record
-the result.
+| Plan | Status | Scope |
+| --- | --- | --- |
+| [Deterministic fixtures and measured capacity](11-quality-and-capacity/README.md) | Planned | Shared scenario corpus, discovered defect fixes, response budgets, retained-state bounds and reproducible capacity measurements |
+
+Implemented plans are removed; the code and its documentation record the result.
 
 ## Plan format
 
