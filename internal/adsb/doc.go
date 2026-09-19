@@ -81,12 +81,6 @@
 // Both times must be nonzero, not in the future, and at most MaxCPRAge (10s)
 // old relative to caller-supplied now. Thus pair separation is at most 10s.
 // It selects the newer position, choosing even on timestamp ties.
-//
-// DecodeLocal requires a trusted previous fix for the same aircraft, no newer
-// than the received frame, with both fix and frame within the same age limit.
-// The caller must know the aircraft is within 180 NM of that reference.
-// A result farther away is rejected. A bad reference can still select an alias;
-// age and distance checks alone do not prove a physically correct track.
 // Receiver-range and motion-plausibility checks belong to the observation
 // consumer. Returned longitude is normalized to [-180,180). These functions
 // own no cache or clock; callers retain samples and supply consistent times.

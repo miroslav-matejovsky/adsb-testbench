@@ -35,16 +35,10 @@ func TestPublishedCPRPositions(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, adsb.CPR{Latitude: 93000, Longitude: 51372}, c)
 
-	ref := adsb.Fix{ICAO: 0x40621d, Coordinates: adsb.Coordinates{Latitude: 52.258, Longitude: 3.918}, At: odd.At}
-	fix, err := adsb.DecodeLocal(even, ref, instant)
-	require.NoError(t, err)
-	require.InDelta(t, 52.2572021484375, fix.Coordinates.Latitude, 1e-10)
-	require.InDelta(t, 3.91937255859375, fix.Coordinates.Longitude, 1e-10)
-
 	// The same pair selects the odd solution when the odd frame is newer.
 	odd.At = instant
 	even.At = instant.Add(-time.Second)
-	fix, err = adsb.DecodeGlobal(even, odd, instant)
+	fix, err := adsb.DecodeGlobal(even, odd, instant)
 	require.NoError(t, err)
 	require.InDelta(t, 52.26578017412606, fix.Coordinates.Latitude, 1e-10)
 	require.InDelta(t, 3.938912527901786, fix.Coordinates.Longitude, 1e-10)
@@ -103,18 +97,7 @@ func TestCPRLongitudeWrapAndLatitudeBoundaries(t *testing.T) {
 		require.InDelta(t, 0, diff, 0.003)
 		require.GreaterOrEqual(t, fix.Coordinates.Longitude, -180.0)
 		require.Less(t, fix.Coordinates.Longitude, 180.0)
-		ref := adsb.Fix{ICAO: fix.ICAO, Coordinates: p, At: instant.Add(-2 * time.Second)}
-		local, err := adsb.DecodeLocal(even, ref, instant)
-		require.NoError(t, err)
-		require.InDelta(t, fix.Coordinates.Latitude, local.Coordinates.Latitude, 1e-9)
-		require.InDelta(t, fix.Coordinates.Longitude, local.Coordinates.Longitude, 1e-9)
 	}
-	// Reference and received position may lie on opposite sides of the date line.
-	s := sampleAt(t, adsb.Coordinates{Latitude: 1, Longitude: -179.999}, true, instant)
-	ref := adsb.Fix{ICAO: 0x40621d, Coordinates: adsb.Coordinates{Latitude: 1, Longitude: 179.999}, At: instant}
-	fix, err := adsb.DecodeLocal(s, ref, instant)
-	require.NoError(t, err)
-	require.InDelta(t, -179.999, fix.Coordinates.Longitude, 0.001)
 }
 
 func TestCPRRejectsCrossingZones(t *testing.T) {
@@ -158,44 +141,6 @@ func TestCPRPairValidation(t *testing.T) {
 	odd.At = instant.Add(-adsb.MaxCPRAge)
 	_, err := adsb.DecodeGlobal(even, odd, instant)
 	require.NoError(t, err)
-}
-
-func TestCPRReferenceValidation(t *testing.T) {
-	s := adsb.PositionSample{Frame: frame(t, evenHex), At: instant}
-	ref := adsb.Fix{ICAO: 0x40621d, Coordinates: adsb.Coordinates{Latitude: 52.258, Longitude: 3.918}, At: instant}
-	for _, tt := range []struct {
-		name   string
-		change func(*adsb.Fix)
-		err    error
-	}{
-		{"other aircraft", func(r *adsb.Fix) { r.ICAO = 42 }, adsb.ErrCPR},
-		{"future", func(r *adsb.Fix) { r.At = instant.Add(time.Nanosecond) }, adsb.ErrCPR},
-		{"stale", func(r *adsb.Fix) { r.At = instant.Add(-adsb.MaxCPRAge - time.Nanosecond) }, adsb.ErrCPR},
-		{"zero time", func(r *adsb.Fix) { r.At = time.Time{} }, adsb.ErrCPR},
-		{"NaN", func(r *adsb.Fix) { r.Coordinates.Latitude = math.NaN() }, adsb.ErrInvalid},
-		{"infinity", func(r *adsb.Fix) { r.Coordinates.Longitude = math.Inf(1) }, adsb.ErrInvalid},
-		{"longitude 181", func(r *adsb.Fix) { r.Coordinates.Longitude = 181 }, adsb.ErrInvalid},
-		{"latitude 91", func(r *adsb.Fix) { r.Coordinates.Latitude = 91 }, adsb.ErrInvalid},
-	} {
-		t.Run(tt.name, func(t *testing.T) {
-			r := ref
-			tt.change(&r)
-			_, err := adsb.DecodeLocal(s, r, instant)
-			require.ErrorIs(t, err, tt.err)
-		})
-	}
-	s.At = instant.Add(-time.Second)
-	_, err := adsb.DecodeLocal(s, ref, instant)
-	require.ErrorIs(t, err, adsb.ErrCPR)
-	s.At = instant
-	ref.At = instant.Add(-adsb.MaxCPRAge)
-	_, err = adsb.DecodeLocal(s, ref, instant)
-	require.NoError(t, err)
-
-	s = sampleAt(t, adsb.Coordinates{}, false, instant)
-	ref.Coordinates = adsb.Coordinates{Latitude: 2.99, Longitude: 3}
-	_, err = adsb.DecodeLocal(s, ref, instant)
-	require.ErrorIs(t, err, adsb.ErrCPR)
 }
 
 func TestCPREncoderRejectsInvalidCoordinates(t *testing.T) {

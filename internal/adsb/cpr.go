@@ -102,45 +102,6 @@ func DecodeGlobal(a, b PositionSample, now time.Time) (Fix, error) {
 	return Fix{ICAO: am.Header.ICAO, Coordinates: Coordinates{Latitude: lat, Longitude: lon}, At: at}, nil
 }
 
-// DecodeLocal resolves one frame relative to a trusted previous fix.
-// The reference must match the aircraft, be no newer than the frame, and be
-// within MaxCPRAge of now. The caller must know the aircraft is within 180 NM
-// of that reference. A decoded distance above that bound is rejected, but
-// this check cannot detect all aliases from an incorrect reference.
-func DecodeLocal(sample PositionSample, reference Fix, now time.Time) (Fix, error) {
-	m, err := decodeSample(sample, now)
-	if err != nil {
-		return Fix{}, err
-	}
-	if err := fresh(reference.At, now); err != nil {
-		return Fix{}, fmt.Errorf("CPR reference: %w", err)
-	}
-	if reference.ICAO != m.Header.ICAO || reference.At.After(sample.At) {
-		return Fix{}, fmt.Errorf("%w: reference aircraft/time mismatch", ErrCPR)
-	}
-	if err := reference.Coordinates.validate(); err != nil {
-		return Fix{}, fmt.Errorf("CPR reference: %w", err)
-	}
-	c := m.Position.CPR
-	i := int(bit(c.Odd))
-	dlat := 360 / float64(60-i)
-	y := float64(c.Latitude) / cprScale
-	ref := reference.Coordinates
-	j := math.Floor(ref.Latitude/dlat) + math.Floor(mod(ref.Latitude, dlat)/dlat-y+0.5)
-	lat := dlat * (j + y)
-	if math.Abs(lat) > 90 {
-		return Fix{}, fmt.Errorf("%w: decoded latitude out of range", ErrCPR)
-	}
-	dlon := 360 / float64(max(longitudeZones(lat)-i, 1))
-	x := float64(c.Longitude) / cprScale
-	k := math.Floor(ref.Longitude/dlon) + math.Floor(mod(ref.Longitude, dlon)/dlon-x+0.5)
-	p := Coordinates{Latitude: lat, Longitude: longitude(dlon * (k + x))}
-	if distanceNM(ref, p) > 180 {
-		return Fix{}, fmt.Errorf("%w: decoded position exceeds 180 NM reference range", ErrCPR)
-	}
-	return Fix{ICAO: m.Header.ICAO, Coordinates: p, At: sample.At}, nil
-}
-
 func decodeSample(s PositionSample, now time.Time) (Message, error) {
 	if err := fresh(s.At, now); err != nil {
 		return Message{}, err
@@ -200,11 +161,4 @@ func latitude(lat float64) float64 {
 		return lat - 360
 	}
 	return lat
-}
-
-func distanceNM(a, b Coordinates) float64 {
-	const radians = math.Pi / 180
-	dlat, dlon := (b.Latitude-a.Latitude)*radians, (b.Longitude-a.Longitude)*radians
-	h := math.Pow(math.Sin(dlat/2), 2) + math.Cos(a.Latitude*radians)*math.Cos(b.Latitude*radians)*math.Pow(math.Sin(dlon/2), 2)
-	return 2 * 3440.065 * math.Asin(math.Sqrt(min(1, max(0, h))))
 }

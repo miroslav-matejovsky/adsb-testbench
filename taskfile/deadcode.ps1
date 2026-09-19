@@ -8,14 +8,7 @@
 #  - test-support API: a function that exists so a test can assert something about
 #    the production code itself. It is unreachable from a cmd entry point by nature,
 #    and the alternative (dropping it) means dropping the assertion it enables.
-$allow = @(
-  # Local CPR decoding is a documented, tested codec capability. Displays
-  # deliberately never trust a local reference (they pair global CPR
-  # frames only), so no command reaches it. Remove both entries together
-  # with the function if the codec drops local decoding.
-  "DecodeLocal",
-  "distanceNM"
-)
+$allow = @()
 
 $out = deadcode ./cmd/... 2>&1
 $exit = $LASTEXITCODE

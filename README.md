@@ -6,8 +6,8 @@ and inspect decoded observations for development and testing.
 
 The raw ADS-B codec is implemented in [internal/adsb](internal/adsb/doc.go).
 It encodes and decodes identification, barometric airborne position, and
-velocity, and reconstructs airborne CPR positions with explicit age and
-reference checks.
+velocity, and reconstructs airborne CPR positions from even/odd frame pairs
+with explicit age and aircraft checks.
 
 The deterministic traffic engine is implemented in
 [simulation](simulation/doc.go). It creates synthetic aircraft from explicit
