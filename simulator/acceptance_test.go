@@ -3,6 +3,7 @@ package simulator
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"net/http"
 	"net/http/httptest"
 	"sync"
@@ -45,8 +46,8 @@ func (p *pathRecorder) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	p.paths = append(p.paths, r.URL.Path)
 	p.mu.Unlock()
 	switch r.URL.Path {
-	case acceptanceMount + "/truth", acceptanceMount + "/metadata", acceptanceMount + "/stations":
-		p.t.Errorf("a display source requested the truth route %q", r.URL.Path)
+	case acceptanceMount + "/truth", acceptanceMount + "/metadata":
+		p.t.Errorf("a display source requested the manager route %q", r.URL.Path)
 	}
 	p.handler.ServeHTTP(w, r)
 }
@@ -124,8 +125,23 @@ func (b *acceptanceBench) run(t *testing.T, real time.Duration, count int) {
 	require.NoError(t, err)
 }
 
+// noStations is a station source for tests that never discover stations.
+type noStations struct{}
+
+func (noStations) Stations(context.Context) (simulatorapi.StationsSnapshot, error) {
+	return simulatorapi.StationsSnapshot{}, errors.New("station discovery is not part of this test")
+}
+
 // displayFor builds a display over one source with explicit fixture settings.
 func displayFor(t *testing.T, source display.ObservationSource) *display.Display {
+	t.Helper()
+
+	return displayWithStations(t, source, noStations{})
+}
+
+// displayWithStations builds a display over explicit observation and station
+// sources.
+func displayWithStations(t *testing.T, source display.ObservationSource, stations display.StationSource) *display.Display {
 	t.Helper()
 
 	backend, err := display.New(display.Config{
@@ -133,9 +149,51 @@ func displayFor(t *testing.T, source display.ObservationSource) *display.Display
 		AltitudeExpiry: 30 * time.Second, VelocityExpiry: 30 * time.Second,
 		MaxRequestBytes: 65536, MaxResponseBytes: 16777216,
 		RequestTimeout: 10 * time.Second, ReportError: func(err error) { t.Error(err) },
-	}, source)
+	}, source, stations)
 	require.NoError(t, err)
 	return backend
+}
+
+func TestBothTransportsProduceIdenticalStations(t *testing.T) {
+	t.Parallel()
+
+	bench := newAcceptanceBench(t, "acceptance-stations")
+	bench.addStation(t, "alpha", true, -95)
+	bench.addStation(t, "bravo", false, -90)
+
+	localStations, err := display.NewInProcessStationSource(bench.api)
+	require.NoError(t, err)
+	fromLocal, err := localStations.Stations(t.Context())
+	require.NoError(t, err)
+	fromHTTP, err := bench.remote.Stations(t.Context())
+	require.NoError(t, err)
+	require.Equal(t, fromLocal, fromHTTP)
+	require.Len(t, fromLocal.Stations, 2)
+	require.False(t, fromLocal.Stations[1].Station.Enabled)
+
+	// A display host discovers stations through its own backend.
+	backend := displayWithStations(t, bench.remote, bench.remote)
+	recorder := httptest.NewRecorder()
+	backend.Handler().ServeHTTP(recorder, httptest.NewRequest(http.MethodGet, "/stations", nil))
+	require.Equal(t, http.StatusOK, recorder.Code, recorder.Body.String())
+	expected, err := json.Marshal(fromLocal)
+	require.NoError(t, err)
+	require.JSONEq(t, string(expected), recorder.Body.String())
+}
+
+func TestBothTransportsClassifyStationFailuresIdentically(t *testing.T) {
+	t.Parallel()
+
+	bench := newAcceptanceBench(t, "acceptance-station-failure")
+	localStations, err := display.NewInProcessStationSource(bench.api)
+	require.NoError(t, err)
+
+	ctx, cancel := context.WithCancel(t.Context())
+	cancel()
+	_, localErr := localStations.Stations(ctx)
+	_, remoteErr := bench.remote.Stations(ctx)
+	require.ErrorIs(t, localErr, simulatorapi.CategoryUnavailable)
+	require.ErrorIs(t, remoteErr, simulatorapi.CategoryUnavailable)
 }
 
 func TestBothTransportsProduceIdenticalObservations(t *testing.T) {

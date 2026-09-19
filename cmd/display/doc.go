@@ -1,7 +1,10 @@
-// Package main documents the planned cmd/display package.
+// Command display serves a standalone aircraft display that reads received
+// evidence and station discovery over HTTP from a simulator command's API.
+// Browsers only contact this command.
 //
-// Standalone display command: configure a remote simulator source and serve
-// the aircraft display.
+//	display -config configs/display.json -config-max-bytes 65536
 //
-// This is a documentation-only skeleton; implementation is planned.
+// Both flags are required. See configs/README.md for the source and
+// transport sections. Exit status: 0 on a clean stop, 2 for usage errors, 1
+// for any other failure.
 package main

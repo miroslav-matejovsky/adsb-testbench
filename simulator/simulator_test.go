@@ -53,6 +53,8 @@ func TestSimulatorConstructionAndLifecycle(t *testing.T) {
 
 	_, err := New(Config{})
 	require.ErrorIs(t, err, simulation.ErrInvalid)
+	require.ErrorIs(t, Config{}.Validate(), simulation.ErrInvalid)
+	require.NoError(t, runtimeTestConfig().Validate())
 	_, err = newSimulator(runtimeTestConfig(), nil)
 	require.ErrorIs(t, err, simulation.ErrInvalid)
 

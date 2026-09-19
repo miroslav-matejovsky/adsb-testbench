@@ -27,9 +27,10 @@ import (
 // previous run's tracks, cursors, and fallback before the new run's payload is
 // decoded, so corrupt new-run data can never fall back to an obsolete run.
 type Display struct {
-	config Config
-	source ObservationSource
-	now    func() time.Time
+	config   Config
+	source   ObservationSource
+	stations StationSource
+	now      func() time.Time
 
 	// gate admits one refresh or history call at a time. It is a channel
 	// rather than a mutex so admission itself can honor cancellation.
@@ -51,23 +52,26 @@ type state struct {
 	lastError    *SourceError
 }
 
-// New validates the configuration and source and returns a display. It starts
-// no background work.
-func New(config Config, source ObservationSource) (*Display, error) {
+// New validates the configuration and both sources and returns a display. It
+// starts no background work.
+func New(config Config, source ObservationSource, stations StationSource) (*Display, error) {
 	if err := config.Validate(); err != nil {
 		return nil, fmt.Errorf("create display: %w", err)
 	}
 	if source == nil {
 		return nil, fmt.Errorf("%w: display observation source is nil", simulatorapi.CategoryInvalid)
 	}
-	return newDisplay(config, source, time.Now), nil
+	if stations == nil {
+		return nil, fmt.Errorf("%w: display station source is nil", simulatorapi.CategoryInvalid)
+	}
+	return newDisplay(config, source, stations, time.Now), nil
 }
 
 // newDisplay builds a display with an injected clock. The clock is used only
 // for the diagnostic local update timestamp, never to age a received field.
-func newDisplay(config Config, source ObservationSource, now func() time.Time) *Display {
+func newDisplay(config Config, source ObservationSource, stations StationSource, now func() time.Time) *Display {
 	display := &Display{
-		config: config, source: source, now: now,
+		config: config, source: source, stations: stations, now: now,
 		gate:  make(chan struct{}, 1),
 		state: state{status: StatusUnavailable},
 	}
@@ -81,18 +85,21 @@ func newDisplay(config Config, source ObservationSource, now func() time.Time) *
 // It returns the display snapshot it produced together with any failure. A
 // failure may still carry explicitly stale observations, so a caller must not
 // drop the error. A successful refresh is never reported for a failed fetch.
+//
+// An invalid selection or a canceled admission fails before the source is
+// contacted. Such a failure returns a detached unavailable snapshot and leaves
+// the published state untouched: it can carry no other request's data.
 func (d *Display) Refresh(ctx context.Context, stationIDs []string) (Snapshot, error) {
-	release, err := d.admit(ctx)
-	if err != nil {
-		return d.Snapshot(), newSourceError(snapshotOperation, simulatorapi.CategoryUnavailable, err, err.Error())
-	}
-	defer release()
-
 	selection := normalizeSelection(stationIDs)
 	request := simulatorapi.ReceptionSnapshotRequest{StationIDs: selection}
 	if err := validateSnapshotRequest(request); err != nil {
-		return d.Snapshot(), invalidRequestError(snapshotOperation, err)
+		return unavailable(invalidRequestError(snapshotOperation, err))
 	}
+	release, err := d.admit(ctx)
+	if err != nil {
+		return unavailable(newSourceError(snapshotOperation, simulatorapi.CategoryUnavailable, err, err.Error()))
+	}
+	defer release()
 
 	raw, err := d.source.ReceptionSnapshot(ctx, request)
 	if err != nil {
@@ -174,6 +181,11 @@ func (d *Display) snapshotLocked() Snapshot {
 // admit takes the single admission token, honoring cancellation while it
 // waits. The returned function returns the token.
 func (d *Display) admit(ctx context.Context) (func(), error) {
+	// An already canceled request is never admitted, even when the token is
+	// free, so cancellation does not race admission.
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
 	select {
 	case <-ctx.Done():
 		return nil, ctx.Err()
@@ -278,6 +290,12 @@ func (d *Display) fail(selection []string, failure *SourceError) (Snapshot, erro
 		d.state.status = StatusUnavailable
 	}
 	return d.snapshotLocked(), failure
+}
+
+// unavailable returns a request-scoped failure that carries no observations
+// and does not touch the published state.
+func unavailable(failure *SourceError) (Snapshot, error) {
+	return Snapshot{Status: StatusUnavailable, Error: failureOf(failure)}, failure
 }
 
 // asSourceError recovers a source failure, categorizing anything a custom

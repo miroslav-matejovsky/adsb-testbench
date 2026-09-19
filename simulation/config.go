@@ -47,6 +47,13 @@ var spawnDomains = []struct {
 	{rangeDomain{"VerticalRateFeetPerMinute", "feet per minute", -10000, 10000, false}, func(s SpawnConfig) Range { return s.VerticalRateFeetPerMinute }},
 }
 
+// Validate reports whether cfg would be accepted by New, without creating
+// an engine.
+func (cfg Config) Validate() error {
+	_, err := normalizeConfig(cfg)
+	return err
+}
+
 // normalizeConfig validates every configuration field and returns an
 // accepted copy. StartTime becomes UTC without a monotonic component.
 // Meaningful zero values are preserved exactly.

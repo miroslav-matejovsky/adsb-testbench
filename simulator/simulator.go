@@ -13,6 +13,15 @@ type Config struct {
 	Simulation simulation.Config
 }
 
+// Validate reports whether New would accept the configuration, without
+// creating an engine.
+func (c Config) Validate() error {
+	if err := c.Simulation.Validate(); err != nil {
+		return fmt.Errorf("validate simulation: %w", err)
+	}
+	return nil
+}
+
 // Simulator owns one engine and the sole driver allowed to mutate it. New
 // starts no background work. Run must be supervised by the caller.
 type Simulator struct {

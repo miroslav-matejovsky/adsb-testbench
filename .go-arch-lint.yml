@@ -1,4 +1,4 @@
-# Planned package boundaries, enforced by task arch-lint.
+# Package boundaries, enforced by task arch-lint.
 # Standard library imports are allowed. External dependencies need explicit entries.
 version: 3
 workdir: .
@@ -10,6 +10,11 @@ exclude:
   - "vendor"
   - ".tmp"
   - ".test-results"
+  - "node_modules"
+  # Test-only fixture host for browser tests; never built by ./... patterns.
+  - "ui/testdata"
+  # Separate consumer module that compiles against public packages only.
+  - "examples"
 
 excludeFiles:
   - "^.*_test\\.go$"
@@ -33,16 +38,19 @@ components:
   cli: { in: internal/cli }
   httpserver: { in: internal/httpserver }
   urlpath: { in: internal/urlpath }
+  processtest: { in: internal/processtest }
 
 deps:
   adsb:
     canUse: [go-adsb]
   cmd-adsb-testbench:
-    mayDependOn: [testbench, simulator, cli, urlpath]
+    mayDependOn: [cli, testbench]
   cmd-simulator:
-    mayDependOn: [simulator, cli, urlpath]
+    mayDependOn: [cli, testbench]
   cmd-display:
-    mayDependOn: [display, cli, urlpath]
+    mayDependOn: [cli, testbench]
+  cli:
+    mayDependOn: [testbench, simulator, display, ui, simulatorapi, httpserver, urlpath]
   simulation:
     mayDependOn: [adsb]
   simulator:
@@ -52,6 +60,6 @@ deps:
   display:
     mayDependOn: [adsb, simulatorapi, ui, httpserver, urlpath]
   testbench:
-    mayDependOn: [simulation, simulator, display, ui, httpserver, urlpath]
+    mayDependOn: [simulator, display, ui, urlpath]
   ui:
-    mayDependOn: [ui-assets, urlpath]
+    mayDependOn: [ui-assets, urlpath, simulatorapi]

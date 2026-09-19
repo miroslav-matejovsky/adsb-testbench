@@ -70,3 +70,32 @@ func copyHistoryRequest(request simulatorapi.HistoryRequest) simulatorapi.Histor
 	}
 	return copied
 }
+
+// InProcessStationSource adapts a station provider in the same process, such
+// as a simulator service, to the display's station source. Responses are
+// validated with the same rules the HTTP source uses.
+type InProcessStationSource struct {
+	provider StationSource
+}
+
+// NewInProcessStationSource validates the provider and returns a source. It
+// starts no goroutine and no background work.
+func NewInProcessStationSource(provider StationSource) (*InProcessStationSource, error) {
+	if provider == nil {
+		return nil, errors.New("display in-process station source: provider is nil")
+	}
+	return &InProcessStationSource{provider: provider}, nil
+}
+
+// Stations calls the provider once and returns a validated, detached copy of
+// its station catalog.
+func (s *InProcessStationSource) Stations(ctx context.Context) (simulatorapi.StationsSnapshot, error) {
+	stations, err := s.provider.Stations(ctx)
+	if err != nil {
+		return simulatorapi.StationsSnapshot{}, sourceErrorFrom(stationsOperation, err)
+	}
+	if runID, err := validateStations(stations); err != nil {
+		return simulatorapi.StationsSnapshot{}, invalidPayloadError(stationsOperation, runID, err)
+	}
+	return cloneStations(stations), nil
+}

@@ -12,10 +12,8 @@ Front matter uses `value` (Low, Medium, High, Critical), `effort` (S, M, L, XL),
 filenames). External prerequisites are described in the item.
 
 Manager controls, the aircraft map and reception inspector, commands, and host
-embedding are tracked together in the active
+embedding were delivered by the completed
 [UI and commands plan](../plans/08-ui-and-commands/README.md).
-Former items 08, 09, and 10 are promoted, not implemented. The simulator API and
-display backend prerequisites already exist and are documented in their packages.
 
 ## Remaining next-work items
 

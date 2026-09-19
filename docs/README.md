@@ -1,6 +1,6 @@
 # Documentation
 
-- [Backlog](backlog/README.md): planned implementation by subsystem.
+- [Backlog](backlog/README.md): open work by subsystem.
 - [Plans](plans/README.md): detailed implementation steps.
 - [Evaluations](evaluations/README.md): investigations and decisions.
 - [Assessments](assesments/README.md): repository reviews.

@@ -11,6 +11,7 @@ import (
 const (
 	snapshotOperation = "read reception snapshot"
 	historyOperation  = "read reception history"
+	stationsOperation = "read stations"
 )
 
 // ObservationSource supplies raw received evidence to a display.
@@ -29,6 +30,21 @@ type ObservationSource interface {
 	// ReceptionHistory returns one explicit page of one station's retained
 	// receptions.
 	ReceptionHistory(ctx context.Context, request simulatorapi.HistoryRequest) (simulatorapi.ReceptionPage, error)
+}
+
+// StationSource supplies the station catalog with synthetic coverage to a
+// display, so a browser can discover station choices through the display
+// backend without contacting the simulator.
+//
+// It is separate from ObservationSource so a host can supply raw evidence
+// without also supplying station discovery, and so neither interface grows
+// beyond what one consumer needs. Station discovery carries no aircraft truth.
+//
+// Implementations must return detached values.
+type StationSource interface {
+	// Stations returns every active station with its estimated coverage at
+	// one virtual instant.
+	Stations(ctx context.Context) (simulatorapi.StationsSnapshot, error)
 }
 
 // sourceErrorFrom maps one underlying failure onto a shared category while

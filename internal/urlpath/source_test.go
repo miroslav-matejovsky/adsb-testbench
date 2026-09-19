@@ -20,6 +20,7 @@ func TestParseSourceBaseKeepsMountPrefix(t *testing.T) {
 		{name: "root slash", raw: "http://127.0.0.1:8080/", want: "http://127.0.0.1:8080/"},
 		{name: "nested", raw: "https://host/bench/a/simulator", want: "https://host/bench/a/simulator/"},
 		{name: "nested slash", raw: "https://host/bench/a/simulator/", want: "https://host/bench/a/simulator/"},
+		{name: "deep nested", raw: "http://[::1]:9000/a/b/c/api/display", want: "http://[::1]:9000/a/b/c/api/display/"},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -53,6 +54,16 @@ func TestParseSourceBaseRejectsAmbiguousURLs(t *testing.T) {
 		{name: "parent segment", raw: "http://host/bench/../simulator"},
 		{name: "encoded separator", raw: "http://host/bench%2Fsimulator"},
 		{name: "malformed escape", raw: "http://host/bench%zz"},
+		{name: "empty fragment", raw: "http://host/sim#"},
+		{name: "literal backslash", raw: `http://host/bench\simulator`},
+		{name: "encoded backslash", raw: "http://host/bench%5Csimulator"},
+		{name: "lowercase encoded backslash", raw: "http://host/bench%5csimulator"},
+		{name: "encoded dot segment", raw: "http://host/bench/%2E%2E/simulator"},
+		{name: "encoded control byte", raw: "http://host/bench%0Asimulator"},
+		{name: "non numeric port", raw: "http://host:abc/sim"},
+		{name: "empty port", raw: "http://host:/sim"},
+		{name: "zero port", raw: "http://host:0/sim"},
+		{name: "port out of range", raw: "http://host:65536/sim"},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

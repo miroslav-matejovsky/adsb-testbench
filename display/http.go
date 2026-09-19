@@ -28,9 +28,14 @@ type RefreshResponse struct {
 // it below a prefix with http.StripPrefix. The browser calls this backend,
 // never the upstream simulator directly.
 //
-//	GET  /snapshot            the cached display state, without refreshing
+//	GET  /snapshot            the shared diagnostic state of the last refresh
+//	GET  /stations            the station catalog with synthetic coverage
 //	POST /observations        refresh an explicit station selection
 //	POST /receptions/history  one page of one station's retained receptions
+//
+// GET /snapshot is diagnostic only: it reflects whichever request refreshed
+// last, which may belong to another browser tab or selection. A browser must
+// render the response of its own POST /observations request instead.
 //
 // Successful responses use 200 and set Cache-Control: no-store. Failures use
 // the shared error envelope and the status of their category: invalid browser
@@ -62,6 +67,8 @@ func (d *Display) serve(w http.ResponseWriter, r *http.Request) error {
 	switch path {
 	case "/snapshot":
 		return d.serveSnapshot(w, r)
+	case "/stations":
+		return d.serveStations(ctx, w, r)
 	case "/observations":
 		return d.serveRefresh(ctx, w, r)
 	case "/receptions/history":
@@ -81,6 +88,21 @@ func (d *Display) serveSnapshot(w http.ResponseWriter, r *http.Request) error {
 			errors.New("this route accepts no request body")))
 	}
 	return d.writeJSON(w, http.StatusOK, "", d.Snapshot())
+}
+
+func (d *Display) serveStations(ctx context.Context, w http.ResponseWriter, r *http.Request) error {
+	if r.Method != http.MethodGet && r.Method != http.MethodHead {
+		return d.writeError(w, methodNotAllowed(r, http.MethodGet))
+	}
+	if r.ContentLength > 0 {
+		return d.writeError(w, displayError(simulatorapi.CategoryInvalid,
+			errors.New("this route accepts no request body")))
+	}
+	stations, err := d.Stations(ctx)
+	if err != nil {
+		return d.writeError(w, sharedError(err))
+	}
+	return d.writeJSON(w, http.StatusOK, "", stations)
 }
 
 func (d *Display) serveRefresh(ctx context.Context, w http.ResponseWriter, r *http.Request) error {

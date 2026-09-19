@@ -21,6 +21,7 @@ import (
 const (
 	snapshotPath = "observations/receptions"
 	historyPath  = "receptions/history"
+	stationsPath = "stations"
 )
 
 // errRedirect reports that the upstream tried to move the source elsewhere.
@@ -114,7 +115,25 @@ func (s *HTTPSource) ReceptionHistory(ctx context.Context, request simulatorapi.
 	return page, nil
 }
 
-// post performs one bounded JSON call and returns its strictly parsed body.
+// Stations fetches and validates the upstream station catalog with a bodiless
+// GET request.
+func (s *HTTPSource) Stations(ctx context.Context) (simulatorapi.StationsSnapshot, error) {
+	value, failure := s.get(ctx, stationsOperation, stationsPath)
+	if failure != nil {
+		return simulatorapi.StationsSnapshot{}, failure
+	}
+	stations, err := parseStationsSnapshot(value)
+	if err != nil {
+		return simulatorapi.StationsSnapshot{}, invalidPayloadError(stationsOperation, "", err)
+	}
+	if runID, err := validateStations(stations); err != nil {
+		return simulatorapi.StationsSnapshot{}, invalidPayloadError(stationsOperation, runID, err)
+	}
+	return stations, nil
+}
+
+// post performs one bounded JSON POST call and returns its strictly parsed
+// body.
 func (s *HTTPSource) post(ctx context.Context, operation, path string, body any) (*simulatorapi.Value, *SourceError) {
 	encoded, err := json.Marshal(body)
 	if err != nil {
@@ -126,18 +145,34 @@ func (s *HTTPSource) post(ctx context.Context, operation, path string, body any)
 			fmt.Sprintf("the encoded request needs %d bytes, above the configured %d",
 				len(encoded), s.maxRequestBytes))
 	}
+	return s.do(ctx, operation, http.MethodPost, path, encoded)
+}
 
+// get performs one bounded bodiless GET call and returns its strictly parsed
+// body.
+func (s *HTTPSource) get(ctx context.Context, operation, path string) (*simulatorapi.Value, *SourceError) {
+	return s.do(ctx, operation, http.MethodGet, path, nil)
+}
+
+// do performs one bounded call. A nil encoded body sends no body at all.
+func (s *HTTPSource) do(ctx context.Context, operation, method, path string, encoded []byte) (*simulatorapi.Value, *SourceError) {
 	// The derived deadline covers headers and body reading, and is canceled
 	// after every call. An earlier caller deadline still wins.
 	ctx, cancel := context.WithTimeout(ctx, s.timeout)
 	defer cancel()
 
-	request, err := http.NewRequestWithContext(ctx, http.MethodPost, s.base+path, bytes.NewReader(encoded))
+	var body io.Reader
+	if encoded != nil {
+		body = bytes.NewReader(encoded)
+	}
+	request, err := http.NewRequestWithContext(ctx, method, s.base+path, body)
 	if err != nil {
 		return nil, newSourceError(operation, simulatorapi.CategoryInternal, err,
 			"the request could not be built")
 	}
-	request.Header.Set("Content-Type", "application/json")
+	if encoded != nil {
+		request.Header.Set("Content-Type", "application/json")
+	}
 	request.Header.Set("Accept", "application/json")
 
 	response, err := s.client.Do(request)

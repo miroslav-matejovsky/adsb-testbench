@@ -1,6 +1,6 @@
 # ADS-B TestBench
 
-A planned local ADS-B simulator with a live aircraft map and a manager UI.
+A local ADS-B simulator with a live aircraft map and a manager UI.
 Generate reproducible synthetic air traffic, model what receiving stations hear,
 and inspect decoded observations for development and testing.
 
@@ -41,10 +41,30 @@ one `ObservationSource` contract, runs the same semantic validation and codec
 decoding on both paths, and publishes each refresh atomically with field
 availability, age, and receiver provenance.
 
-Application commands and the UI are specified together in the
-[UI and commands implementation plan](docs/plans/08-ui-and-commands/README.md).
-The simulator API and display backend are already implemented and documented
-in their package documentation linked above.
+The [ui](ui/doc.go) package serves the manager page, the received-aircraft
+page with its map and reception inspector, and the embedded browser bundle.
+The [testbench](testbench/doc.go) package composes them into combined,
+simulator-only, or display-only applications, and three
+[commands](cmd/README.md) run those applications from complete
+[configuration files](configs/README.md).
+
+## Running
+
+Each command requires a configuration file and its size bound. The shipped
+examples are complete configurations, not defaults:
+
+```text
+task run-combined CONFIG=configs/combined.json CONFIG_MAX_BYTES=65536
+task run-simulator CONFIG=configs/simulator.json CONFIG_MAX_BYTES=65536
+task run-display CONFIG=configs/display.json CONFIG_MAX_BYTES=65536
+```
+
+The combined example serves `http://127.0.0.1:18480/` with links to
+`manager/` and `aircraft/`. The separate examples run together: the simulator
+serves its manager on `127.0.0.1:18481` and the display reads that
+simulator's API and serves its aircraft page on `127.0.0.1:18482`. Every
+application reports its mode, lifecycle state and effective run ID at
+`status`.
 
 ## Inspiration and scope
 
@@ -108,6 +128,35 @@ inserts an application default: byte bounds, timeouts, field lifetimes, the
 coverage reference altitude, the HTTP client, and the host error callback are
 all supplied explicitly.
 
+## Deployment and embedding
+
+A combined application runs one simulator and one display in one process;
+the display reads the simulator in process, with no HTTP hop. In separate
+mode the display reads received evidence and station discovery from the
+simulator API over HTTP. In both modes browsers contact only their own
+application: the manager calls the simulator API, the aircraft page calls
+the display API. Routes (`manager/`, `aircraft/`, `api/simulator/`,
+`api/display/`, `assets/`, `status`) are relative and mounted once below the
+configured public base path; the route table is in
+[testbench](testbench/doc.go).
+
+Two clocks are kept apart. Real time paces the driver and labels how old a
+browser's last successful update is. Virtual time, scaled by the configured
+speed, drives aircraft motion and every field age. The map uses the embedded
+Leaflet 1.9.4 renderer; tiles are an explicit optional setting and `null`
+requests none. Station coverage circles are synthetic estimates at the
+configured reference altitude. The reception inspector pages bounded
+per-station history and shows source retention gaps separately from its own
+`maxHistoryRecords` trimming. Bundled third-party notices are served at
+`assets/notices.html`.
+
+Commands turn the configured simulation ID into a fresh effective run ID on
+every launch, so requests written for an earlier run are rejected. On
+interrupt they drain HTTP within the shutdown budget, then stop the
+simulator. Hosts embed benches through public packages only; the
+[embedding example](examples/embedding/README.md) mounts two independent
+benches and a custom page with browser components.
+
 ## Development
 
 The codec reuses [go-adsb](https://github.com/cjkreklow/go-adsb) v0.4.1 for
@@ -132,11 +181,20 @@ go-arch-lint, and gotestsum. Run repository checks with:
 task all
 ```
 
-Command reachability checks require entry points, so `task all` omits deadcode
-until the [UI and commands plan](docs/plans/08-ui-and-commands/README.md) adds
-runnable commands. Codec tests and package checks
-remain enabled.
+`task all` runs tidy, vet, formatting, command reachability, architecture
+lint, code lint, Go tests, cleanup checks, the external embedding module and
+the browser tests. Browser tests need Node.js (version in `.node-version`)
+and an explicit one-time setup; tests never download dependencies:
 
-Runnable commands are tracked in that plan. Future behavior requires
-deterministic tests and explicit, documented configuration without defaults.
+```text
+npm ci
+npx playwright install chromium
+```
+
+`task build` writes the three commands to `bin/`. Browser test results and
+traces of failing runs are kept below `.test-results/`. See
+[ui/browser](ui/browser/README.md) for the browser test layout.
+
+New behavior requires deterministic tests and explicit, documented
+configuration without defaults.
 See [docs](docs/README.md) and [taskfile](taskfile/README.md) for supporting documentation.

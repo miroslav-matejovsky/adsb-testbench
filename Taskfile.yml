@@ -7,11 +7,39 @@ tasks:
       - task --list
 
   clean:
-    desc: Remove build artifacts, .test-results, and .exe files
+    desc: Remove the declared build and test output directories
     silent: true
     cmds:
       - pwsh -NoProfile -NonInteractive -File taskfile/clean.ps1{{if .QUIET}} > /dev/null 2>&1{{end}}
       - echo clean done
+
+  build:
+    desc: Build the adsb-testbench, simulator and display commands into bin/
+    silent: true
+    cmds:
+      - go build -o bin/ ./cmd/adsb-testbench ./cmd/simulator ./cmd/display
+      - echo build done
+
+  run-combined:
+    desc: Run the combined command. Requires CONFIG and CONFIG_MAX_BYTES, for example CONFIG=configs/combined.json CONFIG_MAX_BYTES=65536
+    requires:
+      vars: [CONFIG, CONFIG_MAX_BYTES]
+    cmds:
+      - go run ./cmd/adsb-testbench -config {{shellQuote .CONFIG}} -config-max-bytes {{shellQuote .CONFIG_MAX_BYTES}}
+
+  run-simulator:
+    desc: Run the standalone simulator. Requires CONFIG and CONFIG_MAX_BYTES, for example CONFIG=configs/simulator.json CONFIG_MAX_BYTES=65536
+    requires:
+      vars: [CONFIG, CONFIG_MAX_BYTES]
+    cmds:
+      - go run ./cmd/simulator -config {{shellQuote .CONFIG}} -config-max-bytes {{shellQuote .CONFIG_MAX_BYTES}}
+
+  run-display:
+    desc: Run the standalone display. Requires CONFIG and CONFIG_MAX_BYTES, for example CONFIG=configs/display.json CONFIG_MAX_BYTES=65536
+    requires:
+      vars: [CONFIG, CONFIG_MAX_BYTES]
+    cmds:
+      - go run ./cmd/display -config {{shellQuote .CONFIG}} -config-max-bytes {{shellQuote .CONFIG_MAX_BYTES}}
 
   tidy:
     desc: Run go mod tidy to clean up dependencies
@@ -61,6 +89,26 @@ tasks:
     cmds:
       - pwsh -NoProfile -NonInteractive -File taskfile/test.ps1
 
+  ui-test:
+    desc: Run browser module unit tests and Playwright browser tests (needs npm ci and Chromium)
+    silent: true
+    cmds:
+      - pwsh -NoProfile -NonInteractive -File taskfile/ui-test.ps1
+
+  examples:
+    desc: Vet and test the external embedding example module (public APIs only)
+    silent: true
+    cmds:
+      - go -C examples/embedding vet ./...
+      - go -C examples/embedding test ./...
+      - echo examples done
+
+  clean-test:
+    desc: Check that cleanup removes only its declared output directories
+    silent: true
+    cmds:
+      - pwsh -NoProfile -NonInteractive -File taskfile/clean.tests.ps1
+
   all:
     desc: Run all checks and tests. This is the main task to run before considering work complete.
     silent: true
@@ -72,11 +120,13 @@ tasks:
       - task tidy
       - task vet
       - task fmt
-      # Enable task deadcode when command entry points exist (backlog item 10).
-      # - task deadcode
+      - task deadcode
       - task arch-lint
       - task lint
       - task test
+      - task clean-test
+      - task examples
+      - task ui-test
       - echo all done
 
 # ---- maintenance tasks ----

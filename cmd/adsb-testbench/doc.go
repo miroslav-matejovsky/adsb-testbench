@@ -1,7 +1,11 @@
-// Package main documents the planned cmd/adsb-testbench package.
+// Command adsb-testbench serves a combined test bench: one simulator with
+// its API and manager, and one display that reads the same simulator in
+// process, below one public mount prefix.
 //
-// Combined command: explicit configuration, process logging, signals, and
-// supervision of the testbench runtime.
+//	adsb-testbench -config configs/combined.json -config-max-bytes 65536
 //
-// This is a documentation-only skeleton; implementation is planned.
+// Both flags are required. The configuration sections and their meaning are
+// documented in configs/README.md. Interrupt or termination drains HTTP and
+// stops the simulator; the exit status is 0 on a clean stop, 2 for usage
+// errors and 1 for any other failure.
 package main

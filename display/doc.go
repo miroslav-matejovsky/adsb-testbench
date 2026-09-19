@@ -9,8 +9,11 @@
 //
 // [NewInProcessSource] adapts a provider in the same process and
 // [NewHTTPSource] reads the same data from a mounted simulator over HTTP.
-// Both return the same data and the same failure categories for the same
-// upstream state, because both run the same semantic validators. Local calls
+// Station discovery is a separate [StationSource]: [NewInProcessStationSource]
+// adapts a local provider, and an [HTTPSource] also satisfies it by reading
+// the simulator's stations route. Station discovery carries no aircraft truth.
+// Both transports return the same data and the same failure categories for
+// the same upstream state, because both run the same semantic validators. Local calls
 // are validated too: a Go provider can supply non-finite numbers, nil
 // collections, or inconsistent metadata that no JSON document could carry.
 //
@@ -43,7 +46,11 @@
 // # Outage and restart
 //
 // At most one successful snapshot is retained, with the exact selection that
-// produced it. A failed refresh returns an error and, for the same selection
+// produced it. This state is shared by every caller of one display, so the
+// GET /snapshot route is diagnostic: each browser component renders the
+// response of its own refresh request. An invalid selection or a canceled
+// admission fails before the source is contacted and returns request-scoped
+// unavailable state without touching the published snapshot. A failed refresh returns an error and, for the same selection
 // within the same run, that snapshot explicitly marked stale; a failed
 // selection change shows no other selection's aircraft. [Display.Snapshot]
 // reports [StatusUnavailable], [StatusFresh], or [StatusStale], together with
@@ -53,7 +60,8 @@
 // A validated run identifier that differs from the published one clears the
 // previous run's tracks and fallback before the new run's payload is decoded,
 // so corrupt new-run data can never fall back to an obsolete run. A conflict
-// error carrying a different current run does the same. An unknown or
+// error carrying a different current run does the same, and so does a station
+// catalog read from a replacement run. An unknown or
 // malformed source identity is an error and never resets state. Within one
 // run, a snapshot whose virtual time or whose per-station latest sequence
 // regressed is rejected.

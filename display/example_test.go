@@ -13,8 +13,8 @@ import (
 )
 
 // exampleProvider stands in for a simulator service. A real host passes
-// simulator.NewAPI(...), which satisfies display.ObservationSource without
-// either package importing the other.
+// simulator.NewAPI(...), which satisfies display.ObservationSource and
+// display.StationSource without either package importing the other.
 type exampleProvider struct{}
 
 func (exampleProvider) ReceptionSnapshot(context.Context, simulatorapi.ReceptionSnapshotRequest) (simulatorapi.ReceptionSnapshot, error) {
@@ -27,6 +27,12 @@ func (exampleProvider) ReceptionSnapshot(context.Context, simulatorapi.Reception
 
 func (exampleProvider) ReceptionHistory(context.Context, simulatorapi.HistoryRequest) (simulatorapi.ReceptionPage, error) {
 	return simulatorapi.ReceptionPage{}, nil
+}
+
+func (exampleProvider) Stations(context.Context) (simulatorapi.StationsSnapshot, error) {
+	return simulatorapi.StationsSnapshot{
+		RunID: "example-run", Now: "2024-03-05T12:00:00Z", Stations: []simulatorapi.StationState{},
+	}, nil
 }
 
 // exampleDisplayConfig is the shared JSON settings document of the examples.
@@ -48,6 +54,10 @@ func ExampleNewInProcessSource() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	stations, err := display.NewInProcessStationSource(exampleProvider{})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// The error callback is a Go dependency, not a serializable setting.
 	config, err := display.ParseConfig(strings.NewReader(exampleDisplayConfig), 4096,
@@ -56,7 +66,7 @@ func ExampleNewInProcessSource() {
 		log.Fatal(err)
 	}
 
-	backend, err := display.New(config, source)
+	backend, err := display.New(config, source, stations)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -110,7 +120,8 @@ func ExampleNewHTTPSource() {
 		log.Fatal(err)
 	}
 
-	backend, err := display.New(config, source)
+	// One HTTP source serves both raw evidence and station discovery.
+	backend, err := display.New(config, source, source)
 	if err != nil {
 		log.Fatal(err)
 	}

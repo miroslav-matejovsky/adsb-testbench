@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 )
 
@@ -19,8 +20,9 @@ var ErrInvalid = errors.New("invalid URL")
 // "https://host/bench/a/simulator/" and appending "receptions/history"
 // addresses the mounted route rather than the server root.
 //
-// Userinfo, queries, fragments, empty path segments, dot segments, and
-// percent-encoded path separators are rejected. Each of them would make the
+// Userinfo, queries, fragments (including empty ones), invalid ports, empty
+// path segments, dot segments, control bytes, backslashes, and percent-encoded
+// path separators or dot segments are rejected. Each of them would make the
 // appended route resolve somewhere the caller did not name.
 func ParseSourceBase(raw string) (string, error) {
 	if raw == "" {
@@ -37,14 +39,13 @@ func ParseSourceBase(raw string) (string, error) {
 		return "", fmt.Errorf("%w: base URL %q has no host", ErrInvalid, raw)
 	case parsed.User != nil:
 		return "", fmt.Errorf("%w: base URL %q must not carry userinfo", ErrInvalid, raw)
-	case parsed.RawQuery != "" || parsed.ForceQuery:
-		return "", fmt.Errorf("%w: base URL %q must not carry a query", ErrInvalid, raw)
-	case parsed.Fragment != "":
-		return "", fmt.Errorf("%w: base URL %q must not carry a fragment", ErrInvalid, raw)
 	case parsed.Opaque != "":
 		return "", fmt.Errorf("%w: base URL %q is not hierarchical", ErrInvalid, raw)
 	}
-	if err := validBasePath(raw, parsed); err != nil {
+	if err := validPort(raw, parsed); err != nil {
+		return "", err
+	}
+	if err := validPathText(raw, parsed.EscapedPath()); err != nil {
 		return "", err
 	}
 	parsed.Path = strings.TrimSuffix(parsed.Path, "/") + "/"
@@ -52,20 +53,19 @@ func ParseSourceBase(raw string) (string, error) {
 	return parsed.String(), nil
 }
 
-// validBasePath rejects path syntax that would change which route an appended
-// relative path resolves to.
-func validBasePath(raw string, parsed *url.URL) error {
-	escaped := parsed.EscapedPath()
-	if strings.Contains(escaped, "//") {
-		return fmt.Errorf("%w: base URL %q has an empty path segment", ErrInvalid, raw)
+// validPort rejects an empty or out-of-range explicit port. A missing port is
+// accepted and means the scheme default.
+func validPort(raw string, parsed *url.URL) error {
+	if strings.HasSuffix(parsed.Host, ":") {
+		return fmt.Errorf("%w: base URL %q has an empty port", ErrInvalid, raw)
 	}
-	if strings.Contains(strings.ToUpper(escaped), "%2F") {
-		return fmt.Errorf("%w: base URL %q encodes a path separator", ErrInvalid, raw)
+	port := parsed.Port()
+	if port == "" {
+		return nil
 	}
-	for _, segment := range strings.Split(parsed.Path, "/") {
-		if segment == "." || segment == ".." {
-			return fmt.Errorf("%w: base URL %q has a dot segment", ErrInvalid, raw)
-		}
+	number, err := strconv.Atoi(port)
+	if err != nil || number < 1 || number > 65535 {
+		return fmt.Errorf("%w: base URL %q has an invalid port", ErrInvalid, raw)
 	}
 	return nil
 }

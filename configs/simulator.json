@@ -1,0 +1,90 @@
+{
+  "$comment": "Complete configuration; every key is required and no value is a default. See configs/README.md for every key, unit and range. Units: *Nanoseconds are decimal strings of nanoseconds, *Milliseconds are integers, *Bytes are integers, degrees, feet, metres, knots. server: listenAddress host:port (loopback only here), publicBasePath mount prefix, HTTP timeouts and header bound. logging: level debug|info|warn|error, format text|json. simulator: engine settings; simulation.id is a label and the command appends a random suffix per launch. The run starts paused while the stations below are installed, then runs at speedHundredths. simulatorApi: service bounds and coverage reference altitude. stations: initial stations. managerUi: manager browser settings. The display command's source.baseUrl points at this server's /api/simulator route.",
+  "server": {
+    "listenAddress": "127.0.0.1:18481",
+    "publicBasePath": "/",
+    "readHeaderTimeoutNanoseconds": "5000000000",
+    "readTimeoutNanoseconds": "10000000000",
+    "writeTimeoutNanoseconds": "15000000000",
+    "idleTimeoutNanoseconds": "60000000000",
+    "shutdownTimeoutNanoseconds": "5000000000",
+    "maxHeaderBytes": 65536
+  },
+  "logging": {
+    "level": "info",
+    "format": "text"
+  },
+  "simulator": {
+    "simulation": {
+      "id": "local-bench",
+      "startTime": "2030-01-01T00:00:00Z",
+      "seed": "20300101",
+      "initialAircraftCount": 8,
+      "speedHundredths": 100,
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 49.5,
+          "max": 50.6
+        },
+        "longitudeDegrees": {
+          "min": 13.6,
+          "max": 15.2
+        },
+        "altitudeFeet": {
+          "min": 3000,
+          "max": 39000
+        },
+        "groundSpeedKnots": {
+          "min": 140,
+          "max": 480
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 359
+        },
+        "verticalRateFeetPerMinute": {
+          "min": -1500,
+          "max": 1500
+        }
+      }
+    }
+  },
+  "simulatorApi": {
+    "maxRequestBytes": 65536,
+    "maxResponseBytes": 4194304,
+    "requestTimeoutNanoseconds": "5000000000",
+    "coverageReferenceAltitudeFeet": 10000
+  },
+  "stations": [
+    {
+      "id": "prague",
+      "enabled": true,
+      "latitudeDegrees": 50.1,
+      "longitudeDegrees": 14.26,
+      "siteElevationMetres": 380,
+      "antennaHeightMetres": 15,
+      "antennaGainDBi": 3,
+      "sensitivityDBm": -90,
+      "systemLossDB": 2,
+      "frameLossProbability": 0.05
+    },
+    {
+      "id": "brno",
+      "enabled": true,
+      "latitudeDegrees": 49.15,
+      "longitudeDegrees": 16.69,
+      "siteElevationMetres": 240,
+      "antennaHeightMetres": 10,
+      "antennaGainDBi": 3,
+      "sensitivityDBm": -88,
+      "systemLossDB": 3,
+      "frameLossProbability": 0
+    }
+  ],
+  "managerUi": {
+    "pollIntervalMilliseconds": 1000,
+    "requestTimeoutMilliseconds": 5000,
+    "maxResponseBytes": 4194304,
+    "resumeSpeedHundredths": 100
+  }
+}

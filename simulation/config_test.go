@@ -88,8 +88,10 @@ func TestConfigNormalizeRejects(t *testing.T) {
 			got, err := normalizeConfig(cfg)
 			require.ErrorIs(t, err, ErrInvalid)
 			require.Equal(t, Config{}, got)
+			require.ErrorIs(t, cfg.Validate(), ErrInvalid)
 		})
 	}
+	require.NoError(t, validConfig().Validate())
 }
 
 // Exact domain endpoints and degenerate ranges are accepted.

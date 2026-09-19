@@ -1,6 +1,6 @@
 # Manager, aircraft display, commands, and embedding
 
-Status: planned. This is one implementation sequence for former backlog items
+Status: complete. This is one implementation sequence for former backlog items
 08 (manager UI), 09 (aircraft map and inspector), and 10 (commands and embedding).
 Promoting the backlog items does not mean their implementation is complete.
 

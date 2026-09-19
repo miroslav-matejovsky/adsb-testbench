@@ -12,10 +12,24 @@ import (
 	"github.com/miroslav-matejovsky/adsb-testbench/simulatorapi"
 )
 
-// funcSource is an observation source driven entirely by the test.
+// funcSource is an observation and station source driven entirely by the
+// test.
 type funcSource struct {
 	snapshot func(context.Context, simulatorapi.ReceptionSnapshotRequest) (simulatorapi.ReceptionSnapshot, error)
 	history  func(context.Context, simulatorapi.HistoryRequest) (simulatorapi.ReceptionPage, error)
+	stations func(context.Context) (simulatorapi.StationsSnapshot, error)
+}
+
+func (s funcSource) Stations(ctx context.Context) (simulatorapi.StationsSnapshot, error) {
+	return s.stations(ctx)
+}
+
+// stationsOf returns source's own station source when it has one.
+func stationsOf(source ObservationSource) StationSource {
+	if stations, ok := source.(StationSource); ok {
+		return stations
+	}
+	return funcSource{}
 }
 
 func (s funcSource) ReceptionSnapshot(ctx context.Context, request simulatorapi.ReceptionSnapshotRequest) (simulatorapi.ReceptionSnapshot, error) {
@@ -78,7 +92,7 @@ func newTestDisplay(t *testing.T, source ObservationSource) (*Display, *fixedClo
 	t.Helper()
 
 	clock := &fixedClock{now: time.Date(2030, 1, 1, 0, 0, 0, 0, time.UTC)}
-	return newDisplay(displayFixtureConfig(), source, clock.Now), clock
+	return newDisplay(displayFixtureConfig(), source, stationsOf(source), clock.Now), clock
 }
 
 func TestDisplayStartsUnavailable(t *testing.T) {
@@ -409,15 +423,18 @@ func TestDisplayHistoryRejectsInvalidRequestsAndPages(t *testing.T) {
 func TestNewDisplayValidatesItsDependencies(t *testing.T) {
 	t.Parallel()
 
-	_, err := New(displayFixtureConfig(), nil)
+	_, err := New(displayFixtureConfig(), nil, funcSource{})
+	require.ErrorIs(t, err, simulatorapi.CategoryInvalid)
+
+	_, err = New(displayFixtureConfig(), funcSource{}, nil)
 	require.ErrorIs(t, err, simulatorapi.CategoryInvalid)
 
 	invalid := displayFixtureConfig()
 	invalid.ReportError = nil
-	_, err = New(invalid, funcSource{})
+	_, err = New(invalid, funcSource{}, funcSource{})
 	require.ErrorIs(t, err, simulatorapi.CategoryInvalid)
 
-	display, err := New(displayFixtureConfig(), funcSource{})
+	display, err := New(displayFixtureConfig(), funcSource{}, funcSource{})
 	require.NoError(t, err)
 	require.Equal(t, StatusUnavailable, display.Snapshot().Status)
 }

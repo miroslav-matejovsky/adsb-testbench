@@ -27,7 +27,7 @@ func newTestDisplayHandler(t *testing.T, source ObservationSource) (http.Handler
 	config := displayFixtureConfig()
 	config.ReportError = func(err error) { *reported = append(*reported, err) }
 	clock := &fixedClock{now: time.Date(2030, 1, 1, 0, 0, 0, 0, time.UTC)}
-	display := newDisplay(config, source, clock.Now)
+	display := newDisplay(config, source, stationsOf(source), clock.Now)
 	return http.StripPrefix(displayMount, display.Handler()), display, reported
 }
 
@@ -247,7 +247,7 @@ func TestDisplayHTTPRejectsQueriesMediaTypesAndOversizedBodies(t *testing.T) {
 		snapshot: func(context.Context, simulatorapi.ReceptionSnapshotRequest) (simulatorapi.ReceptionSnapshot, error) {
 			return fixtureSnapshot(fixtureStart, []string{}, []simulatorapi.Reception{}), nil
 		},
-	}, time.Now)
+	}, funcSource{}, time.Now)
 	smallHandler := http.StripPrefix(displayMount, small.Handler())
 
 	require.Equal(t, http.StatusOK,
@@ -266,7 +266,7 @@ func TestDisplayHTTPEnforcesTheResponseByteBound(t *testing.T) {
 		snapshot: func(context.Context, simulatorapi.ReceptionSnapshotRequest) (simulatorapi.ReceptionSnapshot, error) {
 			return raw, nil
 		},
-	}, time.Now)
+	}, funcSource{}, time.Now)
 	handler := http.StripPrefix(displayMount, display.Handler())
 
 	recorder := displayCall(t, handler, http.MethodPost, "/observations", `{"stationIds":["alpha"]}`, nil)
