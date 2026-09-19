@@ -1,0 +1,59 @@
+{
+  "$comment": "Complete configuration; every key is required and no value is a default. See configs/README.md for every key, unit and range. Units: *Nanoseconds are decimal strings of nanoseconds, *Milliseconds are integers, *Bytes are integers, degrees, feet, metres, knots. server: listenAddress host:port (loopback only here), publicBasePath mount prefix, HTTP timeouts and header bound. logging: level debug|info|warn|error, format text|json. display: field lifetimes and backend bounds. aircraftUi: browser settings; tiles null disables map tiles. source: the simulator API of configs/simulator.json (listen 127.0.0.1:18481); its timeout must not exceed display.requestTimeoutNanoseconds. transport: outbound HTTP dial, keep-alive, TLS handshake, response-header and idle timeouts and connection bounds.",
+  "server": {
+    "listenAddress": "127.0.0.1:18482",
+    "publicBasePath": "/",
+    "readHeaderTimeoutNanoseconds": "5000000000",
+    "readTimeoutNanoseconds": "10000000000",
+    "writeTimeoutNanoseconds": "15000000000",
+    "idleTimeoutNanoseconds": "60000000000",
+    "shutdownTimeoutNanoseconds": "5000000000",
+    "maxHeaderBytes": 65536
+  },
+  "logging": {
+    "level": "info",
+    "format": "text"
+  },
+  "display": {
+    "identityExpiryNanoseconds": "60000000000",
+    "positionExpiryNanoseconds": "30000000000",
+    "altitudeExpiryNanoseconds": "30000000000",
+    "velocityExpiryNanoseconds": "30000000000",
+    "maxRequestBytes": 65536,
+    "maxResponseBytes": 4194304,
+    "requestTimeoutNanoseconds": "5000000000"
+  },
+  "aircraftUi": {
+    "pollIntervalMilliseconds": 1000,
+    "requestTimeoutMilliseconds": 5000,
+    "maxResponseBytes": 4194304,
+    "stationIds": [
+      "prague",
+      "brno"
+    ],
+    "freshForNanoseconds": "10000000000",
+    "lostAfterNanoseconds": "60000000000",
+    "historyPageSize": 100,
+    "maxHistoryRecords": 1000,
+    "initialLatitudeDegrees": 49.8,
+    "initialLongitudeDegrees": 15.0,
+    "initialZoom": 7,
+    "tiles": null
+  },
+  "source": {
+    "baseUrl": "http://127.0.0.1:18481/api/simulator",
+    "timeoutNanoseconds": "4000000000",
+    "maxRequestBytes": 65536,
+    "maxResponseBytes": 4194304
+  },
+  "transport": {
+    "dialTimeoutNanoseconds": "2000000000",
+    "keepAliveNanoseconds": "30000000000",
+    "tlsHandshakeTimeoutNanoseconds": "5000000000",
+    "responseHeaderTimeoutNanoseconds": "4000000000",
+    "idleConnTimeoutNanoseconds": "60000000000",
+    "maxIdleConns": 16,
+    "maxIdleConnsPerHost": 8,
+    "maxConnsPerHost": 16
+  }
+}

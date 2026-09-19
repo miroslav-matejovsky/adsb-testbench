@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ADS-B test bench - simulator manager</title>
+<link rel="stylesheet" href="{{.AssetBase}}ui.css">
+<script type="module" src="{{.AssetBase}}manager-page.js"></script>
+</head>
+<body class="tb-page">
+<header class="tb-page-header">
+<h1>Simulator manager</h1>
+<nav aria-label="Page links"><a href="{{.AssetBase}}notices.html">Third-party notices</a></nav>
+</header>
+<main id="tb-manager-root" class="tb-page-main" aria-label="Simulator manager" data-tb-mount="manager">
+<p class="tb-loading" role="status">Loading the simulator manager...</p>
+<noscript>The simulator manager requires JavaScript.</noscript>
+</main>
+<script type="application/json" id="tb-config">{{.Config}}</script>
+</body>
+</html>

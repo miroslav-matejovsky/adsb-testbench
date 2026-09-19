@@ -8,8 +8,7 @@
 #  - test-support API: a function that exists so a test can assert something about
 #    the production code itself. It is unreachable from a cmd entry point by nature,
 #    and the alternative (dropping it) means dropping the assertion it enables.
-$allow = @(
-)
+$allow = @()
 
 $out = deadcode ./cmd/... 2>&1
 $exit = $LASTEXITCODE

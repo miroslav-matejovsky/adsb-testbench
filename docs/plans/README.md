@@ -2,9 +2,18 @@
 
 This directory contains implementation plans. A plan is an executable specification, not a discussion document.
 
+## Active plans
+
+None. Implemented plans are removed; the code and its documentation record
+the result.
+
+## Plan format
+
 Each plan has:
+
 - `README.md` describing goal, scope, architecture impact, deliverables, and success criteria
 - `assessment.md` describing feasibility, risks, dependencies, validation, and rollback
+- `progress.md` describing the current status by explicitly listing completed and pending steps in simple table format
 - numbered implementation steps (`01-*.md`, `02-*.md`, ...)
 
 Each step contains YAML front matter:
@@ -17,6 +26,7 @@ complexity: "low|medium|high|very_high"
 ```
 
 Each step must contain:
+
 - **Objective**: exact outcome of the step
 - **Target Artifacts**: files, modules, APIs, schemas, configurations, and tests to modify
 - **Implementation Tasks**: ordered, concrete development actions
@@ -26,6 +36,7 @@ Each step must contain:
 - **Non-Goals**: what is explicitly not implemented
 
 Requirements:
+
 - Every task must describe **what to change, where to change it, and how it will be verified**
 - Reference specific files, APIs, classes, methods, database objects, and tests whenever possible
 - Define implementation order explicitly through dependencies
@@ -33,6 +44,7 @@ Requirements:
 - Acceptance criteria must be measurable and independently verifiable
 
 Forbidden:
+
 - Vague work items such as "improve", "enhance", "optimize", "refactor", or "investigate"
 - Open-ended research tasks
 - Future considerations, ideas, or alternatives

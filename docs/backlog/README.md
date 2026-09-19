@@ -1,29 +1,31 @@
 # Backlog
 
-Open implementation and tuning work, grouped by subsystem.
-Completed, covered, and decision-only items do not belong here.
+Open implementation work for ADS-B TestBench, grouped by subsystem.
+Each item is self-contained and records value, effort, complexity, dependencies,
+scope, and acceptance criteria. Remove completed item files and index entries.
+When work moves into a detailed plan, remove its backlog file and index entry
+and link dependent items to the active plan. Promotion is not implementation
+completion.
 
-Each backlog item is a separate file in `docs\backlog\`, containing the item's
-Effort, Value, and details, including anything it requires. This index only
-lists and links items; it does not repeat their details.
+Front matter uses `value` (Low, Medium, High, Critical), `effort` (S, M, L, XL),
+`complexity` (trivial, easy, medium, hard), and `dependencies` (a list of item
+filenames). External prerequisites are described in the item.
 
-Each backlog item file is self-contained and has a yaml front matter section with the following fields:
+Manager controls, the aircraft map and reception inspector, commands, and host
+embedding are implemented; see the root [README](../../README.md).
 
-```yaml
-value: "Low|Medium|High|Critical"
-effort: "S|M|L|XL"
-complexity: "trivial|easy|medium|hard"
-dependencies: "either other backlog items or external factors like new data or infrastructure requirements"
-```
+## Remaining next-work items
 
-## Top five next-work items
-
-| Rank | Item | Effort | Value |  Why next |
-| ---: | --- | :---: | :---: |  --- |
+| Rank | Item | Effort | Value |
+| ---: | --- | :---: | :---: |
+| 1 | [Deterministic fixtures and capacity checks](11-quality-and-capacity.md) | M | High |
+| 2 | [Replay, transport output, and richer scenarios](12-replay-and-traffic-extensions.md) | XL | Medium |
 
 ## Index
 
-### Build & configuration
+### Quality and extensions
 
 | Item | Effort | Value |
 | --- | :---: | :---: |
+| [Deterministic fixtures and capacity checks](11-quality-and-capacity.md) | M | High |
+| [Replay, transport output, and richer scenarios](12-replay-and-traffic-extensions.md) | XL | Medium |

@@ -1,0 +1,16 @@
+{
+  "name": "adsb-testbench-browser-tests",
+  "private": true,
+  "description": "Browser unit and acceptance tests for the embedded ADS-B test bench UI. Not a runtime dependency.",
+  "type": "module",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "test:unit": "node --test \"ui/browser/unit/*.test.mjs\"",
+    "test:browser": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0"
+  }
+}

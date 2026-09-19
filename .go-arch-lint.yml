@@ -1,3 +1,5 @@
+# Package boundaries, enforced by task arch-lint.
+# Standard library imports are allowed. External dependencies need explicit entries.
 version: 3
 workdir: .
 allow:
@@ -5,24 +7,59 @@ allow:
   deepScan: true
 
 exclude:
-  - "examples"
-  - "test"
   - "vendor"
   - ".tmp"
+  - ".test-results"
+  - "node_modules"
+  # Test-only fixture host for browser tests; never built by ./... patterns.
+  - "ui/testdata"
+  # Separate consumer module that compiles against public packages only.
+  - "examples"
 
 excludeFiles:
   - "^.*_test\\.go$"
-  - "^.*\/test\/.*$"
 
 vendors:
-  # TODO just an example
-  x-sync: { in: "golang.org/x/sync/**" }
- 
+  go-adsb: { in: "kreklow.us/go/go-adsb/adsb" }
+
 components:
-  # TODO: just an example for now
-  buildid: { in: internal/buildid }
+  cmd-adsb-testbench: { in: cmd/adsb-testbench }
+  cmd-simulator: { in: cmd/simulator }
+  cmd-display: { in: cmd/display }
+  simulation: { in: simulation }
+  simulator: { in: simulator }
+  simulatorapi: { in: simulatorapi }
+  display: { in: display }
+  testbench: { in: testbench }
+  ui: { in: ui }
+  ui-assets: { in: ui/internal/assets }
+  adsb: { in: internal/adsb }
+  simdriver: { in: internal/simdriver }
+  cli: { in: internal/cli }
+  httpserver: { in: internal/httpserver }
+  urlpath: { in: internal/urlpath }
+  processtest: { in: internal/processtest }
 
 deps:
-  some-component:
-    canUse: [x-sync]
-    mayDependOn: [some-other-component]
+  adsb:
+    canUse: [go-adsb]
+  cmd-adsb-testbench:
+    mayDependOn: [cli, testbench]
+  cmd-simulator:
+    mayDependOn: [cli, testbench]
+  cmd-display:
+    mayDependOn: [cli, testbench]
+  cli:
+    mayDependOn: [testbench, simulator, display, ui, simulatorapi, httpserver, urlpath]
+  simulation:
+    mayDependOn: [adsb]
+  simulator:
+    mayDependOn: [simulation, simdriver, simulatorapi, ui, httpserver, urlpath]
+  simdriver:
+    mayDependOn: [simulation]
+  display:
+    mayDependOn: [adsb, simulatorapi, ui, httpserver, urlpath]
+  testbench:
+    mayDependOn: [simulator, display, ui, urlpath]
+  ui:
+    mayDependOn: [ui-assets, urlpath, simulatorapi]

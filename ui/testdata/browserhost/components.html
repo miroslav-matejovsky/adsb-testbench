@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Host layout</title>
+</head>
+<body>
+<h1>Host layout</h1>
+<section aria-label="Host manager"><div id="host-manager"></div></section>
+<section aria-label="Host display alpha"><div id="host-alpha"></div></section>
+<section aria-label="Host display bravo"><div id="host-bravo"></div></section>
+<script type="module">
+// A host page that builds its own layout from the public components of
+// integration bench C, with explicit API and asset URLs.
+import { mountAircraftDisplay, mountManager } from "/int/c/assets/components.js";
+
+const common = { pollIntervalMilliseconds: 1000, requestTimeoutMilliseconds: 5000, maxResponseBytes: 4194304 };
+const aircraft = (stationIds) => ({
+  ...common, apiBaseUrl: "/int/c/api/display/", assetBaseUrl: "/int/c/assets/", stationIds,
+  freshForNanoseconds: "10000000000", lostAfterNanoseconds: "60000000000", historyPageSize: 5,
+  maxHistoryRecords: 50, initialLatitudeDegrees: 50, initialLongitudeDegrees: 14, initialZoom: 7, tiles: null,
+});
+window.hostComponents = {
+  manager: mountManager(document.getElementById("host-manager"), {
+    ...common, apiBaseUrl: "/int/c/api/simulator/", assetBaseUrl: "/int/c/assets/", resumeSpeedHundredths: 100,
+  }),
+  alpha: mountAircraftDisplay(document.getElementById("host-alpha"), aircraft(["alpha"])),
+  bravo: mountAircraftDisplay(document.getElementById("host-bravo"), aircraft(["bravo"])),
+};
+window.hostReady = true;
+</script>
+</body>
+</html>

@@ -135,3 +135,11 @@ captures/** linguist-generated=true
 *.gz  binary
 
 *.exe binary
+
+# -------------------------------------------------------------------
+# Pinned third-party UI assets: keep upstream bytes so recorded
+# checksums hold on every platform.
+# -------------------------------------------------------------------
+
+ui/internal/assets/static/leaflet/** -text
+ui/internal/assets/licenses/*.txt    -text

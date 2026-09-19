@@ -61,7 +61,9 @@
     ]
   },
   "cSpell.words": [
+    "adsb",
     "buildid",
+    "callsign",
     "deadcode",
     "fe3dback",
     "frontends",
@@ -72,11 +74,14 @@
     "govulncheck",
     "healthz",
     "HTMX",
+    "kreklow",
     "LASTEXITCODE",
     "matejovsky",
     "miroslav",
     "overcomplicate",
     "pkgname",
-    "taskfile"
+    "simulatorapi",
+    "taskfile",
+    "testbench"
   ]
 }
