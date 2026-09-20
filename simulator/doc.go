@@ -28,5 +28,10 @@
 // The host error callback is a Go dependency passed separately, because a
 // callback has no JSON representation.
 //
-// The browser-facing manager UI remains separate backlog work.
+// # Ownership of the manager UI
+//
+// This package provides the service only. The ui package serves the manager
+// page and its embedded browser bundle against these routes, and the
+// testbench package composes a simulator, a display and the pages into one
+// application. No page is served from here.
 package simulator

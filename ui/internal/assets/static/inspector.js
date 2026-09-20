@@ -19,8 +19,12 @@
 import { h, replaceChildren, setText, uniqueId } from "./dom.js";
 import { parseDecimal } from "./time.js";
 
-/** Maximum distinct gap markers kept per loaded history. */
-const MAX_GAP_ROWS = 1000;
+/**
+ * Maximum distinct gap markers kept per loaded history. It is a fixed
+ * policy, not a configurable setting: gap rows are bounded independently of
+ * maxRecords so a long inspection cannot grow the loaded view without end.
+ */
+export const MAX_GAP_ROWS = 1000;
 
 function receiverSummary(receiver) {
   return `${receiver.enabled ? "enabled" : "disabled"}; lat ${receiver.latitudeDegrees}, lon ${receiver.longitudeDegrees} deg; ` +

@@ -137,24 +137,18 @@ func (d *Driver) SetSpeed(ctx context.Context, speed uint16) error {
 	return nil
 }
 
-// AddStation validates and settles before creating a station.
+// AddStation asks the engine whether the addition is acceptable, then settles
+// elapsed time and creates the station. A command the engine would reject,
+// including reuse of a removed identifier and an exhausted identifier budget,
+// fails before any time is settled.
 func (d *Driver) AddStation(ctx context.Context, cfg simulation.StationConfig) (simulation.Station, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.stopped {
 		return simulation.Station{}, ErrStopped
 	}
-	if err := simulation.ValidateStationConfig(cfg); err != nil {
-		return simulation.Station{}, err
-	}
-	snapshot := d.engine.Snapshot()
-	if len(snapshot.Stations) >= simulation.MaxStations {
-		return simulation.Station{}, fmt.Errorf("%w: at most %d active stations", simulation.ErrLimit, simulation.MaxStations)
-	}
-	for _, station := range snapshot.Stations {
-		if station.Config.ID == cfg.ID {
-			return simulation.Station{}, fmt.Errorf("%w: station ID %q is already active", simulation.ErrInvalid, cfg.ID)
-		}
+	if err := d.engine.ValidateStationAddition(ctx, cfg); err != nil {
+		return simulation.Station{}, fmt.Errorf("validate station creation: %w", err)
 	}
 	if err := d.settleLocked(ctx); err != nil {
 		return simulation.Station{}, fmt.Errorf("settle before station creation: %w", err)
@@ -166,21 +160,17 @@ func (d *Driver) AddStation(ctx context.Context, cfg simulation.StationConfig) (
 	return station, nil
 }
 
-// UpdateStation validates and settles before replacing a station's settings.
+// UpdateStation asks the engine whether the update is acceptable, including
+// an unknown station, a stale revision and an exhausted revision, then
+// settles and replaces the station's settings.
 func (d *Driver) UpdateStation(ctx context.Context, expectedRevision uint64, cfg simulation.StationConfig) (simulation.Station, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.stopped {
 		return simulation.Station{}, ErrStopped
 	}
-	if err := simulation.ValidateStationConfig(cfg); err != nil {
-		return simulation.Station{}, err
-	}
-	if err := ctx.Err(); err != nil {
-		return simulation.Station{}, err
-	}
-	if err := d.precheckStation(cfg.ID, expectedRevision); err != nil {
-		return simulation.Station{}, err
+	if err := d.engine.ValidateStationUpdate(ctx, expectedRevision, cfg); err != nil {
+		return simulation.Station{}, fmt.Errorf("validate station update: %w", err)
 	}
 	if err := d.settleLocked(ctx); err != nil {
 		return simulation.Station{}, fmt.Errorf("settle before station update: %w", err)
@@ -192,18 +182,17 @@ func (d *Driver) UpdateStation(ctx context.Context, expectedRevision uint64, cfg
 	return station, nil
 }
 
-// RemoveStation settles before removing a revision-matched station.
+// RemoveStation asks the engine whether the removal is acceptable, then
+// settles and removes the revision-matched station. A station at the largest
+// revision remains removable.
 func (d *Driver) RemoveStation(ctx context.Context, id string, expectedRevision uint64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	if d.stopped {
 		return ErrStopped
 	}
-	if err := ctx.Err(); err != nil {
-		return err
-	}
-	if err := d.precheckStation(id, expectedRevision); err != nil {
-		return err
+	if err := d.engine.ValidateStationRemoval(ctx, id, expectedRevision); err != nil {
+		return fmt.Errorf("validate station removal: %w", err)
 	}
 	if err := d.settleLocked(ctx); err != nil {
 		return fmt.Errorf("settle before station removal: %w", err)
@@ -212,19 +201,6 @@ func (d *Driver) RemoveStation(ctx context.Context, id string, expectedRevision 
 		return fmt.Errorf("remove station: %w", err)
 	}
 	return nil
-}
-
-func (d *Driver) precheckStation(id string, expectedRevision uint64) error {
-	for _, station := range d.engine.Snapshot().Stations {
-		if station.Config.ID != id {
-			continue
-		}
-		if station.Revision != expectedRevision {
-			return fmt.Errorf("%w: station %q is at revision %d, not %d", simulation.ErrConflict, id, station.Revision, expectedRevision)
-		}
-		return nil
-	}
-	return fmt.Errorf("%w: station %q", simulation.ErrNotFound, id)
 }
 
 func (d *Driver) settle(ctx context.Context) error {

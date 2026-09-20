@@ -3,7 +3,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { mergePage, validatePage } from "../../internal/assets/static/inspector.js";
+import { MAX_GAP_ROWS, mergePage, validatePage } from "../../internal/assets/static/inspector.js";
 import { at, frames, isoAt, reception } from "../fixtures.mjs";
 
 function page(sequences, { gap = false, hasMore = true, oldest = "1", latest = "100", runId = "run-1" } = {}) {
@@ -71,4 +71,34 @@ test("pages from another station or with malformed cursors are rejected", () => 
   badSequence.oldestSequence = "01";
   assert.throws(() => validatePage(badSequence, "alpha"), TypeError);
   assert.throws(() => validatePage(null, "alpha"), TypeError);
+});
+
+test("a long inspection bounds records, gap rows and trimming counts", () => {
+  const maxRecords = 50;
+  const start = 9007199254740993n;
+  let history = empty();
+  let sequence = start;
+  const pages = 1200;
+  for (let index = 0; index < pages; index++) {
+    const first = sequence;
+    const sequences = [first, first + 1n, first + 2n].map(String);
+    // Every page repeats its first record and reports a retention gap.
+    history = mergePage(history, page([sequences[0], ...sequences], {
+      gap: true, oldest: String(first), latest: String(first + 2n), hasMore: index < pages - 1,
+    }), maxRecords);
+    sequence = first + 3n;
+  }
+
+  const latest = String(sequence - 1n);
+  assert.equal(history.pages, pages);
+  assert.equal(history.records.length, maxRecords, "loaded records stay at the browser bound");
+  assert.equal(history.records.at(-1).sequence, latest);
+  assert.equal(history.nextCursor.afterSequence, latest, "the cursor is the exact latest sequence");
+  assert.equal(history.latestSequence, latest);
+  assert.equal(history.trimmed, pages * 3 - maxRecords, "every dropped record is counted once");
+  const gapRows = history.entries.filter((entry) => entry.type === "gap").length;
+  const recordRows = history.entries.filter((entry) => entry.type === "record").length;
+  assert.equal(recordRows, maxRecords);
+  assert.equal(gapRows, MAX_GAP_ROWS, "gap markers follow their own fixed policy");
+  assert.ok(history.entries.length <= maxRecords + MAX_GAP_ROWS);
 });

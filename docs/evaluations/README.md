@@ -11,3 +11,4 @@ Revisit a decision when its stated trigger or the surrounding code changes.
 | Evaluation | Decision |
 | --- | --- |
 | [go-adsb codec integration](2026-09-16-go-adsb.md) | Reuse raw fields, CRC, callsign, and altitude; implement encoding, velocity semantics, and guarded CPR locally |
+| [Measured capacity and supported profiles](quality-capacity/README.md) | Publish response budgets derived from a conservative worksheet and the profiles measured to keep up on the recorded host |

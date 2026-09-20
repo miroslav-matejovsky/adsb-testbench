@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"math/rand/v2"
+	"slices"
 	"time"
 )
 
@@ -35,6 +36,8 @@ func (s *station) public(start time.Time) Station {
 // Identifiers are reserved for the whole run: removing a station frees an
 // active slot but never releases its identifier, so a later cursor or record
 // naming that identifier can only ever mean the one station that had it.
+// The reserved set holds at most MaxStationIDsPerRun identifiers of at most
+// 64 bytes each; active holds at most MaxStations stations.
 type stationRegistry struct {
 	active      []station
 	reserved    map[string]struct{}
@@ -72,7 +75,8 @@ func (r *stationRegistry) find(id string) int {
 	return -1
 }
 
-// allocate returns the next station creation ordinal.
+// allocate returns the next station creation ordinal. checkAdd rejects
+// exhaustion first; this guard keeps the invariant local.
 func (r *stationRegistry) allocate() (uint64, error) {
 	if r.nextOrdinal == math.MaxUint64 {
 		return 0, fmt.Errorf("%w: station ordinals are exhausted", ErrLimit)
@@ -82,14 +86,32 @@ func (r *stationRegistry) allocate() (uint64, error) {
 	return ordinal, nil
 }
 
-// add creates a station at an elapsed instant with revision 1 and reserves its
-// identifier. The caller has already validated the settings.
-func (r *stationRegistry) add(seed uint64, cfg StationConfig, createdAt time.Duration) (int, error) {
-	if _, used := r.reserved[cfg.ID]; used {
-		return 0, fmt.Errorf("%w: station ID %q is already used in this run", ErrInvalid, cfg.ID)
+// checkAdd reports whether a station with id may be created now, without
+// changing the registry. Precedence is fixed: a used identifier is invalid;
+// active capacity, lifetime identifier capacity, and ordinal exhaustion are
+// limits, in that order.
+func (r *stationRegistry) checkAdd(id string) error {
+	if _, used := r.reserved[id]; used {
+		return fmt.Errorf("%w: station ID %q is already used in this run", ErrInvalid, id)
 	}
 	if len(r.active) >= MaxStations {
-		return 0, fmt.Errorf("%w: at most %d stations may be active", ErrLimit, MaxStations)
+		return fmt.Errorf("%w: at most %d stations may be active", ErrLimit, MaxStations)
+	}
+	if len(r.reserved) >= MaxStationIDsPerRun {
+		return fmt.Errorf("%w: at most %d station IDs may be created in one run", ErrLimit, MaxStationIDsPerRun)
+	}
+	if r.nextOrdinal == math.MaxUint64 {
+		return fmt.Errorf("%w: station ordinals are exhausted", ErrLimit)
+	}
+	return nil
+}
+
+// add creates a station at an elapsed instant with revision 1 and reserves its
+// identifier. The caller has already validated the settings. A rejected
+// addition consumes no ordinal, identifier, or random stream.
+func (r *stationRegistry) add(seed uint64, cfg StationConfig, createdAt time.Duration) (int, error) {
+	if err := r.checkAdd(cfg.ID); err != nil {
+		return 0, err
 	}
 
 	ordinal, err := r.allocate()
@@ -108,17 +130,33 @@ func (r *stationRegistry) add(seed uint64, cfg StationConfig, createdAt time.Dur
 	return len(r.active) - 1, nil
 }
 
+// checkUpdate returns the index of the station an update would change,
+// without changing the registry. An unknown identifier is not found, a
+// different revision is a conflict, and a revision that cannot increment
+// without wrapping is a limit. An exhausted station can still be removed.
+func (r *stationRegistry) checkUpdate(expectedRevision uint64, id string) (int, error) {
+	index := r.find(id)
+	if index < 0 {
+		return 0, fmt.Errorf("%w: station %q", ErrNotFound, id)
+	}
+	current := r.active[index].revision
+	if current != expectedRevision {
+		return 0, fmt.Errorf("%w: station %q is at revision %d, not %d",
+			ErrConflict, id, current, expectedRevision)
+	}
+	if current == math.MaxUint64 {
+		return 0, fmt.Errorf("%w: station %q revision %d cannot increment", ErrLimit, id, current)
+	}
+	return index, nil
+}
+
 // update replaces every setting of a station, keeping its position, creation
 // instant, ordinal, and generator state, and increments its revision.
 // The caller has already validated the settings.
 func (r *stationRegistry) update(expectedRevision uint64, cfg StationConfig) (int, error) {
-	index := r.find(cfg.ID)
-	if index < 0 {
-		return 0, fmt.Errorf("%w: station %q", ErrNotFound, cfg.ID)
-	}
-	if current := r.active[index].revision; current != expectedRevision {
-		return 0, fmt.Errorf("%w: station %q is at revision %d, not %d",
-			ErrConflict, cfg.ID, current, expectedRevision)
+	index, err := r.checkUpdate(expectedRevision, cfg.ID)
+	if err != nil {
+		return 0, err
 	}
 
 	r.active[index].cfg = cfg
@@ -127,19 +165,31 @@ func (r *stationRegistry) update(expectedRevision uint64, cfg StationConfig) (in
 }
 
 // remove deletes a station, keeping its identifier reserved and the relative
-// order of the remaining stations.
+// order of the remaining stations. The vacated tail element is cleared, so
+// the backing array retains no reference to the removed reception ring.
 func (r *stationRegistry) remove(id string, expectedRevision uint64) error {
-	index := r.find(id)
-	if index < 0 {
-		return fmt.Errorf("%w: station %q", ErrNotFound, id)
-	}
-	if current := r.active[index].revision; current != expectedRevision {
-		return fmt.Errorf("%w: station %q is at revision %d, not %d",
-			ErrConflict, id, current, expectedRevision)
+	index, err := r.checkRemove(id, expectedRevision)
+	if err != nil {
+		return err
 	}
 
-	r.active = append(r.active[:index], r.active[index+1:]...)
+	r.active = slices.Delete(r.active, index, index+1)
 	return nil
+}
+
+// checkRemove returns the index of the station a removal would delete,
+// without changing the registry. Unlike an update, the largest revision is
+// acceptable, since removal does not increment it.
+func (r *stationRegistry) checkRemove(id string, expectedRevision uint64) (int, error) {
+	index := r.find(id)
+	if index < 0 {
+		return 0, fmt.Errorf("%w: station %q", ErrNotFound, id)
+	}
+	if current := r.active[index].revision; current != expectedRevision {
+		return 0, fmt.Errorf("%w: station %q is at revision %d, not %d",
+			ErrConflict, id, current, expectedRevision)
+	}
+	return index, nil
 }
 
 // snapshot returns detached records of the active stations in creation order.

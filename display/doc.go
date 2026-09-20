@@ -13,9 +13,13 @@
 // adapts a local provider, and an [HTTPSource] also satisfies it by reading
 // the simulator's stations route. Station discovery carries no aircraft truth.
 // Both transports return the same data and the same failure categories for
-// the same upstream state, because both run the same semantic validators. Local calls
-// are validated too: a Go provider can supply non-finite numbers, nil
-// collections, or inconsistent metadata that no JSON document could carry.
+// the same upstream state, because both run the same semantic validators.
+// Equivalence is semantic, not unconditional: an HTTP source also enforces a
+// response byte budget, so a supported snapshot that a local call returns can
+// legitimately fail over HTTP with a response-limit error when the configured
+// budget is too small for it. Local calls are validated too: a Go provider can
+// supply non-finite numbers, nil collections, or inconsistent metadata that no
+// JSON document could carry.
 //
 // An HTTP source bounds its request and response bytes, refuses redirects,
 // owns a copy of the host's client configuration, and never retries. The host

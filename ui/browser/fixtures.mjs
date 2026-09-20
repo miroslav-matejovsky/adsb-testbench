@@ -7,6 +7,8 @@
 // barrier, fail the next matching request, or replace the run. This module
 // does not import Playwright, so unit tests reuse its data builders.
 
+import { readFileSync } from "node:fs";
+
 /** Fulfils one request with a JSON body and status. */
 export function json(route, body, status = 200) {
   return route.fulfill({
@@ -26,11 +28,32 @@ export function barrier() {
   return { promise, release };
 }
 
+// Published reference frames from the shared corpus in testdata/quality.
+// This module runs in Node (Playwright runner and unit tests), never in the
+// embedded browser bundle, so it reads the corpus from disk.
+const corpusDir = new URL("../../testdata/quality/", import.meta.url);
+
+/** Parsed testdata/quality/frames.json. */
+export const referenceCorpus = JSON.parse(readFileSync(new URL("frames.json", corpusDir), "utf8"));
+
+/** Parsed testdata/quality/display-reference.json. */
+export const displayReference = JSON.parse(readFileSync(new URL("display-reference.json", corpusDir), "utf8"));
+
+function corpusHex(id) {
+  const entry = referenceCorpus.frames.find((frame) => frame.id === id);
+  if (!entry) {
+    throw new Error(`frame ${id} is not in the shared corpus`);
+  }
+  return entry.hex;
+}
+
+// Presentation fakes reuse these literal bytes as opaque frame text; they do
+// not claim the fake aircraft is the published one.
 export const frames = Object.freeze({
-  identification: "8D4840D6202CC371C32CE0576098",
-  positionEven: "8D40621D58C382D690C8AC2863A7",
-  positionOdd: "8D40621D58C386435CC412692AD6",
-  velocity: "8D485020994409940838175B284F",
+  identification: corpusHex("identification-4840d6"),
+  positionEven: corpusHex("position-40621d-even"),
+  positionOdd: corpusHex("position-40621d-odd"),
+  velocity: corpusHex("velocity-485020-ground"),
 });
 
 const BILLION = 1_000_000_000n;
@@ -160,7 +183,7 @@ export async function fakeSimulator(page, options = {}) {
     stations: new Map(),
     reserved: new Set(),
     referenceAltitudeFeet: options.referenceAltitudeFeet ?? 10000,
-    limits: { maxAircraft: 50, maxStations: 8, maxSpeedHundredths: 100000 },
+    limits: { maxAircraft: 50, maxStations: 8, maxStationIdsPerRun: 1024, maxSpeedHundredths: 100000 },
   };
 
   function setCount(count) {
@@ -283,6 +306,9 @@ export async function fakeSimulator(page, options = {}) {
       }
       if (state.stations.size >= state.limits.maxStations) {
         return [422, { error: { code: "limit", message: "at most 8 stations may be active", field: "", runId: state.runId } }];
+      }
+      if (state.reserved.size >= state.limits.maxStationIdsPerRun) {
+        return [422, { error: { code: "limit", message: `at most ${state.limits.maxStationIdsPerRun} station IDs may be created in one run`, field: "", runId: state.runId } }];
       }
       addStation(settings);
       return [201, { runId: state.runId, operation: "addStation", station: stationWire(settings.id) }];

@@ -123,10 +123,14 @@ type ReceptionModel struct {
 }
 
 // EngineLimits are fixed engine policy bounds. They are published so a client
-// can validate input before sending it.
+// can validate input before sending it. MaxStations bounds simultaneously
+// active stations; MaxStationIDsPerRun bounds every station identifier one
+// run ever creates, including removed ones, since removed identifiers are
+// never reused. Only a new run starts a fresh identifier budget.
 type EngineLimits struct {
 	MaxAircraft           int    `json:"maxAircraft"`
 	MaxStations           int    `json:"maxStations"`
+	MaxStationIDsPerRun   int    `json:"maxStationIdsPerRun"`
 	MaxSpeedHundredths    int    `json:"maxSpeedHundredths"`
 	HistoryLimit          int    `json:"historyLimit"`
 	ReceptionHistoryLimit int    `json:"receptionHistoryLimit"`

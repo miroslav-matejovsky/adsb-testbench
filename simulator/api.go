@@ -64,6 +64,7 @@ func (a *API) Metadata(ctx context.Context) (simulatorapi.Metadata, error) {
 		Limits: simulatorapi.EngineLimits{
 			MaxAircraft:           simulation.MaxAircraft,
 			MaxStations:           simulation.MaxStations,
+			MaxStationIDsPerRun:   simulation.MaxStationIDsPerRun,
 			MaxSpeedHundredths:    simulation.MaxSpeedHundredths,
 			HistoryLimit:          simulation.HistoryLimit,
 			ReceptionHistoryLimit: simulation.ReceptionHistoryLimit,

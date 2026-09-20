@@ -2,7 +2,7 @@
 value: "Medium"
 effort: "XL"
 complexity: "hard"
-dependencies: ["../plans/11-quality-and-capacity/README.md"]
+dependencies: ["../evaluations/quality-capacity/README.md"]
 ---
 
 # Replay, transport output, and richer scenarios
@@ -21,4 +21,6 @@ Test exact replay order and timing, malformed recordings, pause and acceleration
 
 ## Dependencies
 
-- [Deterministic fixtures and measured capacity](../plans/11-quality-and-capacity/README.md)
+- [Measured capacity and supported profiles](../evaluations/quality-capacity/README.md),
+  which delivered the shared fixture corpus in `testdata/quality`, the
+  response budgets and the measured support profiles this item builds on

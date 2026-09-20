@@ -117,6 +117,19 @@ tasks:
     cmds:
       - pwsh -NoProfile -NonInteractive -File taskfile/clean.tests.ps1
 
+  capacity:
+    desc: "Run the capacity benchmarks and measurement reports. Requires COUNT, BENCHTIME, CPU and OUT, for example COUNT=5 BENCHTIME=1s CPU=4 OUT=.test-results/capacity-cpu4"
+    requires:
+      vars: [COUNT, BENCHTIME, CPU, OUT]
+    cmds:
+      - pwsh -NoProfile -NonInteractive -File taskfile/capacity.ps1 -Count {{shellQuote .COUNT}} -Benchtime {{shellQuote .BENCHTIME}} -Cpu {{shellQuote .CPU}} -Out {{shellQuote .OUT}}
+
+  capacity-test:
+    desc: Check the capacity measurement script arguments, output rules and failure propagation
+    silent: true
+    cmds:
+      - pwsh -NoProfile -NonInteractive -File taskfile/capacity.tests.ps1
+
   all:
     desc: Run all checks and tests. This is the main task to run before considering work complete.
     silent: true
@@ -133,6 +146,7 @@ tasks:
       - task lint
       - task test
       - task clean-test
+      - task capacity-test
       - task examples
       - task ui-test
       - echo all done

@@ -1,0 +1,155 @@
+{
+  "frames": [
+    {
+      "id": "identification-4840d6",
+      "classification": "external",
+      "hex": "8D4840D6202CC371C32CE0576098",
+      "sourceUrl": "https://mode-s.org/1090mhz/content/ads-b/2-identification.html",
+      "sourceLocation": "Junzi Sun, The 1090 Megahertz Riddle, chapter Aircraft identification, worked example",
+      "verification": "Literal frame and fields carried over unchanged from internal/adsb/testdata/README.md (codec provenance table, 2026-09-16). Copied into this corpus 2026-09-19. Not recomputed with this repository's encoder or decoder.",
+      "expected": {
+        "icao": "4840D6",
+        "family": "identification",
+        "capability": 5,
+        "identification": {
+          "typeCode": 4,
+          "category": 0,
+          "callsign": "KLM1023"
+        }
+      }
+    },
+    {
+      "id": "position-40621d-even",
+      "classification": "external",
+      "hex": "8D40621D58C382D690C8AC2863A7",
+      "sourceUrl": "https://mode-s.org/1090mhz/content/ads-b/3-airborne-position.html",
+      "sourceLocation": "Junzi Sun, The 1090 Megahertz Riddle, chapter Airborne position, worked example, even message",
+      "verification": "Literal frame and fields carried over unchanged from internal/adsb/testdata/README.md (codec provenance table, 2026-09-16). Copied into this corpus 2026-09-19. Not recomputed with this repository's encoder or decoder.",
+      "expected": {
+        "icao": "40621D",
+        "family": "position",
+        "capability": 5,
+        "position": {
+          "typeCode": 11,
+          "surveillanceStatus": 0,
+          "supplement": false,
+          "timeSynchronized": false,
+          "altitudeFeet": 38000,
+          "cpr": {
+            "odd": false,
+            "latitude": 93000,
+            "longitude": 51372
+          }
+        }
+      }
+    },
+    {
+      "id": "position-40621d-odd",
+      "classification": "external",
+      "hex": "8D40621D58C386435CC412692AD6",
+      "sourceUrl": "https://mode-s.org/1090mhz/content/ads-b/3-airborne-position.html",
+      "sourceLocation": "Junzi Sun, The 1090 Megahertz Riddle, chapter Airborne position, worked example, odd message",
+      "verification": "Literal frame and fields carried over unchanged from internal/adsb/testdata/README.md (codec provenance table, 2026-09-16). Copied into this corpus 2026-09-19. Not recomputed with this repository's encoder or decoder.",
+      "expected": {
+        "icao": "40621D",
+        "family": "position",
+        "capability": 5,
+        "position": {
+          "typeCode": 11,
+          "surveillanceStatus": 0,
+          "supplement": false,
+          "timeSynchronized": false,
+          "altitudeFeet": 38000,
+          "cpr": {
+            "odd": true,
+            "latitude": 74158,
+            "longitude": 50194
+          }
+        }
+      }
+    },
+    {
+      "id": "velocity-485020-ground",
+      "classification": "external",
+      "hex": "8D485020994409940838175B284F",
+      "sourceUrl": "https://mode-s.org/1090mhz/content/ads-b/5-airborne-velocity.html",
+      "sourceLocation": "Junzi Sun, The 1090 Megahertz Riddle, chapter Airborne velocity, example A (subtype 1, ground speed)",
+      "verification": "Literal frame and fields carried over unchanged from internal/adsb/testdata/README.md (codec provenance table, 2026-09-16). Copied into this corpus 2026-09-19. Not recomputed with this repository's encoder or decoder.",
+      "expected": {
+        "icao": "485020",
+        "family": "velocity",
+        "capability": 5,
+        "velocity": {
+          "subtype": 1,
+          "intentChange": false,
+          "ifrCapability": true,
+          "nacv": 0,
+          "eastKnots": { "value": -8, "overRange": false },
+          "northKnots": { "value": -159, "overRange": false },
+          "headingDegrees": null,
+          "airspeedKnots": null,
+          "trueAirspeed": false,
+          "barometricVerticalRate": false,
+          "verticalRateFeetPerMinute": { "value": -832, "overRange": false },
+          "gnssMinusBaroFeet": { "value": 550, "overRange": false }
+        }
+      }
+    },
+    {
+      "id": "velocity-a05f21-airspeed",
+      "classification": "external",
+      "hex": "8DA05F219B06B6AF189400CBC33F",
+      "sourceUrl": "https://mode-s.org/1090mhz/content/ads-b/5-airborne-velocity.html",
+      "sourceLocation": "Junzi Sun, The 1090 Megahertz Riddle, chapter Airborne velocity, example B (subtype 3, airspeed)",
+      "verification": "Literal frame and fields carried over unchanged from internal/adsb/testdata/README.md (codec provenance table, 2026-09-16). Copied into this corpus 2026-09-19. Not recomputed with this repository's encoder or decoder.",
+      "expected": {
+        "icao": "A05F21",
+        "family": "velocity",
+        "capability": 5,
+        "velocity": {
+          "subtype": 3,
+          "intentChange": false,
+          "ifrCapability": false,
+          "nacv": 0,
+          "eastKnots": null,
+          "northKnots": null,
+          "headingDegrees": 243.984375,
+          "airspeedKnots": { "value": 375, "overRange": false },
+          "trueAirspeed": true,
+          "barometricVerticalRate": true,
+          "verticalRateFeetPerMinute": { "value": -2304, "overRange": false },
+          "gnssMinusBaroFeet": null
+        }
+      }
+    }
+  ],
+  "cprPairs": [
+    {
+      "id": "position-40621d-pair",
+      "even": "position-40621d-even",
+      "odd": "position-40621d-odd",
+      "sourceUrl": "https://mode-s.org/1090mhz/content/ads-b/3-airborne-position.html",
+      "sourceLocation": "Junzi Sun, The 1090 Megahertz Riddle, chapter Airborne position, globally unambiguous decoding",
+      "verification": "Coordinates carried over unchanged from internal/adsb/testdata/README.md (2026-09-16). Copied into this corpus 2026-09-19. Not recomputed with this repository's decoder.",
+      "timeProvenance": "synthetic: the published example states no reception instants; these instants only select which half is newer",
+      "cases": [
+        {
+          "name": "even-newer",
+          "evenTime": "2030-01-02T03:04:05Z",
+          "oddTime": "2030-01-02T03:04:03Z",
+          "latitudeDegrees": 52.2572021484375,
+          "longitudeDegrees": 3.91937255859375,
+          "toleranceDegrees": 1e-10
+        },
+        {
+          "name": "odd-newer",
+          "evenTime": "2030-01-02T03:04:04Z",
+          "oddTime": "2030-01-02T03:04:05Z",
+          "latitudeDegrees": 52.26578017412606,
+          "longitudeDegrees": 3.938912527901786,
+          "toleranceDegrees": 1e-10
+        }
+      ]
+    }
+  ]
+}

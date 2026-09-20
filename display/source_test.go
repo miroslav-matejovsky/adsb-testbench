@@ -651,3 +651,32 @@ func TestHTTPSourcePreservesNestedMountPrefixes(t *testing.T) {
 		})
 	}
 }
+
+// TestBothSourcesDecodeTheLiteralReferenceSnapshot serves the stored raw
+// snapshot through a local provider and, byte for byte, through an HTTP
+// transport. Both paths must validate and decode to the stored expectations.
+func TestBothSourcesDecodeTheLiteralReferenceSnapshot(t *testing.T) {
+	t.Parallel()
+
+	reference, raw, scenario := loadReference(t)
+	request := simulatorapi.ReceptionSnapshotRequest{StationIDs: raw.StationIDs}
+
+	local, err := NewInProcessSource(&stubProvider{snapshot: raw})
+	require.NoError(t, err)
+	remote, _ := newHTTPSourceFor(t, func(*http.Request) (*http.Response, error) {
+		return jsonResponse(http.StatusOK, string(reference.Snapshot)), nil
+	})
+
+	decoded := map[string]simulatorapi.ObservationSnapshot{}
+	for name, source := range map[string]ObservationSource{"local": local, "http": remote} {
+		fetched, err := source.ReceptionSnapshot(t.Context(), request)
+		require.NoError(t, err, name)
+		validated, _, err := validateSnapshot(request, fetched)
+		require.NoError(t, err, name)
+		observations, err := decodeSnapshot(validated, referenceLifetimes(reference.Expiry))
+		require.NoError(t, err, name)
+		requireReferenceObservations(t, scenario, reference, observations)
+		decoded[name] = observations
+	}
+	require.Equal(t, decoded["local"], decoded["http"])
+}

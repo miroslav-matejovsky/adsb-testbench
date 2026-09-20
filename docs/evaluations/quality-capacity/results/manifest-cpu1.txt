@@ -1,0 +1,110 @@
+started 2026-09-20T02:06:20Z
+count 5
+benchtime 1s
+cpu 1
+out C:\dev\personal\adsb-testbench\.test-results\capacity-cpu1
+revision 00fd78efc6dd1e9d527d4d6cea1b9c5043c9fa20
+go go version go1.27.1 windows/amd64
+goos windows
+goarch amd64
+gomaxprocs 1
+gogc unset
+gomemlimit unset
+node v26.9.0
+cpu-model Intel(R) Core(TM) Ultra 7 265H
+cpu-logical 16
+memory-bytes 68111437824
+os Microsoft Windows 11 Business 10.0.26200
+workload-file testdata/quality/capacity.json
+workload-sha256 3198D66708CE76843E76A01094516B15E4BAC3BC81B365D2979C957D828799C2
+dirty-files
+   M .go-arch-lint.yml
+   M .todo
+   M Taskfile.yml
+   M configs/README.md
+   M configs/combined.json
+   M configs/display.json
+   M configs/simulator.json
+   M display/decode_test.go
+   M display/fixtures_test.go
+   M display/source_test.go
+   M display/testdata/README.md
+   M docs/plans/11-quality-and-capacity/progress.md
+   M internal/README.md
+   M internal/adsb/cpr_test.go
+   M internal/adsb/frame_test.go
+   M internal/adsb/testdata/README.md
+   M internal/simdriver/doc.go
+   M internal/simdriver/driver.go
+   M internal/simdriver/driver_test.go
+   M simulation/doc.go
+   M simulation/engine.go
+   M simulation/registry.go
+   M simulation/station.go
+   M simulation/types.go
+   M simulator/acceptance_test.go
+   M simulator/api.go
+   M simulator/api_test.go
+   M simulatorapi/contract_test.go
+   M simulatorapi/metadata.go
+   M taskfile/README.md
+   M ui/browser/README.md
+   M ui/browser/fixtures.mjs
+   M ui/browser/stations.spec.mjs
+   M ui/internal/assets/static/stations.js
+  ?? display/benchmark_test.go
+  ?? display/capacity_test.go
+  ?? display/reference_test.go
+  ?? docs/evaluations/quality-capacity/
+  ?? internal/capacitytest/
+  ?? internal/cli/capacity_test.go
+  ?? internal/qualitytest/
+  ?? internal/simdriver/benchmark_test.go
+  ?? simulation/benchmark_test.go
+  ?? simulation/corpus_test.go
+  ?? simulation/measure_test.go
+  ?? simulation/station_bounds_test.go
+  ?? simulation/station_validation_test.go
+  ?? simulator/benchmark_test.go
+  ?? simulator/capacity_test.go
+  ?? simulator/corpus_test.go
+  ?? simulatorapi/capacity_test.go
+  ?? taskfile/capacity.ps1
+  ?? taskfile/capacity.tests.ps1
+  ?? testdata/
+  ?? ui/browser/unit/corpus.test.mjs
+untracked-sources
+  2F3BCEB5F64D6A13EDAFEAE2F8CE1D4E6809A97627D93084943D75418140ABF8  display/benchmark_test.go
+  E19D003B0E4EE92C832FE65884F51911EA65B2782BDAFA467891BAD3E4D0250C  display/capacity_test.go
+  354DC614EB25D26EB3A2909B10073053B4451AD5EE203A2095BBB514426941D6  display/reference_test.go
+  F0361554959E99349CF28BCC3F603CB787B98CE464CF7605824E27AACC790EC2  docs/evaluations/quality-capacity/results/README.md
+  A93B2E4AB0440F9A33135567401595714748E926517AD837EAF3B8CC0C9065B3  internal/capacitytest/capacitytest.go
+  305082DB99318F9A3976861F4AA2E97F829575718B0EC1D5E552751112CCD986  internal/cli/capacity_test.go
+  52A58233C37AD98F8D9AC6060CFA4BB2118043B002DF97839DA7328CF022AE56  internal/qualitytest/capacity.go
+  1B6B3A06A2ACD6DE97AE8603B16F1E327B0BEB18D16A35B8D8A72BBB6168A67A  internal/qualitytest/corpus.go
+  86E22D69C7808789DC2469EC4278A951F85FC164996E0398EF0FE231171E69FF  internal/qualitytest/corpus_test.go
+  D4DDED795C28D96E93FFB35E114DBAFC5D7D136367DE8D14FEB57454D85848D0  internal/qualitytest/doc.go
+  2F86D935B7C0195579980D74A10DE45B11653970DC2B787BC66DFB12D6C019C5  internal/simdriver/benchmark_test.go
+  C78714645A07BB46DE5CC3D95D72F65E8F62200B4D9E596FA247359422227CA9  simulation/benchmark_test.go
+  EE769A13AFC7E0423511C46545ADC231112F8104C90AACF799B10557077FCAFE  simulation/corpus_test.go
+  B0C668F0C8E13910B1504040F297F93310A9B2479459340102AE0E648BD85A33  simulation/measure_test.go
+  A423B50D2599241CC8C35862E48BB4F3F9483B5A205CE45E30321514023CC579  simulation/station_bounds_test.go
+  98B95BA0307183B043D6746061D444EEA9FD4088DB4445FC565A815522DB9FD8  simulation/station_validation_test.go
+  E04CC58D3C7B43F2E834FB047F103232461464BE900AF5BA43686957410A4F95  simulator/benchmark_test.go
+  29D9EBDDB91EB3F6F13AFB36D2658A214591FA38FE88205BC551961B4355EF66  simulator/capacity_test.go
+  3CA85489E34468AD9BF5B635CF1887FC48F982A2AB38B6CCB1BB4E9098257CC7  simulator/corpus_test.go
+  813A4DED843DAE2A4E6639EE958FB23B993F3F4FD57FE6D19916564077AF846B  simulatorapi/capacity_test.go
+  BF9569C1631125E0A61C0E7FBEDAE71C0694111B0F24D885C806721C3528865C  taskfile/capacity.ps1
+  EEC62CDA0FF082855E39AA56EBF64661F4220ED2017ABA7AB44E2C5DB8EF8580  taskfile/capacity.tests.ps1
+  36732E4283A41F6AFAA73A00908D9EEB384CB25803F1666EF7F1D24A30CC2972  testdata/README.md
+  573363CF6762737FE952D93685FA55D6AE3BA7D64FDDF568263FA8925DAD1947  testdata/quality/README.md
+  3198D66708CE76843E76A01094516B15E4BAC3BC81B365D2979C957D828799C2  testdata/quality/capacity.json
+  26A81CBCF44F3EB1EEA487EF332CE0D00D42046822A6FC46C7AEE8DEEC386D65  testdata/quality/display-reference.json
+  80EE452CC07C49E94C47729092B4B5AAD1372A122377C289632CE96EE96C2AD2  testdata/quality/frames.json
+  49C828F61ACEAD19F5E3C61E38F130F72F5A8CF87FB8A1233633DEC809FE95A8  testdata/quality/scenarios.json
+  8DC46170CDA0A5534B9CEE01CDAC885CD92342FD61050DA0B83438DA66828D33  ui/browser/unit/corpus.test.mjs
+commands
+  go test ./simulation ./internal/simdriver ./simulator ./display -run ^$ -bench ^BenchmarkCapacity -benchmem -benchtime 1s -count 5 -cpu 1 -timeout 120m
+  go test ./simulation ./simulator ./display -run ^TestCapacity(Memory|Latency)Report$ -count=1 -v -timeout 60m
+finished 2026-09-20T02:17:25Z
+failures 0

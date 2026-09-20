@@ -98,3 +98,37 @@ test("fields observed after the snapshot instant are rejected", () => {
   const future = aircraft({ icao: "ABC001", lastReceivedAt: isoAt(at(5)), altitude: { feet: 1, observedAt: isoAt(at(5)) } });
   assert.throws(() => buildView(snapshot(4, [future]), null, thresholds), TypeError);
 });
+
+test("churned aircraft leave one tombstone each and never accumulate", () => {
+  const seen = (icao, seconds) => aircraft({
+    icao, lastReceivedAt: isoAt(at(seconds)), identity: { callsign: `TB${icao}`, observedAt: isoAt(at(seconds)) },
+  });
+  const first = buildView(snapshot(3, [seen("ABC001", 1), seen("ABC002", 2), seen("ABC003", 3)]), null, thresholds);
+  assert.equal(first.rows.length, 3);
+
+  // Two aircraft disappear and one new address arrives.
+  const second = buildView(snapshot(4, [seen("ABC003", 3), seen("ABC004", 4)]), first, thresholds);
+  assert.deepEqual(second.rows.map((row) => [row.icao, row.tombstone]),
+    [["ABC001", true], ["ABC002", true], ["ABC003", false], ["ABC004", false]]);
+
+  // The tombstones are gone one view later, and no earlier row returns.
+  const third = buildView(snapshot(5, [seen("ABC004", 4)]), second, thresholds);
+  assert.deepEqual(third.rows.map((row) => [row.icao, row.tombstone]), [["ABC003", true], ["ABC004", false]]);
+  const fourth = buildView(snapshot(6, [seen("ABC004", 4)]), third, thresholds);
+  assert.deepEqual(fourth.rows.map((row) => row.icao), ["ABC004"]);
+});
+
+test("a replacement run starts from no remembered rows", () => {
+  const seen = aircraft({
+    icao: "ABC001", lastReceivedAt: isoAt(at(1)), identity: { callsign: "TB0001", observedAt: isoAt(at(1)) },
+  });
+  const before = buildView(snapshot(2, [seen]), null, thresholds);
+  assert.equal(before.rows.length, 1);
+
+  // The page drops its previous view when the run changes, so a replacement
+  // run builds from the new evidence alone and leaves no tombstone behind.
+  const replacement = { ...snapshot(2, []), runId: "run-2" };
+  const after = buildView(replacement, null, thresholds);
+  assert.deepEqual(after.rows, []);
+  assert.equal(after.runId, "run-2");
+});

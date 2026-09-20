@@ -205,3 +205,43 @@ test("two components with different selections on one backend stay isolated", as
   await poll(page);
   await expect(row(rootB, "BBBBBB")).toBeVisible();
 });
+
+test("an oversized response keeps the populated view stale and recovery replaces it", async ({ page }) => {
+  const positioned = (icao, seconds, longitude) => aircraft({
+    icao, lastReceivedAt: isoAt(at(seconds)),
+    identity: { callsign: `CS${icao.slice(-4)}`, observedAt: isoAt(at(seconds)) },
+    position: { latitudeDegrees: 50, longitudeDegrees: longitude, observedAt: isoAt(at(seconds)) },
+  });
+  const display = await open(page, {
+    aircraftFor: () => [positioned("ABC001", 9, 14), positioned("ABC002", 9, 15)],
+  });
+  const markers = page.getByRole("region", { name: "Aircraft map" }).locator(".tb-aircraft-marker");
+  await expect(rows(page)).toHaveCount(2);
+  await expect(markers).toHaveCount(2);
+
+  // The backend cannot serialize its answer within the configured budget.
+  display.failNext("POST", "observations", 503, {
+    snapshot: { status: "unavailable", lastUpdatedAt: null, observations: null, error: null },
+    error: {
+      code: "response_limit", message: "the complete response needs 5359994 bytes, above the configured 2048",
+      field: "", runId: "run-1",
+    },
+  });
+  display.state.aircraftFor = () => [positioned("ABC003", 10, 16)];
+  await poll(page);
+  await expect(banner(page)).toContainText("Transport stale: showing the last successful data for this selection");
+  await expect(page.locator(".tb-component > .tb-error")).toContainText("above the configured 2048");
+  await expect(rows(page)).toHaveCount(2, { timeout: 5000 });
+  await expect(row(page, "ABC003")).toHaveCount(0, { timeout: 5000 });
+  await expect(markers).toHaveCount(2);
+
+  // The next successful refresh replaces the view completely.
+  await poll(page);
+  await expect(banner(page)).toContainText("Received data is current.");
+  await expect(row(page, "ABC003")).toHaveCount(1);
+  await expect(markers).toHaveCount(1, { timeout: 5000 });
+  // The two aircraft that are gone appear as tombstones for exactly one view.
+  await expect(rows(page)).toHaveCount(3);
+  await poll(page);
+  await expect(rows(page)).toHaveCount(1);
+});

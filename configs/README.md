@@ -96,6 +96,39 @@ letters, digits, `-` or `_`, unique), `enabled` (`true` or `false`),
 `antennaGainDBi` (-10..40), `sensitivityDBm` (-140..0), `systemLossDB`
 (0..30) and `frameLossProbability` (0..1). Zero and `false` are values.
 
+These are engine policies, not configuration values: at most 8 stations are
+active at once, and one run creates at most 1024 distinct station IDs in
+total, counting stations the manager later removes, because a removed ID is
+never reused in its run. Configured stations count toward that budget.
+Further creations fail with a `limit` error; edits and removals keep working.
+Restarting the command starts a new run with a fresh run ID and an empty
+budget. Both limits are published in `metadata.limits` as `maxStations` and
+`maxStationIdsPerRun`.
+
+### Response budgets
+
+`maxResponseBytes` values in these files are not round numbers by accident.
+They follow the supported byte-budget profile documented in
+[testdata/quality](../testdata/quality/README.md): the largest conservative
+response bound of each path, times 1.25, rounded up to a whole MiB.
+
+| Setting | Files | Value | Largest response it must carry |
+| --- | --- | --- | --- |
+| `simulatorApi.maxResponseBytes` | combined, simulator | 32,505,856 | decoded observations of 8000 raw records |
+| `managerUi.maxResponseBytes` | combined, simulator | 32,505,856 | every simulator response the manager reads |
+| `source.maxResponseBytes` | display | 10,485,760 | a raw reception snapshot of 8 full station rings |
+| `display.maxResponseBytes` | combined, display | 32,505,856 | one refresh body with 8000 decoded tracks |
+| `aircraftUi.maxResponseBytes` | combined, display | 32,505,856 | every display response the page reads |
+
+The profile covers the engine limits, an effective run ID of at most 128
+UTF-8 bytes, all valid station-ID lengths, all legal field widths, and JSON
+escaping. A command appends a 21-byte suffix to `simulation.id`, so a label
+must fit in 107 bytes to stay inside the profile. A smaller custom budget
+stays valid if it meets the documented minimums; it then fails clearly at
+runtime with a `response_limit` error and a complete error envelope instead
+of a partial body. The budgets bound transmitted bodies, not peak memory or
+concurrent requests.
+
 ### display
 
 Field lifetimes `identityExpiryNanoseconds`, `positionExpiryNanoseconds`,

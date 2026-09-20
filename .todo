@@ -5,3 +5,14 @@ Do not use this file for tracking progress or track finished work. If work is fi
 Keep this file short; active implementation plans live in `docs/plans/`,
 the structured backlog of lower-priority follow-ups lives in `docs/backlog/` (start at `docs/backlog/README.md`),
 and the architecture overview lives in `README.md`.
+
+## Error envelope size versus JSON escaping
+
+`simulatorapi.MinResponseBytes` (2048) is documented as always holding a
+complete error envelope with a clamped message, a run ID and a field path.
+The clamp counts bytes before JSON escaping, so text made of characters that
+escape to six bytes (`<`, `>`, `&`, control bytes) can produce an envelope of
+about 7 KB; `simulatorapi/capacity_test.go` records that bound as
+`errorEnvelopeBytes`. The shipped budgets are far above it, so this only
+affects a custom configuration at the documented minimum. Decide whether to
+clamp after escaping or raise the documented minimum.

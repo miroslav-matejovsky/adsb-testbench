@@ -1,0 +1,270 @@
+{
+  "id": "reference-fields",
+  "classification": "external",
+  "description": "Published frames with their original addresses, received by one synthetic station at synthetic virtual instants. Frames and wire values are external; receiver settings, instants and sequences are synthetic.",
+  "frames": [
+    "identification-4840d6",
+    "position-40621d-odd",
+    "position-40621d-even",
+    "velocity-485020-ground",
+    "velocity-a05f21-airspeed"
+  ],
+  "expiry": {
+    "identityNanoseconds": "60000000000",
+    "positionNanoseconds": "30000000000",
+    "altitudeNanoseconds": "30000000000",
+    "velocityNanoseconds": "30000000000"
+  },
+  "snapshot": {
+    "runId": "reference-fields",
+    "now": "2024-03-05T12:00:10Z",
+    "stationIds": [
+      "reference"
+    ],
+    "retention": [
+      {
+        "stationId": "reference",
+        "oldestSequence": "1",
+        "latestSequence": "5",
+        "truncated": false,
+        "limit": 1000
+      }
+    ],
+    "records": [
+      {
+        "sequence": "1",
+        "transmissionSequence": "1",
+        "stationId": "reference",
+        "stationRevision": "1",
+        "icao": "4840D6",
+        "kind": "identification",
+        "timestamp": "2024-03-05T12:00:01Z",
+        "frame": "8D4840D6202CC371C32CE0576098",
+        "slantRangeNauticalMiles": 12.5,
+        "receivedPowerDBm": -80,
+        "receiver": {
+          "id": "reference",
+          "enabled": true,
+          "latitudeDegrees": 52.25,
+          "longitudeDegrees": 3.92,
+          "siteElevationMetres": 10,
+          "antennaHeightMetres": 20,
+          "antennaGainDBi": 3,
+          "sensitivityDBm": -95,
+          "systemLossDB": 2,
+          "frameLossProbability": 0,
+          "revision": "1",
+          "createdAt": "2024-03-05T12:00:00Z"
+        }
+      },
+      {
+        "sequence": "2",
+        "transmissionSequence": "2",
+        "stationId": "reference",
+        "stationRevision": "1",
+        "icao": "40621D",
+        "kind": "position",
+        "timestamp": "2024-03-05T12:00:02Z",
+        "frame": "8D40621D58C386435CC412692AD6",
+        "slantRangeNauticalMiles": 12.5,
+        "receivedPowerDBm": -80,
+        "receiver": {
+          "id": "reference",
+          "enabled": true,
+          "latitudeDegrees": 52.25,
+          "longitudeDegrees": 3.92,
+          "siteElevationMetres": 10,
+          "antennaHeightMetres": 20,
+          "antennaGainDBi": 3,
+          "sensitivityDBm": -95,
+          "systemLossDB": 2,
+          "frameLossProbability": 0,
+          "revision": "1",
+          "createdAt": "2024-03-05T12:00:00Z"
+        }
+      },
+      {
+        "sequence": "3",
+        "transmissionSequence": "3",
+        "stationId": "reference",
+        "stationRevision": "1",
+        "icao": "40621D",
+        "kind": "position",
+        "timestamp": "2024-03-05T12:00:03Z",
+        "frame": "8D40621D58C382D690C8AC2863A7",
+        "slantRangeNauticalMiles": 12.5,
+        "receivedPowerDBm": -80,
+        "receiver": {
+          "id": "reference",
+          "enabled": true,
+          "latitudeDegrees": 52.25,
+          "longitudeDegrees": 3.92,
+          "siteElevationMetres": 10,
+          "antennaHeightMetres": 20,
+          "antennaGainDBi": 3,
+          "sensitivityDBm": -95,
+          "systemLossDB": 2,
+          "frameLossProbability": 0,
+          "revision": "1",
+          "createdAt": "2024-03-05T12:00:00Z"
+        }
+      },
+      {
+        "sequence": "4",
+        "transmissionSequence": "4",
+        "stationId": "reference",
+        "stationRevision": "1",
+        "icao": "485020",
+        "kind": "velocity",
+        "timestamp": "2024-03-05T12:00:04Z",
+        "frame": "8D485020994409940838175B284F",
+        "slantRangeNauticalMiles": 12.5,
+        "receivedPowerDBm": -80,
+        "receiver": {
+          "id": "reference",
+          "enabled": true,
+          "latitudeDegrees": 52.25,
+          "longitudeDegrees": 3.92,
+          "siteElevationMetres": 10,
+          "antennaHeightMetres": 20,
+          "antennaGainDBi": 3,
+          "sensitivityDBm": -95,
+          "systemLossDB": 2,
+          "frameLossProbability": 0,
+          "revision": "1",
+          "createdAt": "2024-03-05T12:00:00Z"
+        }
+      },
+      {
+        "sequence": "5",
+        "transmissionSequence": "5",
+        "stationId": "reference",
+        "stationRevision": "1",
+        "icao": "A05F21",
+        "kind": "velocity",
+        "timestamp": "2024-03-05T12:00:05Z",
+        "frame": "8DA05F219B06B6AF189400CBC33F",
+        "slantRangeNauticalMiles": 12.5,
+        "receivedPowerDBm": -80,
+        "receiver": {
+          "id": "reference",
+          "enabled": true,
+          "latitudeDegrees": 52.25,
+          "longitudeDegrees": 3.92,
+          "siteElevationMetres": 10,
+          "antennaHeightMetres": 20,
+          "antennaGainDBi": 3,
+          "sensitivityDBm": -95,
+          "systemLossDB": 2,
+          "frameLossProbability": 0,
+          "revision": "1",
+          "createdAt": "2024-03-05T12:00:00Z"
+        }
+      }
+    ]
+  },
+  "expected": {
+    "aircraft": [
+      {
+        "icao": "40621D",
+        "lastReceivedAt": "2024-03-05T12:00:03Z",
+        "identity": null,
+        "position": {
+          "latitudeDegrees": 52.2572021484375,
+          "longitudeDegrees": 3.91937255859375,
+          "toleranceDegrees": 1e-10,
+          "observedAt": "2024-03-05T12:00:03Z",
+          "evidenceTransmissionSequences": [
+            "3",
+            "2"
+          ],
+          "derivation": "even half (transmission 3) is newer; coordinates are the published globally unambiguous decoding result. Evidence lists the even half, then the odd half."
+        },
+        "barometricAltitude": {
+          "feet": 38000,
+          "observedAt": "2024-03-05T12:00:03Z",
+          "evidenceTransmissionSequence": "3"
+        },
+        "velocity": null
+      },
+      {
+        "icao": "4840D6",
+        "lastReceivedAt": "2024-03-05T12:00:01Z",
+        "identity": {
+          "callsign": "KLM1023",
+          "observedAt": "2024-03-05T12:00:01Z",
+          "evidenceTransmissionSequence": "1"
+        },
+        "position": null,
+        "barometricAltitude": null,
+        "velocity": null
+      },
+      {
+        "icao": "485020",
+        "lastReceivedAt": "2024-03-05T12:00:04Z",
+        "identity": null,
+        "position": null,
+        "barometricAltitude": null,
+        "velocity": {
+          "subtype": 1,
+          "eastKnots": {
+            "value": -8,
+            "overRange": false
+          },
+          "northKnots": {
+            "value": -159,
+            "overRange": false
+          },
+          "groundSpeedKnots": 159.2,
+          "trackDegrees": 182.88,
+          "derivedTolerance": 0.005,
+          "headingDegrees": null,
+          "airspeedKnots": null,
+          "trueAirspeed": false,
+          "barometricVerticalRate": false,
+          "verticalRateFeetPerMinute": {
+            "value": -832,
+            "overRange": false
+          },
+          "gnssMinusBaroFeet": {
+            "value": 550,
+            "overRange": false
+          },
+          "observedAt": "2024-03-05T12:00:04Z",
+          "evidenceTransmissionSequence": "4",
+          "derivation": "ground speed 159.20 kt and track 182.88 degrees are the published results of example A, rounded to 0.01"
+        }
+      },
+      {
+        "icao": "A05F21",
+        "lastReceivedAt": "2024-03-05T12:00:05Z",
+        "identity": null,
+        "position": null,
+        "barometricAltitude": null,
+        "velocity": {
+          "subtype": 3,
+          "eastKnots": null,
+          "northKnots": null,
+          "groundSpeedKnots": null,
+          "trackDegrees": null,
+          "derivedTolerance": 0,
+          "headingDegrees": 243.984375,
+          "airspeedKnots": {
+            "value": 375,
+            "overRange": false
+          },
+          "trueAirspeed": true,
+          "barometricVerticalRate": true,
+          "verticalRateFeetPerMinute": {
+            "value": -2304,
+            "overRange": false
+          },
+          "gnssMinusBaroFeet": null,
+          "observedAt": "2024-03-05T12:00:05Z",
+          "evidenceTransmissionSequence": "5",
+          "derivation": "airspeed subtypes carry no ground vector, so ground speed and track stay unknown"
+        }
+      }
+    ]
+  }
+}

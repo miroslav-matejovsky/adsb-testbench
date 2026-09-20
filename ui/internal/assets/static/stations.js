@@ -385,7 +385,8 @@ export function mountStationEditor(panel, host) {
       return `Station ${form.stationId} no longer exists; it was removed by another client.`;
     }
     if (error.code === "limit") {
-      return `The station limit was reached (at most ${host.maxStations()} active stations). ${error.message}`;
+      // The server message names the bound: active stations or IDs per run.
+      return `The station limit was reached: ${error.message}.`;
     }
     if (error.code === "invalid" && /already used/.test(error.message)) {
       return `${error.message}. Station IDs cannot be reused within one run, even after removal; choose a new ID.`;

@@ -1,0 +1,24 @@
+=== RUN   TestCapacityMemoryReport
+    measure_test.go:58: retained after warmup: HeapAlloc 2160144 bytes, HeapObjects 1160, NumGC 14, aircraft 100, stations 8, records 8000
+    measure_test.go:81: epoch 1: HeapAlloc 2165880 bytes, HeapObjects 1173, TotalAlloc delta 284441872 bytes, NumGC 80
+    measure_test.go:81: epoch 2: HeapAlloc 2167336 bytes, HeapObjects 1186, TotalAlloc delta 569144848 bytes, NumGC 141
+    measure_test.go:81: epoch 3: HeapAlloc 2167784 bytes, HeapObjects 1190, TotalAlloc delta 853572160 bytes, NumGC 200
+    measure_test.go:81: epoch 4: HeapAlloc 2168232 bytes, HeapObjects 1194, TotalAlloc delta 1137620256 bytes, NumGC 262
+    measure_test.go:81: epoch 5: HeapAlloc 2168456 bytes, HeapObjects 1196, TotalAlloc delta 1421795504 bytes, NumGC 325
+    measure_test.go:81: epoch 6: HeapAlloc 2169352 bytes, HeapObjects 1204, TotalAlloc delta 1705951984 bytes, NumGC 389
+    measure_test.go:81: epoch 7: HeapAlloc 2169912 bytes, HeapObjects 1209, TotalAlloc delta 1989444368 bytes, NumGC 452
+    measure_test.go:81: epoch 8: HeapAlloc 2170072 bytes, HeapObjects 1211, TotalAlloc delta 2274157648 bytes, NumGC 515
+    measure_test.go:81: epoch 9: HeapAlloc 2170456 bytes, HeapObjects 1215, TotalAlloc delta 2558195584 bytes, NumGC 578
+    measure_test.go:81: epoch 10: HeapAlloc 2170568 bytes, HeapObjects 1216, TotalAlloc delta 2842751216 bytes, NumGC 643
+--- PASS: TestCapacityMemoryReport (1.56s)
+PASS
+ok  	github.com/miroslav-matejovsky/adsb-testbench/simulation	1.654s
+=== RUN   TestCapacityLatencyReport
+    capacity_test.go:435: callers 1: 100 requests, median 99.4999ms, p95 179.0779ms, max 305.6732ms, errors 0
+    capacity_test.go:435: callers 4: 100 requests, median 136.018ms, p95 242.1176ms, max 273.9091ms, errors 0
+--- PASS: TestCapacityLatencyReport (15.27s)
+PASS
+ok  	github.com/miroslav-matejovsky/adsb-testbench/simulator	15.401s
+testing: warning: no tests to run
+PASS
+ok  	github.com/miroslav-matejovsky/adsb-testbench/display	0.119s [no tests to run]

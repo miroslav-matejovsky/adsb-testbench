@@ -27,7 +27,8 @@ with the setup command when dependencies are missing.
 | `embedding.spec.mjs` | Integration: independent benches, host-built component layout; presentation: repeated mount/destroy with requests in flight |
 | `restart.spec.mjs` | Integration: source restart clears tracks, cursors and review-gated drafts; old-run mutations are rejected |
 | `support.mjs` | Shared fixture: fails on console errors, records requests; `installPausedClock`, settled `poll` |
-| `fixtures.mjs` | Stateful fake simulator and display APIs with barriers and failures |
+| `fixtures.mjs` | Stateful fake simulator and display APIs with barriers and failures; reads published frames from the shared [corpus](../../testdata/quality/README.md) |
+| `unit/corpus.test.mjs` | Checks that fixtures use the shared corpus frames and display reference |
 
 Playwright starts `ui/testdata/browserhost` (see its `doc.go`), which serves
 the real pages and assets at `/` and `/bench/a/` for presentation tests, whose
@@ -55,3 +56,22 @@ and each spec owns its benches so specs never share mutable state.
 
 Each spec header states the layer it covers: presentation with intercepted
 payloads, or integration with real handlers.
+
+## Bounded browser state
+
+The browser keeps its own bounded state, separately from what a display
+retains. These bounds are covered by unit tests, which are cheaper and more
+exact than a heap measurement:
+
+| State | Bound | Covering test |
+| --- | --- | --- |
+| Loaded reception rows | `aircraftUi.maxHistoryRecords`, with a running trimmed count | `unit/inspector.test.mjs`: browser trimming, and the long inspection over 1200 pages |
+| Retention gap markers | `MAX_GAP_ROWS` in `inspector.js`, a fixed policy independent of the record bound | `unit/inspector.test.mjs`: the long inspection |
+| Reception sequences | Exact decimal strings above 2^53 in rows and cursors | `unit/inspector.test.mjs` |
+| Disappeared aircraft | One tombstone view each, then gone | `unit/tracks.test.mjs`: churn and replacement run |
+| Previous-run rows and cursors | Cleared on a run change; a held response of the old run restores nothing | `aircraft.spec.mjs`, `inspector.spec.mjs`, `restart.spec.mjs` |
+
+Failure handling is covered at the layer that owns it: transport and decode
+failures in the Go `display` package, and their browser labeling in
+`aircraft.spec.mjs` (outage, replacement run, oversized response and the
+recovery after each).

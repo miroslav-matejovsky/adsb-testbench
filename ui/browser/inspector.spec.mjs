@@ -174,3 +174,24 @@ test("inspection works with every tile request blocked", async ({ page }) => {
   await expect(historyRows(page)).toHaveCount(3);
   await expect(historyRows(page).first().locator(".tb-frame")).toHaveText(frames.identification);
 });
+
+test("a history response held across a run replacement restores no old rows", async ({ page }) => {
+  const { display } = await open(page);
+  await load(page);
+  await expect(historyRows(page)).toHaveCount(3);
+
+  // The next page is held at the fake API while the run is replaced, so the
+  // response that finally arrives belongs to the previous run.
+  const held = display.hold("POST", "receptions/history");
+  await history(page).getByRole("button", { name: "Next page" }).click();
+  await held.arrived;
+  display.state.runId = "run-2";
+  await poll(page);
+  await expect(history(page)).toContainText("History cleared: the simulator run changed.");
+  await expect(historyRows(page)).toHaveCount(0);
+
+  held.release();
+  await poll(page);
+  await expect(historyRows(page)).toHaveCount(0, { timeout: 5000 });
+  await expect(history(page)).not.toContainText("9007199254740993");
+});

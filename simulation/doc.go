@@ -95,14 +95,24 @@
 //
 // [Station] pairs an accepted configuration with a Revision and the virtual
 // CreatedAt instant. Revision starts at 1 and increments on every accepted
-// update, including one that assigns identical settings.
+// update, including one that assigns identical settings. Revisions never wrap:
+// an update of a station at the largest uint64 revision returns [ErrLimit]
+// and changes nothing, while removing that station remains possible.
 //
 // # Engine policy
 //
 // [MaxAircraft], [MaxSpeedHundredths], [HistoryLimit],
 // [ReceptionHistoryLimit], [MaxHistoryPageSize], [MaxAdvance],
-// [MaxBatchFrames], and [MaxStations] are fixed limits of this package, not
-// values inserted into configuration.
+// [MaxBatchFrames], [MaxStations], and [MaxStationIDsPerRun] are fixed
+// limits of this package, not values inserted into configuration.
+//
+// At most [MaxStations] stations are active at once, and one run creates at
+// most [MaxStationIDsPerRun] distinct station identifiers in total, counting
+// removed stations, because a removed identifier stays reserved. Creating a
+// station beyond either bound returns [ErrLimit] without consuming an
+// identifier, ordinal, or random stream. Updates and removals are never
+// limited by the lifetime budget. A restarted run, which needs a fresh run
+// ID, starts with an empty budget.
 //
 // Addresses are allocated monotonically from 000001 to FFFFFE and are never
 // reused within a run, including after a count reduction. A callsign is TB

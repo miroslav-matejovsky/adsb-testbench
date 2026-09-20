@@ -20,7 +20,11 @@ func decodeFixture(t *testing.T, raw simulatorapi.ReceptionSnapshot, expiry life
 	return decodeSnapshot(validated, expiry)
 }
 
-func TestDecodeBuildsFieldsFromIndependentPublishedFrames(t *testing.T) {
+// TestDecodeBuildsFieldsFromSyntheticEncodedFrames uses frames built by the
+// project encoder from stated values. It pins the decode pipeline, but its
+// bytes are not independent protocol evidence; the literal published frames
+// are exercised by TestDecodeLiteralReferenceSnapshot.
+func TestDecodeBuildsFieldsFromSyntheticEncodedFrames(t *testing.T) {
 	t.Parallel()
 
 	station := fixtureStation("alpha", 1, fixtureStart)

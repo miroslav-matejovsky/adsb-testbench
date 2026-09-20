@@ -1,5 +1,5 @@
 {
-  "$comment": "Complete configuration; every key is required and no value is a default. See configs/README.md for every key, unit and range. Units: *Nanoseconds are decimal strings of nanoseconds, *Milliseconds are integers, *Bytes are integers, degrees, feet, metres, knots. server: listenAddress host:port (loopback only here), publicBasePath mount prefix, HTTP timeouts and header bound. logging: level debug|info|warn|error, format text|json. simulator: engine settings; simulation.id is a label and the command appends a random suffix per launch. The run starts paused while the stations below are installed, then runs at speedHundredths. simulatorApi: service bounds and coverage reference altitude. stations: initial stations. managerUi: manager browser settings. The display command's source.baseUrl points at this server's /api/simulator route.",
+  "$comment": "Complete configuration; every key is required and no value is a default. See configs/README.md for every key, unit and range. Units: *Nanoseconds are decimal strings of nanoseconds, *Milliseconds are integers, *Bytes are integers, degrees, feet, metres, knots. server: listenAddress host:port (loopback only here), publicBasePath mount prefix, HTTP timeouts and header bound. logging: level debug|info|warn|error, format text|json. simulator: engine settings; simulation.id is a label and the command appends a random suffix per launch. The run starts paused while the stations below are installed, then runs at speedHundredths. simulatorApi: service bounds and coverage reference altitude. stations: initial stations. managerUi: manager browser settings. The display command's source.baseUrl points at this server's /api/simulator route. Response budgets follow the supported byte-budget profile in testdata/quality/capacity.json (engine limits, effective run ID of at most 128 UTF-8 bytes, 64-byte station IDs, full JSON escaping): the largest conservative response bound times 1.25, rounded up to a whole MiB.",
   "server": {
     "listenAddress": "127.0.0.1:8001",
     "publicBasePath": "/",
@@ -51,7 +51,7 @@
   },
   "simulatorApi": {
     "maxRequestBytes": 65536,
-    "maxResponseBytes": 4194304,
+    "maxResponseBytes": 32505856,
     "requestTimeoutNanoseconds": "5000000000",
     "coverageReferenceAltitudeFeet": 10000
   },
@@ -84,7 +84,7 @@
   "managerUi": {
     "pollIntervalMilliseconds": 1000,
     "requestTimeoutMilliseconds": 5000,
-    "maxResponseBytes": 4194304,
+    "maxResponseBytes": 32505856,
     "resumeSpeedHundredths": 100
   }
 }

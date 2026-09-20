@@ -166,9 +166,65 @@ func (e *Engine) SetSpeed(ctx context.Context, speed uint16) error {
 	return nil
 }
 
+// ValidateStationAddition reports whether AddStation would accept cfg now:
+// context, settings, identifier reuse, active capacity, the per-run
+// identifier budget, and ordinal exhaustion, with AddStation's error
+// categories and precedence. It is read only: it copies no history, emits no
+// frames, and reserves nothing.
+//
+// Success does not reserve the addition. AddStation rechecks everything, and
+// another mutation may intervene unless the caller serializes all mutations,
+// as the runtime driver does.
+func (e *Engine) ValidateStationAddition(ctx context.Context, cfg StationConfig) error {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	if err := validateStation(cfg); err != nil {
+		return err
+	}
+	return e.state.stations.checkAdd(cfg.ID)
+}
+
+// ValidateStationUpdate reports whether UpdateStation would accept cfg at
+// expectedRevision now: context, settings, an existing station, a matching
+// revision, and a revision that can still increment. It is read only and
+// reserves nothing, exactly like ValidateStationAddition.
+func (e *Engine) ValidateStationUpdate(ctx context.Context, expectedRevision uint64, cfg StationConfig) error {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	if err := validateStation(cfg); err != nil {
+		return err
+	}
+	_, err := e.state.stations.checkUpdate(expectedRevision, cfg.ID)
+	return err
+}
+
+// ValidateStationRemoval reports whether RemoveStation would accept id at
+// expectedRevision now. A station at the largest revision is removable. It is
+// read only and reserves nothing, exactly like ValidateStationAddition.
+func (e *Engine) ValidateStationRemoval(ctx context.Context, id string, expectedRevision uint64) error {
+	e.mu.Lock()
+	defer e.mu.Unlock()
+
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	_, err := e.state.stations.checkRemove(id, expectedRevision)
+	return err
+}
+
 // AddStation creates a receiving station at the committed virtual time with
 // revision 1. The identifier must be unused in this run, including by a
-// station that has already been removed.
+// station that has already been removed; a used identifier returns
+// ErrInvalid. More than MaxStations active stations, or more than
+// MaxStationIDsPerRun identifiers in the run, returns ErrLimit.
 //
 // It emits no frames and settles no time. A station receives only
 // transmissions emitted at or after its creation instant; retained
@@ -207,8 +263,9 @@ func (e *Engine) AddStation(ctx context.Context, cfg StationConfig) (Station, er
 // the station and adding another, which allocates a new random stream.
 //
 // A revision mismatch returns ErrConflict and changes nothing. An unknown
-// identifier returns ErrNotFound. Creation instant, ordinal, and generator
-// state are preserved.
+// identifier returns ErrNotFound. A station already at the largest uint64
+// revision returns ErrLimit, because its revision cannot increment. Creation
+// instant, ordinal, and generator state are preserved.
 func (e *Engine) UpdateStation(ctx context.Context, expectedRevision uint64, cfg StationConfig) (Station, error) {
 	e.mu.Lock()
 	defer e.mu.Unlock()

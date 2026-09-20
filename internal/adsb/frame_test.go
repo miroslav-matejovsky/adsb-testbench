@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/miroslav-matejovsky/adsb-testbench/internal/adsb"
+	"github.com/miroslav-matejovsky/adsb-testbench/internal/qualitytest"
 	"github.com/stretchr/testify/require"
 )
 
@@ -28,54 +29,87 @@ func frame(t testing.TB, text string) adsb.Frame {
 	return adsb.Frame(data)
 }
 
-// These expectations come from the published examples listed in testdata/README.md.
-// Encoding consumes these literal fields, not fields returned by our decoder.
-func TestPublishedFrames(t *testing.T) {
-	tests := []struct {
-		name, hex string
-		want      adsb.Message
-	}{
-		{"identification", identHex, adsb.Message{
-			Header:         adsb.Header{ICAO: 0x4840d6, Capability: 5},
-			Identification: &adsb.Identification{TypeCode: 4, Category: 0, Callsign: "KLM1023"},
-		}},
-		{"even position", evenHex, adsb.Message{
-			Header:   adsb.Header{ICAO: 0x40621d, Capability: 5},
-			Position: &adsb.AirbornePosition{TypeCode: 11, AltitudeFeet: number(38000), CPR: adsb.CPR{Latitude: 93000, Longitude: 51372}},
-		}},
-		{"odd position", oddHex, adsb.Message{
-			Header:   adsb.Header{ICAO: 0x40621d, Capability: 5},
-			Position: &adsb.AirbornePosition{TypeCode: 11, AltitudeFeet: number(38000), CPR: adsb.CPR{Odd: true, Latitude: 74158, Longitude: 50194}},
-		}},
-		{"ground velocity", groundHex, adsb.Message{
-			Header: adsb.Header{ICAO: 0x485020, Capability: 5},
-			Velocity: &adsb.Velocity{Subtype: 1, IFRCapability: true, EastKnots: measurement(-8), NorthKnots: measurement(-159),
-				VerticalRateFeetPerMinute: measurement(-832), GNSSMinusBaroFeet: measurement(550)},
-		}},
-		{"airspeed", airHex, adsb.Message{
-			Header: adsb.Header{ICAO: 0xa05f21, Capability: 5},
-			Velocity: &adsb.Velocity{Subtype: 3, HeadingDegrees: number(243.984375), AirspeedKnots: measurement(375),
-				TrueAirspeed: true, BarometricVerticalRate: true, VerticalRateFeetPerMinute: measurement(-2304)},
-		}},
+// referenceFrames loads the shared literal frames. Their expectations come
+// from the published examples listed in testdata/README.md and are stored as
+// data, never produced by this codec.
+func referenceFrames(t testing.TB) qualitytest.FrameCorpus {
+	t.Helper()
+
+	corpus, err := qualitytest.LoadFrames("../../testdata/quality/frames.json")
+	require.NoError(t, err)
+	return corpus
+}
+
+// expectedMessage converts literal corpus fields into a codec message.
+func expectedMessage(want qualitytest.ExpectedFrame) adsb.Message {
+	message := adsb.Message{Header: adsb.Header{ICAO: want.ICAO, Capability: want.Capability}}
+	measure := func(m *qualitytest.Measurement) *adsb.Measurement {
+		if m == nil {
+			return nil
+		}
+		return &adsb.Measurement{Value: m.Value, OverRange: m.OverRange}
 	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			input := frame(t, tt.hex)
+	switch {
+	case want.Identification != nil:
+		id := want.Identification
+		message.Identification = &adsb.Identification{TypeCode: id.TypeCode, Category: id.Category, Callsign: id.Callsign}
+	case want.Position != nil:
+		p := want.Position
+		message.Position = &adsb.AirbornePosition{
+			TypeCode: p.TypeCode, SurveillanceStatus: p.SurveillanceStatus, Supplement: p.Supplement,
+			AltitudeFeet: p.AltitudeFeet, TimeSynchronized: p.TimeSynchronized,
+			CPR: adsb.CPR{Odd: p.CPR.Odd, Latitude: p.CPR.Latitude, Longitude: p.CPR.Longitude},
+		}
+	case want.Velocity != nil:
+		v := want.Velocity
+		message.Velocity = &adsb.Velocity{
+			Subtype: v.Subtype, IntentChange: v.IntentChange, IFRCapability: v.IFRCapability, NACv: v.NACv,
+			EastKnots: measure(v.EastKnots), NorthKnots: measure(v.NorthKnots), HeadingDegrees: v.HeadingDegrees,
+			AirspeedKnots: measure(v.AirspeedKnots), TrueAirspeed: v.TrueAirspeed,
+			BarometricVerticalRate: v.BarometricVerticalRate, VerticalRateFeetPerMinute: measure(v.VerticalRateFeetPerMinute),
+			GNSSMinusBaroFeet: measure(v.GNSSMinusBaroFeet),
+		}
+	}
+	return message
+}
+
+// Encoding consumes the literal expected fields, not fields returned by our
+// decoder, and must reproduce the original bytes including CRC.
+func TestPublishedFrames(t *testing.T) {
+	corpus := referenceFrames(t)
+	for _, reference := range corpus.Frames {
+		t.Run(reference.ID, func(t *testing.T) {
+			require.Equal(t, qualitytest.External, reference.Classification)
+			want := expectedMessage(reference.Expected)
+			input := frame(t, reference.Hex)
 			got, err := adsb.Decode(input[:])
 			require.NoError(t, err)
-			require.Equal(t, tt.want, got)
+			require.Equal(t, want, got)
 			var encoded adsb.Frame
 			switch {
-			case tt.want.Identification != nil:
-				encoded, err = adsb.EncodeIdentification(tt.want.Header, *tt.want.Identification)
-			case tt.want.Position != nil:
-				encoded, err = adsb.EncodePosition(tt.want.Header, *tt.want.Position)
-			case tt.want.Velocity != nil:
-				encoded, err = adsb.EncodeVelocity(tt.want.Header, *tt.want.Velocity)
+			case want.Identification != nil:
+				encoded, err = adsb.EncodeIdentification(want.Header, *want.Identification)
+			case want.Position != nil:
+				encoded, err = adsb.EncodePosition(want.Header, *want.Position)
+			case want.Velocity != nil:
+				encoded, err = adsb.EncodeVelocity(want.Header, *want.Velocity)
 			}
 			require.NoError(t, err)
 			require.Equal(t, input, encoded)
 		})
+	}
+}
+
+// The mutation tests below start from the same literals, named locally.
+func TestLocalLiteralsMatchTheSharedCorpus(t *testing.T) {
+	corpus := referenceFrames(t)
+	for id, text := range map[string]string{
+		"identification-4840d6": identHex, "position-40621d-even": evenHex, "position-40621d-odd": oddHex,
+		"velocity-485020-ground": groundHex, "velocity-a05f21-airspeed": airHex,
+	} {
+		reference, err := corpus.Frame(id)
+		require.NoError(t, err)
+		require.Equal(t, reference.Hex, text, id)
 	}
 }
 

@@ -247,3 +247,17 @@ test("capacity failures are reported with the station limit", async ({ page }) =
   await expect(form).toContainText("The station limit was reached");
   await expect(field(form, "Station ID")).toHaveValue("bravo");
 });
+
+test("the per-run station ID budget is reported with its own bound", async ({ page }) => {
+  const simulator = await open(page);
+  simulator.state.limits.maxStationIdsPerRun = 1;
+  await page.getByRole("button", { name: "Add station" }).click();
+  const form = card(page, null);
+  for (const [label, value] of Object.entries(newStation)) {
+    await field(form, label).fill(value);
+  }
+  await form.getByLabel("Reception").selectOption("true");
+  await form.getByRole("button", { name: "Create station" }).click();
+  await expect(form).toContainText("The station limit was reached: at most 1 station IDs may be created in one run.");
+  await expect(field(form, "Station ID")).toHaveValue("bravo");
+});

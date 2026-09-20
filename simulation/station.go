@@ -63,8 +63,9 @@ type Station struct {
 }
 
 // ValidateStationConfig checks every station field without changing an engine.
-// Runtime command serializers use it to reject invalid edits before settling
-// elapsed real time.
+// Transport adapters use it to reject invalid settings early. Registry rules,
+// such as identifier reuse and revisions, need an engine; see
+// Engine.ValidateStationAddition and Engine.ValidateStationUpdate.
 func ValidateStationConfig(cfg StationConfig) error {
 	return validateStation(cfg)
 }

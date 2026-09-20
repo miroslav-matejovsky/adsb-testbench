@@ -2,6 +2,7 @@ package simdriver_test
 
 import (
 	"context"
+	"strconv"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -232,4 +233,185 @@ func testStation(id string) simulation.StationConfig {
 		SiteElevationMetres: 100, AntennaHeightMetres: 20, AntennaGainDBi: 3,
 		SensitivityDBm: -95, SystemLossDB: 2, FrameLossProbability: 0,
 	}
+}
+
+// rig is one driver over its own engine and fake clock. count is the active
+// aircraft count, so a command can settle time without changing the fleet.
+type rig struct {
+	engine *simulation.Engine
+	clock  *fakeClock
+	driver *simdriver.Driver
+	count  int
+}
+
+func newRig(t *testing.T, count int, speed uint16) rig {
+	t.Helper()
+	engine, clock, driver := newDriver(t, count, speed)
+	return rig{engine: engine, clock: clock, driver: driver, count: count}
+}
+
+// receptions captures the retained receptions of every active station.
+func (r rig) receptions(t *testing.T) simulation.ReceptionSnapshot {
+	t.Helper()
+	ids := []string{}
+	for _, station := range r.engine.Snapshot().Stations {
+		ids = append(ids, station.Config.ID)
+	}
+	snapshot, err := r.engine.ReceptionSnapshot(t.Context(), simulation.ReceptionSnapshotRequest{StationIDs: ids})
+	require.NoError(t, err)
+	return snapshot
+}
+
+// requireSameFuture applies the same valid commands to both rigs and
+// compares everything visible. The first command settles the pending time,
+// so losing or double-applying it, or disturbing hidden random, ordinal or
+// sequence state, changes the comparison.
+func requireSameFuture(t *testing.T, subject, control rig) {
+	t.Helper()
+	for _, r := range []rig{subject, control} {
+		require.NoError(t, r.driver.SetCount(t.Context(), 2))
+		r.clock.Add(3 * time.Second)
+		require.NoError(t, r.driver.SetCount(t.Context(), 1))
+	}
+	require.Equal(t, control.engine.Snapshot(), subject.engine.Snapshot())
+	require.Equal(t, control.receptions(t), subject.receptions(t))
+}
+
+func TestDriverRejectedStationAdditionDoesNotSettle(t *testing.T) {
+	t.Parallel()
+
+	prelude := func(r rig) {
+		created, err := r.driver.AddStation(t.Context(), testStation("primary"))
+		require.NoError(t, err)
+		require.NoError(t, r.driver.RemoveStation(t.Context(), "primary", created.Revision))
+	}
+	subject, control := newRig(t, 1, 100), newRig(t, 1, 100)
+	prelude(subject)
+	prelude(control)
+	subject.clock.Add(5 * time.Second)
+	control.clock.Add(5 * time.Second)
+
+	before := subject.engine.Snapshot()
+	sequence := before.History.LatestSequence
+	_, err := subject.driver.AddStation(t.Context(), testStation("primary"))
+	require.ErrorIs(t, err, simulation.ErrInvalid)
+	after := subject.engine.Snapshot()
+	require.Equal(t, before, after)
+	require.Zero(t, after.Elapsed, "a rejected command settles no time")
+	require.Equal(t, sequence, after.History.LatestSequence)
+
+	// A valid command applies the pending five seconds exactly once.
+	for _, r := range []rig{subject, control} {
+		_, err := r.driver.AddStation(t.Context(), testStation("secondary"))
+		require.NoError(t, err)
+		require.Equal(t, 5*time.Second, r.engine.Snapshot().Elapsed)
+	}
+	requireSameFuture(t, subject, control)
+}
+
+func TestDriverRejectedStationCommandsDoNotSettle(t *testing.T) {
+	t.Parallel()
+
+	active := func(ids ...string) func(*testing.T, rig) {
+		return func(t *testing.T, r rig) {
+			for _, id := range ids {
+				_, err := r.driver.AddStation(t.Context(), testStation(id))
+				require.NoError(t, err)
+			}
+		}
+	}
+	spentBudget := func(t *testing.T, r rig) {
+		for i := range simulation.MaxStationIDsPerRun {
+			id := "cycle-" + strconv.Itoa(i)
+			created, err := r.driver.AddStation(t.Context(), testStation(id))
+			require.NoError(t, err)
+			require.NoError(t, r.driver.RemoveStation(t.Context(), id, created.Revision))
+		}
+	}
+	canceled, cancel := context.WithCancel(t.Context())
+	cancel()
+
+	cases := []struct {
+		name    string
+		prelude func(*testing.T, rig)
+		command func(context.Context, rig) error
+		ctx     context.Context
+		err     error
+	}{
+		{
+			name: "active duplicate", prelude: active("primary"), err: simulation.ErrInvalid,
+			command: func(ctx context.Context, r rig) error {
+				_, err := r.driver.AddStation(ctx, testStation("primary"))
+				return err
+			},
+		},
+		{
+			name: "active capacity", prelude: active("s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"), err: simulation.ErrLimit,
+			command: func(ctx context.Context, r rig) error {
+				_, err := r.driver.AddStation(ctx, testStation("s9"))
+				return err
+			},
+		},
+		{
+			name: "lifetime identifier budget", prelude: spentBudget, err: simulation.ErrLimit,
+			command: func(ctx context.Context, r rig) error {
+				_, err := r.driver.AddStation(ctx, testStation("beyond"))
+				return err
+			},
+		},
+		{
+			name: "canceled addition", prelude: active(), ctx: canceled, err: context.Canceled,
+			command: func(ctx context.Context, r rig) error {
+				_, err := r.driver.AddStation(ctx, testStation("primary"))
+				return err
+			},
+		},
+		{
+			name: "unknown station update", prelude: active("primary"), err: simulation.ErrNotFound,
+			command: func(ctx context.Context, r rig) error {
+				_, err := r.driver.UpdateStation(ctx, 1, testStation("missing"))
+				return err
+			},
+		},
+		{
+			name: "stale revision update", prelude: active("primary"), err: simulation.ErrConflict,
+			command: func(ctx context.Context, r rig) error {
+				_, err := r.driver.UpdateStation(ctx, 2, testStation("primary"))
+				return err
+			},
+		},
+		{
+			name: "stale revision removal", prelude: active("primary"), err: simulation.ErrConflict,
+			command: func(ctx context.Context, r rig) error {
+				return r.driver.RemoveStation(ctx, "primary", 2)
+			},
+		},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
+			subject, control := newRig(t, 1, 100), newRig(t, 1, 100)
+			tc.prelude(t, subject)
+			tc.prelude(t, control)
+			subject.clock.Add(5 * time.Second)
+			control.clock.Add(5 * time.Second)
+
+			ctx := tc.ctx
+			if ctx == nil {
+				ctx = t.Context()
+			}
+			before := subject.engine.Snapshot()
+			require.ErrorIs(t, tc.command(ctx, subject), tc.err)
+			require.Equal(t, before, subject.engine.Snapshot(), "no time settled and nothing changed")
+			requireSameFuture(t, subject, control)
+		})
+	}
+
+	// A canceled addition consumed no identifier: the same ID is accepted later.
+	r := newRig(t, 0, 100)
+	_, err := r.driver.AddStation(canceled, testStation("primary"))
+	require.ErrorIs(t, err, context.Canceled)
+	_, err = r.driver.AddStation(t.Context(), testStation("primary"))
+	require.NoError(t, err)
 }

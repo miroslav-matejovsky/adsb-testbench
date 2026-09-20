@@ -20,8 +20,9 @@ embedding are implemented; see the root [README](../../README.md).
 | ---: | --- | :---: | :---: |
 | 1 | [Replay, transport output, and richer scenarios](12-replay-and-traffic-extensions.md) | XL | Medium |
 
-Deterministic fixtures and capacity checks have moved to the active
-[implementation plan](../plans/11-quality-and-capacity/README.md).
+Deterministic fixtures and capacity checks are implemented; their results are
+published in the [capacity report](../evaluations/quality-capacity/README.md)
+and the shared corpus lives in `testdata/quality`.
 
 ## Index
 

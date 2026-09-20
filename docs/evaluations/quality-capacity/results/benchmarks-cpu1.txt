@@ -1,0 +1,434 @@
+goos: windows
+goarch: amd64
+pkg: github.com/miroslav-matejovsky/adsb-testbench/simulation
+cpu: Intel(R) Core(TM) Ultra 7 265H
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-0/advance-0s         	   88737	     12925 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-0/advance-0s         	  109893	     13219 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-0/advance-0s         	   93381	     16777 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-0/advance-0s         	   68661	     16755 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-0/advance-0s         	   68400	     18008 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-0/advance-100ms      	   75025	     18477 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-0/advance-100ms      	   58399	     17679 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-0/advance-100ms      	   66591	     17096 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-0/advance-100ms      	   83664	     15087 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-0/advance-100ms      	   85494	     14874 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-100/advance-0s       	   78319	     15629 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-100/advance-0s       	   89415	     13656 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-100/advance-0s       	   90822	     14080 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-100/advance-0s       	   82496	     14385 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-100/advance-0s       	   87679	     14204 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-100/advance-100ms    	   80826	     13326 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-100/advance-100ms    	   87200	     13205 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-100/advance-100ms    	   87290	     13452 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-100/advance-100ms    	   85981	     11925 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-0/speed-100/advance-100ms    	   96126	     12719 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	   57392 B/op	       2 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-0/advance-0s         	    2445	    543422 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-0/advance-0s         	    2373	    557701 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-0/advance-0s         	    2355	    557263 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-0/advance-0s         	    2347	    541705 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-0/advance-0s         	    2002	    579138 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-0/advance-100ms      	    2324	    586377 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-0/advance-100ms      	    2186	    588528 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-0/advance-100ms      	    2538	    538501 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-0/advance-100ms      	    2041	    575689 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-0/advance-100ms      	    2361	    576792 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-100/advance-0s       	    2079	    589882 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-100/advance-0s       	    2404	    557663 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-100/advance-0s       	    2012	    591222 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-100/advance-0s       	    2274	    555073 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-100/advance-0s       	    2323	    561920 ns/op	         0 frames/op	         0 receptions/op	         0 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-100/advance-100ms    	    1933	    578794 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-100/advance-100ms    	    2286	    555251 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-100/advance-100ms    	    2289	    609947 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-100/advance-100ms    	    2269	    561256 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/empty-overhead/aircraft-0/stations-8/speed-100/advance-100ms    	    2247	    594845 ns/op	         0 frames/op	         0 receptions/op	 100000000 virtual-ns/op	 1894144 B/op	      12 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-1/stations-0/speed-100/advance-1s    	   58862	     19654 ns/op	         4.200 frames/op	      4681 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	   58405 B/op	      10 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-1/stations-0/speed-100/advance-1s    	   67657	     20209 ns/op	         4.201 frames/op	      4813 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	   58405 B/op	      10 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-1/stations-0/speed-100/advance-1s    	   64005	     19210 ns/op	         4.201 frames/op	      4566 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	   58405 B/op	      10 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-1/stations-0/speed-100/advance-1s    	   66991	     18507 ns/op	         4.201 frames/op	      4415 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	   58405 B/op	      10 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-1/stations-0/speed-100/advance-1s    	   68877	     17612 ns/op	         4.201 frames/op	      4197 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	   58405 B/op	      10 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-1/stations-0/speed-100/advance-1m0s  	    4860	    282840 ns/op	       252.0 frames/op	      1123 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	  106335 B/op	     263 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-1/stations-0/speed-100/advance-1m0s  	    3754	    298795 ns/op	       252.0 frames/op	      1179 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	  106334 B/op	     263 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-1/stations-0/speed-100/advance-1m0s  	    4425	    270465 ns/op	       252.0 frames/op	      1079 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	  106335 B/op	     263 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-1/stations-0/speed-100/advance-1m0s  	    4683	    259665 ns/op	       252.0 frames/op	      1030 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	  106335 B/op	     263 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-1/stations-0/speed-100/advance-1m0s  	    5042	    271854 ns/op	       252.0 frames/op	      1079 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	  106335 B/op	     263 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-10/stations-0/speed-100/advance-1s   	   17994	     64636 ns/op	        42.00 frames/op	      1537 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	   70387 B/op	      51 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-10/stations-0/speed-100/advance-1s   	   17944	     70067 ns/op	        42.00 frames/op	      1671 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	   70387 B/op	      51 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-10/stations-0/speed-100/advance-1s   	   17637	     72408 ns/op	        42.00 frames/op	      1724 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	   70387 B/op	      51 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-10/stations-0/speed-100/advance-1s   	   16051	     71191 ns/op	        42.00 frames/op	      1693 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	   70386 B/op	      51 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-10/stations-0/speed-100/advance-1s   	   18201	     70076 ns/op	        42.00 frames/op	      1672 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	   70387 B/op	      51 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-10/stations-0/speed-100/advance-1m0s 	     412	   3067131 ns/op	      2520 frames/op	      1217 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	  745081 B/op	    2536 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-10/stations-0/speed-100/advance-1m0s 	     350	   3273143 ns/op	      2520 frames/op	      1297 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	  745083 B/op	    2536 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-10/stations-0/speed-100/advance-1m0s 	     386	   3256135 ns/op	      2520 frames/op	      1295 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	  745087 B/op	    2536 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-10/stations-0/speed-100/advance-1m0s 	     352	   3253988 ns/op	      2520 frames/op	      1290 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	  745084 B/op	    2536 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-10/stations-0/speed-100/advance-1m0s 	     384	   3105594 ns/op	      2520 frames/op	      1232 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	  745084 B/op	    2536 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-100/stations-0/speed-100/advance-1s  	    1329	   1003766 ns/op	       419.9 frames/op	      2387 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	  174199 B/op	     432 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-100/stations-0/speed-100/advance-1s  	     958	   1120862 ns/op	       419.9 frames/op	      2670 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	  174200 B/op	     432 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-100/stations-0/speed-100/advance-1s  	    1214	   1045765 ns/op	       419.8 frames/op	      2472 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	  174197 B/op	     432 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-100/stations-0/speed-100/advance-1s  	    1056	   1078274 ns/op	       419.8 frames/op	      2568 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	  174197 B/op	     432 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-100/stations-0/speed-100/advance-1s  	    1261	   1023374 ns/op	       419.9 frames/op	      2432 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	  174199 B/op	     432 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-100/stations-0/speed-100/advance-1m0s         	      22	  51501305 ns/op	     25192 frames/op	      2038 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	 9337233 B/op	   25218 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-100/stations-0/speed-100/advance-1m0s         	      21	  59282452 ns/op	     25192 frames/op	      2368 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	 9337200 B/op	   25217 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-100/stations-0/speed-100/advance-1m0s         	      19	  64523689 ns/op	     25190 frames/op	      2564 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	 9337081 B/op	   25215 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-100/stations-0/speed-100/advance-1m0s         	      19	  63673274 ns/op	     25190 frames/op	      2528 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	 9337081 B/op	   25215 allocs/op
+BenchmarkCapacityEngineAdvance/scheduler-scaling/aircraft-100/stations-0/speed-100/advance-1m0s         	      18	  64327950 ns/op	     25191 frames/op	      2557 ns/frame	         0 receptions/op	60000000000 virtual-ns/op	 9337148 B/op	   25216 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-1/speed-100/advance-1s           	     676	   1751657 ns/op	       420.0 frames/op	      4177 ns/frame	       420.0 receptions/op	1000000000 virtual-ns/op	  665758 B/op	     445 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-1/speed-100/advance-1s           	     770	   1663197 ns/op	       420.0 frames/op	      3961 ns/frame	       420.0 receptions/op	1000000000 virtual-ns/op	  665759 B/op	     445 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-1/speed-100/advance-1s           	     700	   1715655 ns/op	       420.0 frames/op	      4081 ns/frame	       420.0 receptions/op	1000000000 virtual-ns/op	  665758 B/op	     445 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-1/speed-100/advance-1s           	     816	   1559704 ns/op	       420.0 frames/op	      3733 ns/frame	       420.0 receptions/op	1000000000 virtual-ns/op	  665760 B/op	     446 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-1/speed-100/advance-1s           	     817	   1764149 ns/op	       420.0 frames/op	      4207 ns/frame	       420.0 receptions/op	1000000000 virtual-ns/op	  665761 B/op	     446 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-2/speed-100/advance-1s           	     591	   2057536 ns/op	       420.0 frames/op	      4892 ns/frame	       840.1 receptions/op	1000000000 virtual-ns/op	 1108306 B/op	     448 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-2/speed-100/advance-1s           	     639	   2018526 ns/op	       420.0 frames/op	      4817 ns/frame	       840.0 receptions/op	1000000000 virtual-ns/op	 1108302 B/op	     447 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-2/speed-100/advance-1s           	     576	   2033858 ns/op	       420.0 frames/op	      4849 ns/frame	       840.0 receptions/op	1000000000 virtual-ns/op	 1108305 B/op	     448 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-2/speed-100/advance-1s           	     646	   2269731 ns/op	       420.0 frames/op	      5416 ns/frame	       840.0 receptions/op	1000000000 virtual-ns/op	 1108303 B/op	     447 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-2/speed-100/advance-1s           	     634	   2354682 ns/op	       420.0 frames/op	      5607 ns/frame	       840.0 receptions/op	1000000000 virtual-ns/op	 1108302 B/op	     447 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-8/speed-100/advance-1s           	     262	   4671084 ns/op	       420.1 frames/op	     11119 ns/frame	      3361 receptions/op	1000000000 virtual-ns/op	 4871435 B/op	     458 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-8/speed-100/advance-1s           	     255	   4604891 ns/op	       420.0 frames/op	     10964 ns/frame	      3360 receptions/op	1000000000 virtual-ns/op	 4870582 B/op	     458 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-8/speed-100/advance-1s           	     222	   5494238 ns/op	       420.1 frames/op	     13039 ns/frame	      3361 receptions/op	1000000000 virtual-ns/op	 4881800 B/op	     458 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-8/speed-100/advance-1s           	     240	   5136641 ns/op	       420.0 frames/op	     12192 ns/frame	      3360 receptions/op	1000000000 virtual-ns/op	 4878425 B/op	     458 allocs/op
+BenchmarkCapacityEngineAdvance/reception-scaling/aircraft-100/stations-8/speed-100/advance-1s           	     226	   5238986 ns/op	       420.2 frames/op	     12499 ns/frame	      3361 receptions/op	1000000000 virtual-ns/op	 4881516 B/op	     458 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/disabled     	     500	   2354200 ns/op	       419.8 frames/op	      5602 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010946 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/disabled     	     480	   2580630 ns/op	       419.8 frames/op	      6153 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010945 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/disabled     	     471	   2422229 ns/op	       419.8 frames/op	      5763 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010946 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/disabled     	     493	   2317023 ns/op	       419.8 frames/op	      5510 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010945 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/disabled     	     510	   2275201 ns/op	       419.8 frames/op	      5400 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010945 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/out-of-range 	     410	   3113450 ns/op	       419.7 frames/op	      7423 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010940 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/out-of-range 	     351	   3470147 ns/op	       419.7 frames/op	      8262 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010937 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/out-of-range 	     408	   2996530 ns/op	       419.7 frames/op	      7149 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010939 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/out-of-range 	     393	   3010959 ns/op	       419.7 frames/op	      7159 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010938 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/out-of-range 	     414	   2720644 ns/op	       419.6 frames/op	      6458 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010936 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-zero    	     256	   4945689 ns/op	       419.6 frames/op	     11718 ns/frame	      3357 receptions/op	1000000000 virtual-ns/op	 4914836 B/op	     457 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-zero    	     248	   4865612 ns/op	       419.5 frames/op	     11558 ns/frame	      3356 receptions/op	1000000000 virtual-ns/op	 4920584 B/op	     457 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-zero    	     228	   4862960 ns/op	       419.4 frames/op	     11603 ns/frame	      3356 receptions/op	1000000000 virtual-ns/op	 4934469 B/op	     457 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-zero    	     246	   4939311 ns/op	       419.5 frames/op	     11768 ns/frame	      3356 receptions/op	1000000000 virtual-ns/op	 4923134 B/op	     457 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-zero    	     199	   5550704 ns/op	       419.4 frames/op	     13238 ns/frame	      3355 receptions/op	1000000000 virtual-ns/op	 4945814 B/op	     457 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-one     	     369	   3216729 ns/op	       419.6 frames/op	      7665 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010934 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-one     	     355	   3226544 ns/op	       419.6 frames/op	      7681 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010934 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-one     	     367	   3167248 ns/op	       419.7 frames/op	      7557 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010938 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-one     	     354	   3197944 ns/op	       419.6 frames/op	      7612 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010931 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-one     	     362	   3335612 ns/op	       419.7 frames/op	      7931 ns/frame	         0 receptions/op	1000000000 virtual-ns/op	 2010937 B/op	     442 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-quarter 	     242	   4784693 ns/op	       419.5 frames/op	     11385 ns/frame	      2518 receptions/op	1000000000 virtual-ns/op	 4042802 B/op	     456 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-quarter 	     229	   4876910 ns/op	       419.4 frames/op	     11642 ns/frame	      2518 receptions/op	1000000000 virtual-ns/op	 4048517 B/op	     456 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-quarter 	     264	   4633988 ns/op	       419.4 frames/op	     11048 ns/frame	      2517 receptions/op	1000000000 virtual-ns/op	 4030272 B/op	     456 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-quarter 	     240	   4943625 ns/op	       419.5 frames/op	     11775 ns/frame	      2518 receptions/op	1000000000 virtual-ns/op	 4044648 B/op	     456 allocs/op
+BenchmarkCapacityEngineAdvance/radio-outcomes/aircraft-100/stations-8/speed-100/advance-1s/loss-quarter 	     264	   4507089 ns/op	       419.4 frames/op	     10727 ns/frame	      2517 receptions/op	1000000000 virtual-ns/op	 4030272 B/op	     456 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-1                                                          	   56312	     22358 ns/op	   58810 B/op	      13 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-1                                                          	   52534	     23279 ns/op	   58810 B/op	      13 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-1                                                          	   57399	     21037 ns/op	   58810 B/op	      13 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-1                                                          	   48974	     22990 ns/op	   58810 B/op	      13 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-1                                                          	   77295	     17053 ns/op	   58810 B/op	      13 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-10                                                         	   19868	     60235 ns/op	   73907 B/op	      74 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-10                                                         	   20998	     56451 ns/op	   73906 B/op	      74 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-10                                                         	   21346	     57329 ns/op	   73906 B/op	      74 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-10                                                         	   20310	     57382 ns/op	   73906 B/op	      74 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-10                                                         	   21762	     56068 ns/op	   73906 B/op	      74 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-100                                                        	    2589	    514078 ns/op	  232298 B/op	     621 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-100                                                        	    2072	    563412 ns/op	  232298 B/op	     621 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-100                                                        	    2380	    540234 ns/op	  232298 B/op	     621 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-100                                                        	    2042	    525240 ns/op	  232298 B/op	     621 allocs/op
+BenchmarkCapacityEngineConstruction/aircraft-100                                                        	    2632	    541210 ns/op	  232298 B/op	     621 allocs/op
+BenchmarkCapacityEngineZeroAdvance                                                                      	    1818	    709498 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineZeroAdvance                                                                      	    1538	    799211 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineZeroAdvance                                                                      	    1728	    698692 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineZeroAdvance                                                                      	    1916	    684738 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineZeroAdvance                                                                      	    2071	    646205 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineSameCount                                                                        	    1474	    686259 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineSameCount                                                                        	    1824	    711843 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineSameCount                                                                        	    2030	    718110 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineSameCount                                                                        	    1668	    707333 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineSameCount                                                                        	    2149	    631730 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineStationUpdate                                                                    	    2048	    660665 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineStationUpdate                                                                    	    2559	    687925 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineStationUpdate                                                                    	    1660	    659897 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineStationUpdate                                                                    	    2120	    625962 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityEngineStationUpdate                                                                    	    1800	    724700 ns/op	 1918720 B/op	      13 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-1                                                	    8643	    129351 ns/op	      1000 records/op	  459136 B/op	       8 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-1                                                	    8895	    123172 ns/op	      1000 records/op	  459136 B/op	       8 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-1                                                	    7902	    127596 ns/op	      1000 records/op	  459136 B/op	       8 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-1                                                	    8887	    117572 ns/op	      1000 records/op	  459136 B/op	       8 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-1                                                	    9334	    128972 ns/op	      1000 records/op	  459136 B/op	       8 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-2                                                	    2115	    579844 ns/op	      2000 records/op	  909784 B/op	       9 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-2                                                	    1606	    748876 ns/op	      2000 records/op	  909784 B/op	       9 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-2                                                	    1473	    774101 ns/op	      2000 records/op	  909784 B/op	       9 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-2                                                	    1784	    579195 ns/op	      2000 records/op	  909784 B/op	       9 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-2                                                	    1614	    755981 ns/op	      2000 records/op	  909784 B/op	       9 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-8                                                	     153	   7803273 ns/op	      8000 records/op	 3630056 B/op	      15 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-8                                                	     199	   6095261 ns/op	      8000 records/op	 3630056 B/op	      15 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-8                                                	     210	   5820731 ns/op	      8000 records/op	 3630056 B/op	      15 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-8                                                	     130	   9929601 ns/op	      8000 records/op	 3630056 B/op	      15 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-8                                                	     216	   5404672 ns/op	      8000 records/op	 3630056 B/op	      15 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-1                                              	    8456	    121541 ns/op	      1000 records/op	  459136 B/op	       8 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-1                                              	    9318	    129006 ns/op	      1000 records/op	  459136 B/op	       8 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-1                                              	   10000	    114929 ns/op	      1000 records/op	  459136 B/op	       8 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-1                                              	    9518	    121989 ns/op	      1000 records/op	  459136 B/op	       8 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-1                                              	    9684	    125266 ns/op	      1000 records/op	  459136 B/op	       8 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-2                                              	    1970	    555774 ns/op	      2000 records/op	  909784 B/op	       9 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-2                                              	    1795	    701364 ns/op	      2000 records/op	  909784 B/op	       9 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-2                                              	    1593	    677242 ns/op	      2000 records/op	  909784 B/op	       9 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-2                                              	    1934	    699752 ns/op	      2000 records/op	  909784 B/op	       9 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-2                                              	    1732	    691596 ns/op	      2000 records/op	  909784 B/op	       9 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-8                                              	     100	  10268511 ns/op	      8000 records/op	 3630056 B/op	      15 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-8                                              	     174	   7070958 ns/op	      8000 records/op	 3630056 B/op	      15 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-8                                              	     100	  11315359 ns/op	      8000 records/op	 3630056 B/op	      15 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-8                                              	     100	  10395181 ns/op	      8000 records/op	 3630056 B/op	      15 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-8                                              	     100	  10363443 ns/op	      8000 records/op	 3630056 B/op	      15 allocs/op
+PASS
+ok  	github.com/miroslav-matejovsky/adsb-testbench/simulation	219.403s
+goos: windows
+goarch: amd64
+pkg: github.com/miroslav-matejovsky/adsb-testbench/internal/simdriver
+cpu: Intel(R) Core(TM) Ultra 7 265H
+BenchmarkCapacityDriverTick/speed-0/real-100ms         	    1855	    673130 ns/op	         0 virtual-ns/op	 1947904 B/op	      16 allocs/op
+BenchmarkCapacityDriverTick/speed-0/real-100ms         	    2433	    637000 ns/op	         0 virtual-ns/op	 1947904 B/op	      16 allocs/op
+BenchmarkCapacityDriverTick/speed-0/real-100ms         	    1652	    659109 ns/op	         0 virtual-ns/op	 1947904 B/op	      16 allocs/op
+BenchmarkCapacityDriverTick/speed-0/real-100ms         	    2000	    695180 ns/op	         0 virtual-ns/op	 1947904 B/op	      16 allocs/op
+BenchmarkCapacityDriverTick/speed-0/real-100ms         	    1884	    627100 ns/op	         0 virtual-ns/op	 1947904 B/op	      16 allocs/op
+BenchmarkCapacityDriverTick/speed-100/real-100ms       	     720	   1701313 ns/op	 100000000 virtual-ns/op	 4148326 B/op	      87 allocs/op
+BenchmarkCapacityDriverTick/speed-100/real-100ms       	     730	   1799179 ns/op	 100000000 virtual-ns/op	 4148362 B/op	      87 allocs/op
+BenchmarkCapacityDriverTick/speed-100/real-100ms       	     702	   1743231 ns/op	 100000000 virtual-ns/op	 4147951 B/op	      87 allocs/op
+BenchmarkCapacityDriverTick/speed-100/real-100ms       	     692	   1618334 ns/op	 100000000 virtual-ns/op	 4147511 B/op	      87 allocs/op
+BenchmarkCapacityDriverTick/speed-100/real-100ms       	     877	   1598250 ns/op	 100000000 virtual-ns/op	 4149174 B/op	      87 allocs/op
+BenchmarkCapacityDriverTick/speed-1000/real-100ms      	     262	   4688689 ns/op	1000000000 virtual-ns/op	 6901515 B/op	     474 allocs/op
+BenchmarkCapacityDriverTick/speed-1000/real-100ms      	     236	   5131510 ns/op	1000000000 virtual-ns/op	 6922248 B/op	     474 allocs/op
+BenchmarkCapacityDriverTick/speed-1000/real-100ms      	     250	   4842068 ns/op	1000000000 virtual-ns/op	 6908011 B/op	     474 allocs/op
+BenchmarkCapacityDriverTick/speed-1000/real-100ms      	     252	   4611012 ns/op	1000000000 virtual-ns/op	 6905515 B/op	     474 allocs/op
+BenchmarkCapacityDriverTick/speed-1000/real-100ms      	     261	   4864487 ns/op	1000000000 virtual-ns/op	 6902695 B/op	     474 allocs/op
+BenchmarkCapacityDriverTick/speed-10000/real-100ms     	      21	  49898981 ns/op	10000000000 virtual-ns/op	46002257 B/op	    4270 allocs/op
+BenchmarkCapacityDriverTick/speed-10000/real-100ms     	      25	  49163628 ns/op	10000000000 virtual-ns/op	46002216 B/op	    4269 allocs/op
+BenchmarkCapacityDriverTick/speed-10000/real-100ms     	      24	  47112329 ns/op	10000000000 virtual-ns/op	46002226 B/op	    4270 allocs/op
+BenchmarkCapacityDriverTick/speed-10000/real-100ms     	      28	  47648664 ns/op	10000000000 virtual-ns/op	46002228 B/op	    4270 allocs/op
+BenchmarkCapacityDriverTick/speed-10000/real-100ms     	      25	  43677388 ns/op	10000000000 virtual-ns/op	46002216 B/op	    4269 allocs/op
+BenchmarkCapacityDriverCatchUp/virtual-1m0s/speed-10000         	       4	 290569200 ns/op	60000000000 virtual-ns/op	276436528 B/op	   25142 allocs/op
+BenchmarkCapacityDriverCatchUp/virtual-1m0s/speed-10000         	       4	 283755875 ns/op	60000000000 virtual-ns/op	276436528 B/op	   25142 allocs/op
+BenchmarkCapacityDriverCatchUp/virtual-1m0s/speed-10000         	       4	 302271725 ns/op	60000000000 virtual-ns/op	276436528 B/op	   25142 allocs/op
+BenchmarkCapacityDriverCatchUp/virtual-1m0s/speed-10000         	       4	 296631900 ns/op	60000000000 virtual-ns/op	276436528 B/op	   25142 allocs/op
+BenchmarkCapacityDriverCatchUp/virtual-1m0s/speed-10000         	       4	 280193825 ns/op	60000000000 virtual-ns/op	276436528 B/op	   25142 allocs/op
+BenchmarkCapacityDriverCatchUp/virtual-1h0m0s/speed-10000       	       1	16635844600 ns/op	3600000000000 virtual-ns/op	16471798848 B/op	 1515912 allocs/op
+BenchmarkCapacityDriverCatchUp/virtual-1h0m0s/speed-10000       	       1	16179606600 ns/op	3600000000000 virtual-ns/op	16471798848 B/op	 1515912 allocs/op
+BenchmarkCapacityDriverCatchUp/virtual-1h0m0s/speed-10000       	       1	16316607400 ns/op	3600000000000 virtual-ns/op	16471798848 B/op	 1515912 allocs/op
+BenchmarkCapacityDriverCatchUp/virtual-1h0m0s/speed-10000       	       1	16897752700 ns/op	3600000000000 virtual-ns/op	16471798848 B/op	 1515912 allocs/op
+BenchmarkCapacityDriverCatchUp/virtual-1h0m0s/speed-10000       	       1	16486569000 ns/op	3600000000000 virtual-ns/op	16471798848 B/op	 1515912 allocs/op
+PASS
+ok  	github.com/miroslav-matejovsky/adsb-testbench/internal/simdriver	113.730s
+goos: windows
+goarch: amd64
+pkg: github.com/miroslav-matejovsky/adsb-testbench/simulator
+cpu: Intel(R) Core(TM) Ultra 7 265H
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-1         	    1591	    697211 ns/op	      1000 records/op	  824938 B/op	    5843 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-1         	    1927	    651541 ns/op	      1000 records/op	  824938 B/op	    5843 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-1         	    1611	    685077 ns/op	      1000 records/op	  824938 B/op	    5843 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-1         	    1611	    673539 ns/op	      1000 records/op	  824938 B/op	    5843 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-1         	    1674	    720494 ns/op	      1000 records/op	  824938 B/op	    5843 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-2         	     530	   1942588 ns/op	      2000 records/op	 1633180 B/op	   11676 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-2         	     854	   2134522 ns/op	      2000 records/op	 1633180 B/op	   11676 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-2         	     704	   1958757 ns/op	      2000 records/op	 1633173 B/op	   11676 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-2         	     528	   2241196 ns/op	      2000 records/op	 1633180 B/op	   11676 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-2         	     537	   2228593 ns/op	      2000 records/op	 1633182 B/op	   11676 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-8         	     100	  12078539 ns/op	      8000 records/op	 6507113 B/op	   46669 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-8         	      87	  14219315 ns/op	      8000 records/op	 6507116 B/op	   46670 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-8         	      54	  21296209 ns/op	      8000 records/op	 6507112 B/op	   46670 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-8         	      51	  21046031 ns/op	      8000 records/op	 6507112 B/op	   46670 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-1/stations-8         	      81	  14468907 ns/op	      8000 records/op	 6507119 B/op	   46670 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-1       	    1474	    759386 ns/op	      1000 records/op	  825625 B/op	    6014 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-1       	    1818	    719514 ns/op	      1000 records/op	  825626 B/op	    6014 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-1       	    1705	    728118 ns/op	      1000 records/op	  825626 B/op	    6014 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-1       	    1725	    742190 ns/op	      1000 records/op	  825625 B/op	    6014 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-1       	    1626	    669961 ns/op	      1000 records/op	  825625 B/op	    6014 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-2       	     529	   2366797 ns/op	      2000 records/op	 1634558 B/op	   12018 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-2       	     453	   2389784 ns/op	      2000 records/op	 1634555 B/op	   12018 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-2       	     456	   2293081 ns/op	      2000 records/op	 1634556 B/op	   12018 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-2       	     520	   2133957 ns/op	      2000 records/op	 1634552 B/op	   12018 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-2       	     554	   2206249 ns/op	      2000 records/op	 1634555 B/op	   12018 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-8       	     100	  17063603 ns/op	      8000 records/op	 6512598 B/op	   48037 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-8       	     100	  19863125 ns/op	      8000 records/op	 6512597 B/op	   48037 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-8       	     100	  19996301 ns/op	      8000 records/op	 6512597 B/op	   48037 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-8       	     100	  19526078 ns/op	      8000 records/op	 6512597 B/op	   48037 allocs/op
+BenchmarkCapacityReceptionSnapshot/aircraft-100/stations-8       	     100	  19781524 ns/op	      8000 records/op	 6512596 B/op	   48037 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-1     	     518	   2409984 ns/op	    559235 bytes/op	  571854 B/op	       4 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-1     	     466	   2478182 ns/op	    559235 bytes/op	  572459 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-1     	     507	   2388645 ns/op	    559235 bytes/op	  571896 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-1     	     525	   2398756 ns/op	    559235 bytes/op	  571677 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-1     	     501	   2332011 ns/op	    559235 bytes/op	  571972 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-2     	     234	   5148618 ns/op	   1118367 bytes/op	 1150961 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-2     	     241	   5121959 ns/op	   1118367 bytes/op	 1150137 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-2     	     242	   5304647 ns/op	   1118367 bytes/op	 1150023 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-2     	     247	   4957185 ns/op	   1118367 bytes/op	 1149467 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-2     	     274	   4580747 ns/op	   1118367 bytes/op	 1146817 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-8     	      58	  20330129 ns/op	   4473159 bytes/op	 4938359 B/op	       4 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-8     	      55	  19664613 ns/op	   4473159 bytes/op	 4963290 B/op	       4 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-8     	      61	  20358626 ns/op	   4473159 bytes/op	 4915881 B/op	       4 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-8     	      60	  19406005 ns/op	   4473159 bytes/op	 4923125 B/op	       4 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-1/stations-8     	      60	  19383407 ns/op	   4473159 bytes/op	 4923125 B/op	       4 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-1   	     488	   2444127 ns/op	    563391 bytes/op	  572145 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-1   	     510	   2318540 ns/op	    563391 bytes/op	  571859 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-1   	     441	   2387573 ns/op	    563391 bytes/op	  572853 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-1   	     525	   2319491 ns/op	    563391 bytes/op	  571677 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-1   	     561	   2160177 ns/op	    563391 bytes/op	  571280 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-2   	     236	   4690378 ns/op	   1126679 bytes/op	 1158914 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-2   	     270	   4399761 ns/op	   1126679 bytes/op	 1155369 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-2   	     280	   4508099 ns/op	   1126679 bytes/op	 1154490 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-2   	     249	   4556084 ns/op	   1126679 bytes/op	 1157444 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-2   	     258	   4577225 ns/op	   1126679 bytes/op	 1156513 B/op	       3 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-8   	      63	  18616590 ns/op	   4506407 bytes/op	 4934853 B/op	       4 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-8   	      57	  17827932 ns/op	   4506407 bytes/op	 4979133 B/op	       4 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-8   	      63	  18625825 ns/op	   4506407 bytes/op	 4934853 B/op	       4 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-8   	      62	  19137419 ns/op	   4506407 bytes/op	 4941628 B/op	       4 allocs/op
+BenchmarkCapacityReceptionSnapshotJSON/aircraft-100/stations-8   	      62	  18859894 ns/op	   4506407 bytes/op	 4941628 B/op	       4 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-1   	      42	  29173845 ns/op	      1000 records/op	16170487 B/op	  172618 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-1   	      40	  27029288 ns/op	      1000 records/op	16224515 B/op	  172618 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-1   	      39	  29430992 ns/op	      1000 records/op	16461494 B/op	  172620 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-1   	      49	  27815567 ns/op	      1000 records/op	16313936 B/op	  172620 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-1   	      50	  27803808 ns/op	      1000 records/op	15997411 B/op	  172614 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-1    	      30	  43797520 ns/op	      1000 records/op	16079190 B/op	  172715 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-1    	      38	  42593716 ns/op	      1000 records/op	16187354 B/op	  172711 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-1    	      28	  41978268 ns/op	      1000 records/op	16187325 B/op	  172710 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-1    	      34	  42897156 ns/op	      1000 records/op	16187476 B/op	  172712 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-1    	      31	  40986106 ns/op	      1000 records/op	15976183 B/op	  172712 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-2   	      21	  60824276 ns/op	      2000 records/op	32768862 B/op	  344283 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-2   	      21	  54528295 ns/op	      2000 records/op	32768774 B/op	  344282 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-2   	      20	  60413525 ns/op	      2000 records/op	32768736 B/op	  344282 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-2   	      22	  61336464 ns/op	      2000 records/op	32768647 B/op	  344280 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-2   	      19	  55328021 ns/op	      2000 records/op	32768856 B/op	  344283 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-2    	      13	  79465546 ns/op	      2000 records/op	31689968 B/op	  344375 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-2    	      16	  74285519 ns/op	      2000 records/op	31688329 B/op	  344374 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-2    	      15	  72145060 ns/op	      2000 records/op	31688134 B/op	  344371 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-2    	      18	  74784261 ns/op	      2000 records/op	31688297 B/op	  344373 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-2    	      19	  70490616 ns/op	      2000 records/op	31336658 B/op	  344368 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-8   	       4	 252625425 ns/op	      8000 records/op	130961404 B/op	 1374183 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-8   	       5	 239376020 ns/op	      8000 records/op	130961494 B/op	 1374184 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-8   	       5	 245179780 ns/op	      8000 records/op	130961499 B/op	 1374184 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-8   	       4	 253024275 ns/op	      8000 records/op	130961382 B/op	 1374183 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-1/stations-8   	       4	 257072825 ns/op	      8000 records/op	130961802 B/op	 1374188 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-8    	       4	 272115150 ns/op	      8000 records/op	126528978 B/op	 1374301 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-8    	       4	 261396700 ns/op	      8000 records/op	126522470 B/op	 1374279 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-8    	       4	 323076575 ns/op	      8000 records/op	126521516 B/op	 1374265 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-8    	       4	 288270800 ns/op	      8000 records/op	126522196 B/op	 1374274 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-1/stations-8    	       4	 308003450 ns/op	      8000 records/op	126522460 B/op	 1374278 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-1 	      37	  30489578 ns/op	      1000 records/op	15841012 B/op	  173023 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-1 	      42	  28043276 ns/op	      1000 records/op	16022591 B/op	  173025 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-1 	      37	  27094868 ns/op	      1000 records/op	16016304 B/op	  173025 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-1 	      37	  29115695 ns/op	      1000 records/op	16103949 B/op	  173026 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-1 	      31	  32340374 ns/op	      1000 records/op	16299050 B/op	  173028 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-1  	      36	  38683833 ns/op	      1000 records/op	15289454 B/op	  173110 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-1  	      30	  42779550 ns/op	      1000 records/op	15001567 B/op	  173103 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-1  	      30	  37801237 ns/op	      1000 records/op	15435279 B/op	  173107 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-1  	      28	  51865254 ns/op	      1000 records/op	15496011 B/op	  173109 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-1  	      19	  59596337 ns/op	      1000 records/op	15850563 B/op	  173115 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-2 	      12	 129655392 ns/op	      2000 records/op	32802504 B/op	  345104 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-2 	      12	  94597683 ns/op	      2000 records/op	32802441 B/op	  345103 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-2 	      12	  90633142 ns/op	      2000 records/op	32802477 B/op	  345103 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-2 	      13	  94338038 ns/op	      2000 records/op	32802428 B/op	  345102 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-2 	      12	 102263125 ns/op	      2000 records/op	31695226 B/op	  345095 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-2  	      10	 109911550 ns/op	      2000 records/op	31048318 B/op	  345194 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-2  	       9	 161106600 ns/op	      2000 records/op	31713910 B/op	  345195 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-2  	      10	 109893520 ns/op	      2000 records/op	31713853 B/op	  345194 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-2  	      10	 112409560 ns/op	      2000 records/op	31046045 B/op	  345189 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-2  	       9	 118343644 ns/op	      2000 records/op	30229604 B/op	  345180 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-8 	       2	 568889300 ns/op	      8000 records/op	131084784 B/op	 1377479 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-8 	       2	 622148800 ns/op	      8000 records/op	131084852 B/op	 1377479 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-8 	       3	 402236900 ns/op	      8000 records/op	131084720 B/op	 1377477 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-8 	       3	 379644000 ns/op	      8000 records/op	131084813 B/op	 1377479 allocs/op
+BenchmarkCapacitySimulatorHTTP/in-memory/aircraft-100/stations-8 	       3	 381889333 ns/op	      8000 records/op	131084970 B/op	 1377481 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-8  	       2	 563602950 ns/op	      8000 records/op	126626952 B/op	 1377628 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-8  	       3	 394699200 ns/op	      8000 records/op	126613114 B/op	 1377573 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-8  	       3	 383617100 ns/op	      8000 records/op	126612976 B/op	 1377572 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-8  	       3	 388086133 ns/op	      8000 records/op	126613466 B/op	 1377578 allocs/op
+BenchmarkCapacitySimulatorHTTP/loopback/aircraft-100/stations-8  	       3	 379008433 ns/op	      8000 records/op	126612789 B/op	 1377569 allocs/op
+BenchmarkCapacitySimulatorContention/callers-1                   	      12	  99200150 ns/op	         1.000 requests/op	13257817 B/op	   48236 allocs/op
+BenchmarkCapacitySimulatorContention/callers-1                   	      13	 102268538 ns/op	         1.000 requests/op	11046582 B/op	   48223 allocs/op
+BenchmarkCapacitySimulatorContention/callers-1                   	      10	 103098040 ns/op	         1.000 requests/op	13702592 B/op	   48228 allocs/op
+BenchmarkCapacitySimulatorContention/callers-1                   	      12	  87945267 ns/op	         1.000 requests/op	11044372 B/op	   48223 allocs/op
+BenchmarkCapacitySimulatorContention/callers-1                   	      13	  88569231 ns/op	         1.000 requests/op	11058979 B/op	   48222 allocs/op
+BenchmarkCapacitySimulatorContention/callers-4                   	       2	 543593450 ns/op	         4.000 requests/op	137057216 B/op	  193247 allocs/op
+BenchmarkCapacitySimulatorContention/callers-4                   	       3	 408508067 ns/op	         4.000 requests/op	123778005 B/op	  193169 allocs/op
+BenchmarkCapacitySimulatorContention/callers-4                   	       3	 375068400 ns/op	         4.000 requests/op	97275024 B/op	  193120 allocs/op
+BenchmarkCapacitySimulatorContention/callers-4                   	       3	 390670967 ns/op	         4.000 requests/op	132616464 B/op	  193183 allocs/op
+BenchmarkCapacitySimulatorContention/callers-4                   	       3	 355365500 ns/op	         4.000 requests/op	106099701 B/op	  193117 allocs/op
+PASS
+ok  	github.com/miroslav-matejovsky/adsb-testbench/simulator	166.937s
+goos: windows
+goarch: amd64
+pkg: github.com/miroslav-matejovsky/adsb-testbench/display
+cpu: Intel(R) Core(TM) Ultra 7 265H
+BenchmarkCapacityDisplayRefresh/stations-1/records-1000         	     200	   5841729 ns/op	      1000 records/op	      1000 tracks/op	 2740942 B/op	   20799 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-1/records-1000         	     228	   5738915 ns/op	      1000 records/op	      1000 tracks/op	 2740936 B/op	   20799 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-1/records-1000         	     100	  14273377 ns/op	      1000 records/op	      1000 tracks/op	 2740935 B/op	   20799 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-1/records-1000         	      18	  57711617 ns/op	      1000 records/op	      1000 tracks/op	 2740955 B/op	   20799 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-1/records-1000         	      28	  40959650 ns/op	      1000 records/op	      1000 tracks/op	 2740933 B/op	   20799 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-2/records-2000         	      54	  21402313 ns/op	      2000 records/op	      2000 tracks/op	 5474644 B/op	   41815 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-2/records-2000         	      78	  22539247 ns/op	      2000 records/op	      2000 tracks/op	 5474630 B/op	   41815 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-2/records-2000         	      61	  19277811 ns/op	      2000 records/op	      2000 tracks/op	 5474633 B/op	   41815 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-2/records-2000         	      87	  21080011 ns/op	      2000 records/op	      2000 tracks/op	 5474626 B/op	   41815 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-2/records-2000         	      61	  19396475 ns/op	      2000 records/op	      2000 tracks/op	 5474627 B/op	   41815 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-8/records-8000         	      15	  76890833 ns/op	      8000 records/op	      8000 tracks/op	21884947 B/op	  167911 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-8/records-8000         	      14	  97346371 ns/op	      8000 records/op	      8000 tracks/op	21884949 B/op	  167912 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-8/records-8000         	      14	  76742064 ns/op	      8000 records/op	      8000 tracks/op	21884939 B/op	  167911 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-8/records-8000         	      13	 216997838 ns/op	      8000 records/op	      8000 tracks/op	21884971 B/op	  167912 allocs/op
+BenchmarkCapacityDisplayRefresh/stations-8/records-8000         	      18	  73099444 ns/op	      8000 records/op	      8000 tracks/op	21884960 B/op	  167912 allocs/op
+BenchmarkCapacityDisplayRefresh/source-cardinality/records-8000 	      15	  74188967 ns/op	      8000 records/op	      8000 tracks/op	21884987 B/op	  167912 allocs/op
+BenchmarkCapacityDisplayRefresh/source-cardinality/records-8000 	      18	  70968378 ns/op	      8000 records/op	      8000 tracks/op	21884976 B/op	  167912 allocs/op
+BenchmarkCapacityDisplayRefresh/source-cardinality/records-8000 	      16	  75320931 ns/op	      8000 records/op	      8000 tracks/op	21884950 B/op	  167912 allocs/op
+BenchmarkCapacityDisplayRefresh/source-cardinality/records-8000 	      13	  77784523 ns/op	      8000 records/op	      8000 tracks/op	21884969 B/op	  167912 allocs/op
+BenchmarkCapacityDisplayRefresh/source-cardinality/records-8000 	      18	  80349828 ns/op	      8000 records/op	      8000 tracks/op	21884957 B/op	  167912 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-1/records-1000            	      68	  17329654 ns/op	    891166 bytes/op	 4922831 B/op	   20876 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-1/records-1000            	      84	  16499143 ns/op	    891166 bytes/op	 4911153 B/op	   20867 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-1/records-1000            	      72	  16965035 ns/op	    891166 bytes/op	 5046385 B/op	   20868 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-1/records-1000            	      67	  19415757 ns/op	    891166 bytes/op	 4771430 B/op	   20866 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-1/records-1000            	      66	  16970359 ns/op	    891166 bytes/op	 4695547 B/op	   20865 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-2/records-2000            	      28	  36044557 ns/op	   1784173 bytes/op	11326222 B/op	   41897 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-2/records-2000            	      37	  33384930 ns/op	   1784173 bytes/op	10201614 B/op	   41892 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-2/records-2000            	      31	  36276413 ns/op	   1784173 bytes/op	11106548 B/op	   41895 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-2/records-2000            	      34	  34922050 ns/op	   1784173 bytes/op	11237221 B/op	   41896 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-2/records-2000            	      28	  37572393 ns/op	   1784173 bytes/op	11326198 B/op	   41896 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-8/records-8000            	       4	 316786350 ns/op	   7142215 bytes/op	77888534 B/op	  168070 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-8/records-8000            	       7	 155073929 ns/op	   7142215 bytes/op	60014931 B/op	  168047 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-8/records-8000            	       7	 159692514 ns/op	   7142215 bytes/op	65972742 B/op	  168054 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-8/records-8000            	       7	 158414157 ns/op	   7142215 bytes/op	65972786 B/op	  168054 allocs/op
+BenchmarkCapacityDisplayHTTP/stations-8/records-8000            	       6	 182882350 ns/op	   7142215 bytes/op	77888544 B/op	  168070 allocs/op
+BenchmarkCapacityDisplayHTTP/source-cardinality/records-8000    	       7	 148745786 ns/op	   7142215 bytes/op	54057082 B/op	  168040 allocs/op
+BenchmarkCapacityDisplayHTTP/source-cardinality/records-8000    	       6	 181315967 ns/op	   7142215 bytes/op	77888490 B/op	  168069 allocs/op
+BenchmarkCapacityDisplayHTTP/source-cardinality/records-8000    	       7	 162667714 ns/op	   7142215 bytes/op	65972761 B/op	  168054 allocs/op
+BenchmarkCapacityDisplayHTTP/source-cardinality/records-8000    	       6	 187281600 ns/op	   7142215 bytes/op	70937722 B/op	  168061 allocs/op
+BenchmarkCapacityDisplayHTTP/source-cardinality/records-8000    	       6	 166837467 ns/op	   7142215 bytes/op	63986833 B/op	  168052 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-1/records-1000     	      28	  40919332 ns/op	    532997 bytes/op	11984697 B/op	  166668 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-1/records-1000     	      31	  40338010 ns/op	    532997 bytes/op	11984694 B/op	  166667 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-1/records-1000     	      30	  38329043 ns/op	    532997 bytes/op	11984664 B/op	  166667 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-1/records-1000     	      30	  38694247 ns/op	    532997 bytes/op	11984761 B/op	  166668 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-1/records-1000     	      34	  36408415 ns/op	    532997 bytes/op	11984693 B/op	  166667 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-2/records-2000     	      16	  74212644 ns/op	   1067004 bytes/op	23573902 B/op	  333714 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-2/records-2000     	      14	  80658500 ns/op	   1067004 bytes/op	23573876 B/op	  333713 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-2/records-2000     	      18	  77277372 ns/op	   1067004 bytes/op	23573863 B/op	  333713 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-2/records-2000     	      13	  79611331 ns/op	   1067004 bytes/op	23573803 B/op	  333712 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-2/records-2000     	      14	  75878914 ns/op	   1067004 bytes/op	23573888 B/op	  333713 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-8/records-8000     	       4	 327497075 ns/op	   4271046 bytes/op	95431250 B/op	 1335968 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-8/records-8000     	       4	 314091725 ns/op	   4271046 bytes/op	95431186 B/op	 1335967 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-8/records-8000     	       4	 311703475 ns/op	   4271046 bytes/op	95431064 B/op	 1335965 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-8/records-8000     	       4	 300736350 ns/op	   4271046 bytes/op	95431230 B/op	 1335967 allocs/op
+BenchmarkCapacityDisplaySourceParse/stations-8/records-8000     	       4	 300534300 ns/op	   4271046 bytes/op	95431268 B/op	 1335968 allocs/op
+BenchmarkCapacityDisplaySourceParse/source-cardinality/records-8000         	       4	 307765075 ns/op	   4271046 bytes/op	95431246 B/op	 1335968 allocs/op
+BenchmarkCapacityDisplaySourceParse/source-cardinality/records-8000         	       4	 307619100 ns/op	   4271046 bytes/op	95431000 B/op	 1335965 allocs/op
+BenchmarkCapacityDisplaySourceParse/source-cardinality/records-8000         	       4	 285268550 ns/op	   4271046 bytes/op	95431064 B/op	 1335965 allocs/op
+BenchmarkCapacityDisplaySourceParse/source-cardinality/records-8000         	       4	 316594625 ns/op	   4271046 bytes/op	95431056 B/op	 1335965 allocs/op
+BenchmarkCapacityDisplaySourceParse/source-cardinality/records-8000         	       4	 329865925 ns/op	   4271046 bytes/op	95430766 B/op	 1335962 allocs/op
+BenchmarkCapacityDisplayFailures/response-limit                             	       8	 141479938 ns/op	49893650 B/op	  168057 allocs/op
+BenchmarkCapacityDisplayFailures/response-limit                             	       7	 150417586 ns/op	52872222 B/op	  168055 allocs/op
+BenchmarkCapacityDisplayFailures/response-limit                             	       8	 138795362 ns/op	44680052 B/op	  168043 allocs/op
+BenchmarkCapacityDisplayFailures/response-limit                             	       7	 166428757 ns/op	64788042 B/op	  168071 allocs/op
+BenchmarkCapacityDisplayFailures/response-limit                             	       8	 145662338 ns/op	49893271 B/op	  168051 allocs/op
+BenchmarkCapacityDisplayFailures/stale-fallback                             	     152	   8021321 ns/op	 3973512 B/op	   16014 allocs/op
+BenchmarkCapacityDisplayFailures/stale-fallback                             	     145	   8342274 ns/op	 3973512 B/op	   16014 allocs/op
+BenchmarkCapacityDisplayFailures/stale-fallback                             	     147	   8204586 ns/op	 3973512 B/op	   16014 allocs/op
+BenchmarkCapacityDisplayFailures/stale-fallback                             	     141	   8499468 ns/op	 3973512 B/op	   16014 allocs/op
+BenchmarkCapacityDisplayFailures/stale-fallback                             	     154	   7668739 ns/op	 3973512 B/op	   16014 allocs/op
+BenchmarkCapacityDisplayContention/callers-1                                	      14	  83377407 ns/op	         1.000 refreshes/op	21885333 B/op	  167916 allocs/op
+BenchmarkCapacityDisplayContention/callers-1                                	      13	  87490700 ns/op	         1.000 refreshes/op	21885292 B/op	  167916 allocs/op
+BenchmarkCapacityDisplayContention/callers-1                                	      13	  85368162 ns/op	         1.000 refreshes/op	21885290 B/op	  167916 allocs/op
+BenchmarkCapacityDisplayContention/callers-1                                	      15	  79318313 ns/op	         1.000 refreshes/op	21885263 B/op	  167916 allocs/op
+BenchmarkCapacityDisplayContention/callers-1                                	      14	  81069136 ns/op	         1.000 refreshes/op	21885269 B/op	  167916 allocs/op
+BenchmarkCapacityDisplayContention/callers-4                                	       3	 365178200 ns/op	         4.000 refreshes/op	87541237 B/op	  671658 allocs/op
+BenchmarkCapacityDisplayContention/callers-4                                	       4	 324143300 ns/op	         4.000 refreshes/op	87540686 B/op	  671657 allocs/op
+BenchmarkCapacityDisplayContention/callers-4                                	       3	 342266433 ns/op	         4.000 refreshes/op	87540752 B/op	  671658 allocs/op
+BenchmarkCapacityDisplayContention/callers-4                                	       3	 338409633 ns/op	         4.000 refreshes/op	87540802 B/op	  671659 allocs/op
+BenchmarkCapacityDisplayContention/callers-4                                	       2	 505823600 ns/op	         4.000 refreshes/op	87540724 B/op	  671658 allocs/op
+PASS
+ok  	github.com/miroslav-matejovsky/adsb-testbench/display	100.246s

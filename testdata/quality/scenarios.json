@@ -1,0 +1,998 @@
+[
+  {
+    "id": "empty-selection",
+    "kind": "engine",
+    "classification": "synthetic",
+    "description": "Zero aircraft. One run has no station at all; the other configures a station. Both select an explicit empty station list.",
+    "engine": {
+      "seed": "1",
+      "startTime": "2024-03-05T12:00:00Z",
+      "initialAircraftCount": 0,
+      "speedHundredths": 100,
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      }
+    },
+    "stations": [],
+    "selection": [],
+    "expiry": {
+      "identityNanoseconds": "60000000000",
+      "positionNanoseconds": "30000000000",
+      "altitudeNanoseconds": "30000000000",
+      "velocityNanoseconds": "30000000000"
+    },
+    "runs": [
+      {
+        "name": "no-stations",
+        "runId": "empty-selection",
+        "operations": [
+          {
+            "op": "advance",
+            "durationNanoseconds": "10000000000"
+          }
+        ]
+      },
+      {
+        "name": "configured-stations",
+        "runId": "empty-selection",
+        "operations": [
+          {
+            "op": "addStation",
+            "station": {
+              "id": "primary",
+              "enabled": true,
+              "latitudeDegrees": 50,
+              "longitudeDegrees": 14,
+              "siteElevationMetres": 100,
+              "antennaHeightMetres": 20,
+              "antennaGainDBi": 3,
+              "sensitivityDBm": -95,
+              "systemLossDB": 2,
+              "frameLossProbability": 0
+            }
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "10000000000"
+          }
+        ]
+      }
+    ],
+    "assertions": [
+      "allocated-empty-arrays",
+      "no-fabricated-tracks"
+    ]
+  },
+  {
+    "id": "reference-fields",
+    "kind": "reference",
+    "classification": "external",
+    "description": "Published reference frames with their original addresses at explicit synthetic virtual instants.",
+    "reference": "display-reference.json",
+    "assertions": [
+      "known-fields",
+      "partial-tracks",
+      "cpr-coordinate-tolerance",
+      "distinct-original-icaos"
+    ]
+  },
+  {
+    "id": "partitioned-time",
+    "kind": "engine",
+    "classification": "synthetic",
+    "description": "One 10 s virtual advance against explicit partitions summing to exactly 10 s, including a one-nanosecond part.",
+    "engine": {
+      "seed": "81985529216486895",
+      "startTime": "2024-03-05T12:00:00Z",
+      "initialAircraftCount": 3,
+      "speedHundredths": 100,
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 51
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 15
+        },
+        "altitudeFeet": {
+          "min": 30000,
+          "max": 36000
+        },
+        "groundSpeedKnots": {
+          "min": 400,
+          "max": 500
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 360
+        },
+        "verticalRateFeetPerMinute": {
+          "min": -1000,
+          "max": 1000
+        }
+      }
+    },
+    "stations": [
+      {
+        "id": "primary",
+        "enabled": true,
+        "latitudeDegrees": 50.5,
+        "longitudeDegrees": 14.5,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 30,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      }
+    ],
+    "selection": [
+      "primary"
+    ],
+    "expiry": {
+      "identityNanoseconds": "60000000000",
+      "positionNanoseconds": "30000000000",
+      "altitudeNanoseconds": "30000000000",
+      "velocityNanoseconds": "30000000000"
+    },
+    "runs": [
+      {
+        "name": "whole",
+        "runId": "partitioned-time",
+        "operations": [
+          {
+            "op": "advance",
+            "durationNanoseconds": "10000000000"
+          }
+        ]
+      },
+      {
+        "name": "split",
+        "runId": "partitioned-time",
+        "operations": [
+          {
+            "op": "advance",
+            "durationNanoseconds": "3000000000"
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "1"
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "4499999999"
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "2500000000"
+          }
+        ]
+      }
+    ],
+    "assertions": [
+      "identical-batches",
+      "identical-future"
+    ]
+  },
+  {
+    "id": "fractional-speed",
+    "kind": "engine",
+    "classification": "synthetic",
+    "description": "Speed 33 hundredths with real durations whose scaled values leave nanosecond remainders. Split and unsplit real time must carry identically.",
+    "engine": {
+      "seed": "81985529216486895",
+      "startTime": "2024-03-05T12:00:00Z",
+      "initialAircraftCount": 3,
+      "speedHundredths": 33,
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 51
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 15
+        },
+        "altitudeFeet": {
+          "min": 30000,
+          "max": 36000
+        },
+        "groundSpeedKnots": {
+          "min": 400,
+          "max": 500
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 360
+        },
+        "verticalRateFeetPerMinute": {
+          "min": -1000,
+          "max": 1000
+        }
+      }
+    },
+    "stations": [
+      {
+        "id": "primary",
+        "enabled": true,
+        "latitudeDegrees": 50.5,
+        "longitudeDegrees": 14.5,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 30,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      }
+    ],
+    "selection": [
+      "primary"
+    ],
+    "expiry": {
+      "identityNanoseconds": "60000000000",
+      "positionNanoseconds": "30000000000",
+      "altitudeNanoseconds": "30000000000",
+      "velocityNanoseconds": "30000000000"
+    },
+    "runs": [
+      {
+        "name": "whole",
+        "runId": "fractional-speed",
+        "operations": [
+          {
+            "op": "elapse",
+            "durationNanoseconds": "10000000007"
+          }
+        ]
+      },
+      {
+        "name": "split",
+        "runId": "fractional-speed",
+        "operations": [
+          {
+            "op": "elapse",
+            "durationNanoseconds": "3333333333"
+          },
+          {
+            "op": "elapse",
+            "durationNanoseconds": "1"
+          },
+          {
+            "op": "elapse",
+            "durationNanoseconds": "6666666673"
+          }
+        ]
+      }
+    ],
+    "assertions": [
+      "identical-batches",
+      "identical-future"
+    ]
+  },
+  {
+    "id": "pause-and-accelerate",
+    "kind": "engine",
+    "classification": "synthetic",
+    "description": "2 s real at speed 100, 5 s real paused, 100 ms real at speed 10000: exactly 12 s virtual. The virtual run advances 12 s directly.",
+    "engine": {
+      "seed": "81985529216486895",
+      "startTime": "2024-03-05T12:00:00Z",
+      "initialAircraftCount": 3,
+      "speedHundredths": 100,
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 51
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 15
+        },
+        "altitudeFeet": {
+          "min": 30000,
+          "max": 36000
+        },
+        "groundSpeedKnots": {
+          "min": 400,
+          "max": 500
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 360
+        },
+        "verticalRateFeetPerMinute": {
+          "min": -1000,
+          "max": 1000
+        }
+      }
+    },
+    "stations": [
+      {
+        "id": "primary",
+        "enabled": true,
+        "latitudeDegrees": 50.5,
+        "longitudeDegrees": 14.5,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 30,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      }
+    ],
+    "selection": [
+      "primary"
+    ],
+    "expiry": {
+      "identityNanoseconds": "60000000000",
+      "positionNanoseconds": "30000000000",
+      "altitudeNanoseconds": "30000000000",
+      "velocityNanoseconds": "30000000000"
+    },
+    "runs": [
+      {
+        "name": "scaled",
+        "runId": "pause-and-accelerate",
+        "operations": [
+          {
+            "op": "elapse",
+            "durationNanoseconds": "2000000000"
+          },
+          {
+            "op": "setSpeed",
+            "speedHundredths": 0
+          },
+          {
+            "op": "elapse",
+            "durationNanoseconds": "5000000000"
+          },
+          {
+            "op": "setSpeed",
+            "speedHundredths": 10000
+          },
+          {
+            "op": "elapse",
+            "durationNanoseconds": "100000000"
+          }
+        ]
+      },
+      {
+        "name": "virtual",
+        "runId": "pause-and-accelerate",
+        "operations": [
+          {
+            "op": "advance",
+            "durationNanoseconds": "12000000000"
+          }
+        ]
+      }
+    ],
+    "assertions": [
+      "paused-time-discarded",
+      "physical-speed-unchanged",
+      "identical-batches"
+    ]
+  },
+  {
+    "id": "receiver-revisions",
+    "kind": "engine",
+    "classification": "synthetic",
+    "description": "Two receivers; one is updated, disabled, re-enabled; the other is removed. A run without receivers transmits the same frames.",
+    "engine": {
+      "seed": "81985529216486895",
+      "startTime": "2024-03-05T12:00:00Z",
+      "initialAircraftCount": 0,
+      "speedHundredths": 100,
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 51
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 15
+        },
+        "altitudeFeet": {
+          "min": 30000,
+          "max": 36000
+        },
+        "groundSpeedKnots": {
+          "min": 400,
+          "max": 500
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 360
+        },
+        "verticalRateFeetPerMinute": {
+          "min": -1000,
+          "max": 1000
+        }
+      }
+    },
+    "stations": [],
+    "selection": [
+      "primary"
+    ],
+    "expiry": {
+      "identityNanoseconds": "60000000000",
+      "positionNanoseconds": "30000000000",
+      "altitudeNanoseconds": "30000000000",
+      "velocityNanoseconds": "30000000000"
+    },
+    "runs": [
+      {
+        "name": "receivers",
+        "runId": "receiver-revisions",
+        "operations": [
+          {
+            "op": "addStation",
+            "station": {
+              "id": "primary",
+              "enabled": true,
+              "latitudeDegrees": 50.5,
+              "longitudeDegrees": 14.5,
+              "siteElevationMetres": 100,
+              "antennaHeightMetres": 30,
+              "antennaGainDBi": 3,
+              "sensitivityDBm": -95,
+              "systemLossDB": 2,
+              "frameLossProbability": 0
+            }
+          },
+          {
+            "op": "addStation",
+            "station": {
+              "id": "secondary",
+              "enabled": true,
+              "latitudeDegrees": 50.5,
+              "longitudeDegrees": 14.5,
+              "siteElevationMetres": 100,
+              "antennaHeightMetres": 30,
+              "antennaGainDBi": 3,
+              "sensitivityDBm": -95,
+              "systemLossDB": 2,
+              "frameLossProbability": 0
+            }
+          },
+          {
+            "op": "setCount",
+            "count": 3
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "5000000000"
+          },
+          {
+            "op": "updateStation",
+            "expectedRevision": "1",
+            "station": {
+              "id": "primary",
+              "enabled": true,
+              "latitudeDegrees": 50.5,
+              "longitudeDegrees": 14.5,
+              "siteElevationMetres": 100,
+              "antennaHeightMetres": 30,
+              "antennaGainDBi": 10,
+              "sensitivityDBm": -95,
+              "systemLossDB": 2,
+              "frameLossProbability": 0
+            }
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "5000000000"
+          },
+          {
+            "op": "updateStation",
+            "expectedRevision": "2",
+            "station": {
+              "id": "primary",
+              "enabled": false,
+              "latitudeDegrees": 50.5,
+              "longitudeDegrees": 14.5,
+              "siteElevationMetres": 100,
+              "antennaHeightMetres": 30,
+              "antennaGainDBi": 10,
+              "sensitivityDBm": -95,
+              "systemLossDB": 2,
+              "frameLossProbability": 0
+            }
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "5000000000"
+          },
+          {
+            "op": "updateStation",
+            "expectedRevision": "3",
+            "station": {
+              "id": "primary",
+              "enabled": true,
+              "latitudeDegrees": 50.5,
+              "longitudeDegrees": 14.5,
+              "siteElevationMetres": 100,
+              "antennaHeightMetres": 30,
+              "antennaGainDBi": 10,
+              "sensitivityDBm": -95,
+              "systemLossDB": 2,
+              "frameLossProbability": 0
+            }
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "5000000000"
+          },
+          {
+            "op": "removeStation",
+            "stationId": "secondary",
+            "expectedRevision": "1"
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "5000000000"
+          }
+        ]
+      },
+      {
+        "name": "no-receivers",
+        "runId": "receiver-revisions",
+        "operations": [
+          {
+            "op": "setCount",
+            "count": 3
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "5000000000"
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "5000000000"
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "5000000000"
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "5000000000"
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "5000000000"
+          }
+        ]
+      }
+    ],
+    "assertions": [
+      "historical-revisions",
+      "receiver-provenance",
+      "unchanged-transmissions"
+    ]
+  },
+  {
+    "id": "loss-extremes",
+    "kind": "engine",
+    "classification": "synthetic",
+    "description": "Three co-located receivers with loss probability 0, 1 and 0.25 hear the same eligible geometry. The run is replayed to show seeded reproducibility.",
+    "engine": {
+      "seed": "7",
+      "startTime": "2024-03-05T12:00:00Z",
+      "initialAircraftCount": 0,
+      "speedHundredths": 100,
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      }
+    },
+    "stations": [
+      {
+        "id": "receive-all",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      },
+      {
+        "id": "drop-all",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 1
+      },
+      {
+        "id": "quarter",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0.25
+      }
+    ],
+    "selection": [
+      "receive-all",
+      "drop-all",
+      "quarter"
+    ],
+    "expiry": {
+      "identityNanoseconds": "60000000000",
+      "positionNanoseconds": "30000000000",
+      "altitudeNanoseconds": "30000000000",
+      "velocityNanoseconds": "30000000000"
+    },
+    "runs": [
+      {
+        "name": "first",
+        "runId": "loss-extremes",
+        "operations": [
+          {
+            "op": "setCount",
+            "count": 2
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "30000000000"
+          }
+        ]
+      },
+      {
+        "name": "replay",
+        "runId": "loss-extremes",
+        "operations": [
+          {
+            "op": "setCount",
+            "count": 2
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "30000000000"
+          }
+        ]
+      }
+    ],
+    "assertions": [
+      "receive-all",
+      "drop-all",
+      "seeded-partial-loss",
+      "reproducible"
+    ]
+  },
+  {
+    "id": "expiry-boundaries",
+    "kind": "engine",
+    "classification": "synthetic",
+    "description": "Four distinct field lifetimes. Transmission stops after 20 s; each field is checked at exactly its lifetime and one nanosecond later. The CPR pairing bound is checked at exactly 10 s and 10 s plus 1 ns.",
+    "engine": {
+      "seed": "7",
+      "startTime": "2024-03-05T12:00:00Z",
+      "initialAircraftCount": 0,
+      "speedHundredths": 100,
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      }
+    },
+    "stations": [
+      {
+        "id": "primary",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      }
+    ],
+    "selection": [
+      "primary"
+    ],
+    "expiry": {
+      "identityNanoseconds": "40000000000",
+      "positionNanoseconds": "25000000000",
+      "altitudeNanoseconds": "15000000000",
+      "velocityNanoseconds": "7000000000"
+    },
+    "runs": [
+      {
+        "name": "stop-transmitting",
+        "runId": "expiry-boundaries",
+        "operations": [
+          {
+            "op": "setCount",
+            "count": 1
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "20000000000"
+          },
+          {
+            "op": "setCount",
+            "count": 0
+          }
+        ]
+      }
+    ],
+    "assertions": [
+      "inclusive-lifetime",
+      "expired-after-lifetime",
+      "cpr-pair-age-bound"
+    ]
+  },
+  {
+    "id": "retention-and-churn",
+    "kind": "engine",
+    "classification": "synthetic",
+    "description": "Five aircraft fill and wrap one station ring, are removed, and are replaced by five new identities.",
+    "engine": {
+      "seed": "7",
+      "startTime": "2024-03-05T12:00:00Z",
+      "initialAircraftCount": 0,
+      "speedHundredths": 100,
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      }
+    },
+    "stations": [
+      {
+        "id": "primary",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      }
+    ],
+    "selection": [
+      "primary"
+    ],
+    "expiry": {
+      "identityNanoseconds": "60000000000",
+      "positionNanoseconds": "30000000000",
+      "altitudeNanoseconds": "30000000000",
+      "velocityNanoseconds": "30000000000"
+    },
+    "runs": [
+      {
+        "name": "churn",
+        "runId": "retention-and-churn",
+        "operations": [
+          {
+            "op": "setCount",
+            "count": 5
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "60000000000"
+          },
+          {
+            "op": "setCount",
+            "count": 0
+          },
+          {
+            "op": "setCount",
+            "count": 5
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "1000000000"
+          }
+        ]
+      }
+    ],
+    "assertions": [
+      "bounded-records",
+      "eviction-gap",
+      "removed-aircraft-observed",
+      "new-identities"
+    ]
+  },
+  {
+    "id": "restart",
+    "kind": "engine",
+    "classification": "synthetic",
+    "description": "Two runs with the same seed and settings but different run IDs.",
+    "engine": {
+      "seed": "7",
+      "startTime": "2024-03-05T12:00:00Z",
+      "initialAircraftCount": 0,
+      "speedHundredths": 100,
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      }
+    },
+    "stations": [
+      {
+        "id": "primary",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      }
+    ],
+    "selection": [
+      "primary"
+    ],
+    "expiry": {
+      "identityNanoseconds": "60000000000",
+      "positionNanoseconds": "30000000000",
+      "altitudeNanoseconds": "30000000000",
+      "velocityNanoseconds": "30000000000"
+    },
+    "runs": [
+      {
+        "name": "first",
+        "runId": "restart-first",
+        "operations": [
+          {
+            "op": "setCount",
+            "count": 2
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "10000000000"
+          }
+        ]
+      },
+      {
+        "name": "second",
+        "runId": "restart-second",
+        "operations": [
+          {
+            "op": "setCount",
+            "count": 2
+          },
+          {
+            "op": "advance",
+            "durationNanoseconds": "10000000000"
+          }
+        ]
+      }
+    ],
+    "assertions": [
+      "same-generated-payloads",
+      "old-cursor-rejected",
+      "no-cross-run-fallback"
+    ]
+  }
+]

@@ -1,0 +1,741 @@
+{
+  "profile": {
+    "name": "supported-byte-budget",
+    "description": "Engine and display structural limits, an effective run ID of at most 128 UTF-8 bytes, every valid station ID length, every legal field width and value, and the declared consumer concurrency. Error message and field text is at most 512 bytes each. Every byte of host-chosen text may escape to six JSON bytes.",
+    "maxSelectedStations": 8,
+    "maxStationRecords": 1000,
+    "maxSnapshotRecords": 8000,
+    "maxHistoryPageRecords": 1000,
+    "maxTruthAircraft": 100,
+    "transmissionHistoryLimit": 1000,
+    "maxRunIdBytes": 128,
+    "runIdSuffixBytes": 21,
+    "maxStationIdBytes": 64,
+    "maxErrorMessageBytes": 512,
+    "maxErrorFieldBytes": 512,
+    "jsonEscapeFactor": 6,
+    "uint64Digits": 20,
+    "timestampBytes": 30,
+    "finiteNumberBytes": 25,
+    "headroomPercent": 125,
+    "roundingBytes": 1048576,
+    "simulatorReaders": 4,
+    "displayRefreshers": 4
+  },
+  "bounds": {
+    "rawSnapshotBytes": 7714932,
+    "historyPageBytes": 965952,
+    "observationHeaderBytes": 3125,
+    "observationRecordBytes": 3205,
+    "observationSnapshotBytes": 25643125,
+    "truthBytes": 197580,
+    "stationsBytes": 7032,
+    "metadataBytes": 3422,
+    "errorEnvelopeBytes": 6985,
+    "displayRefreshBytes": 25657229
+  },
+  "budgets": {
+    "simulatorApiMaxResponseBytes": 32505856,
+    "managerUiMaxResponseBytes": 32505856,
+    "sourceMaxResponseBytes": 10485760,
+    "displayMaxResponseBytes": 32505856,
+    "aircraftUiMaxResponseBytes": 32505856
+  },
+  "workloads": [
+    {
+      "seed": "11",
+      "startTime": "2030-01-01T00:00:00Z",
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      },
+      "station": {
+        "id": "template",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      },
+      "stationVariants": [],
+      "expiry": {
+        "identityNanoseconds": "60000000000",
+        "positionNanoseconds": "30000000000",
+        "altitudeNanoseconds": "30000000000",
+        "velocityNanoseconds": "30000000000"
+      },
+      "retentionFillTarget": 0,
+      "callers": [
+        1
+      ],
+      "name": "empty-overhead",
+      "description": "No aircraft. Paused and real-time ticks with no station and with eight stations, over zero and one heartbeat of virtual time.",
+      "aircraftCounts": [
+        0
+      ],
+      "stationCounts": [
+        0,
+        8
+      ],
+      "speedHundredths": [
+        0,
+        100
+      ],
+      "advanceNanoseconds": [
+        "0",
+        "100000000"
+      ]
+    },
+    {
+      "seed": "11",
+      "startTime": "2030-01-01T00:00:00Z",
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      },
+      "station": {
+        "id": "template",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      },
+      "stationVariants": [],
+      "expiry": {
+        "identityNanoseconds": "60000000000",
+        "positionNanoseconds": "30000000000",
+        "altitudeNanoseconds": "30000000000",
+        "velocityNanoseconds": "30000000000"
+      },
+      "retentionFillTarget": 0,
+      "callers": [
+        1
+      ],
+      "name": "scheduler-scaling",
+      "description": "Aircraft counts 1, 10 and 100 with no station, advancing one second and one maximum advance.",
+      "aircraftCounts": [
+        1,
+        10,
+        100
+      ],
+      "stationCounts": [
+        0
+      ],
+      "speedHundredths": [
+        100
+      ],
+      "advanceNanoseconds": [
+        "1000000000",
+        "60000000000"
+      ]
+    },
+    {
+      "seed": "11",
+      "startTime": "2030-01-01T00:00:00Z",
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      },
+      "station": {
+        "id": "template",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      },
+      "stationVariants": [],
+      "expiry": {
+        "identityNanoseconds": "60000000000",
+        "positionNanoseconds": "30000000000",
+        "altitudeNanoseconds": "30000000000",
+        "velocityNanoseconds": "30000000000"
+      },
+      "retentionFillTarget": 1000,
+      "callers": [
+        1
+      ],
+      "name": "reception-scaling",
+      "description": "One hundred aircraft heard by 1, 2 and 8 co-located stations with full reception histories.",
+      "aircraftCounts": [
+        100
+      ],
+      "stationCounts": [
+        1,
+        2,
+        8
+      ],
+      "speedHundredths": [
+        100
+      ],
+      "advanceNanoseconds": [
+        "1000000000"
+      ]
+    },
+    {
+      "seed": "11",
+      "startTime": "2030-01-01T00:00:00Z",
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      },
+      "station": {
+        "id": "template",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      },
+      "stationVariants": [
+        {
+          "name": "disabled",
+          "station": {
+            "id": "template",
+            "enabled": false,
+            "latitudeDegrees": 50,
+            "longitudeDegrees": 14,
+            "siteElevationMetres": 100,
+            "antennaHeightMetres": 20,
+            "antennaGainDBi": 3,
+            "sensitivityDBm": -95,
+            "systemLossDB": 2,
+            "frameLossProbability": 0
+          }
+        },
+        {
+          "name": "out-of-range",
+          "station": {
+            "id": "template",
+            "enabled": true,
+            "latitudeDegrees": -50,
+            "longitudeDegrees": -140,
+            "siteElevationMetres": 100,
+            "antennaHeightMetres": 20,
+            "antennaGainDBi": 3,
+            "sensitivityDBm": -95,
+            "systemLossDB": 2,
+            "frameLossProbability": 0
+          }
+        },
+        {
+          "name": "loss-zero",
+          "station": {
+            "id": "template",
+            "enabled": true,
+            "latitudeDegrees": 50,
+            "longitudeDegrees": 14,
+            "siteElevationMetres": 100,
+            "antennaHeightMetres": 20,
+            "antennaGainDBi": 3,
+            "sensitivityDBm": -95,
+            "systemLossDB": 2,
+            "frameLossProbability": 0
+          }
+        },
+        {
+          "name": "loss-one",
+          "station": {
+            "id": "template",
+            "enabled": true,
+            "latitudeDegrees": 50,
+            "longitudeDegrees": 14,
+            "siteElevationMetres": 100,
+            "antennaHeightMetres": 20,
+            "antennaGainDBi": 3,
+            "sensitivityDBm": -95,
+            "systemLossDB": 2,
+            "frameLossProbability": 1
+          }
+        },
+        {
+          "name": "loss-quarter",
+          "station": {
+            "id": "template",
+            "enabled": true,
+            "latitudeDegrees": 50,
+            "longitudeDegrees": 14,
+            "siteElevationMetres": 100,
+            "antennaHeightMetres": 20,
+            "antennaGainDBi": 3,
+            "sensitivityDBm": -95,
+            "systemLossDB": 2,
+            "frameLossProbability": 0.25
+          }
+        }
+      ],
+      "expiry": {
+        "identityNanoseconds": "60000000000",
+        "positionNanoseconds": "30000000000",
+        "altitudeNanoseconds": "30000000000",
+        "velocityNanoseconds": "30000000000"
+      },
+      "retentionFillTarget": 0,
+      "callers": [
+        1
+      ],
+      "name": "radio-outcomes",
+      "description": "One hundred aircraft and eight stations under every reception outcome: disabled, out of radio range, loss 0, loss 1 and a seeded loss of 0.25.",
+      "aircraftCounts": [
+        100
+      ],
+      "stationCounts": [
+        8
+      ],
+      "speedHundredths": [
+        100
+      ],
+      "advanceNanoseconds": [
+        "1000000000"
+      ]
+    },
+    {
+      "seed": "11",
+      "startTime": "2030-01-01T00:00:00Z",
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      },
+      "station": {
+        "id": "template",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      },
+      "stationVariants": [],
+      "expiry": {
+        "identityNanoseconds": "60000000000",
+        "positionNanoseconds": "30000000000",
+        "altitudeNanoseconds": "30000000000",
+        "velocityNanoseconds": "30000000000"
+      },
+      "retentionFillTarget": 0,
+      "callers": [
+        1
+      ],
+      "name": "driver-acceleration",
+      "description": "One real heartbeat of driver settlement at speeds 100, 1000 and 10000 hundredths with the maximum fleet and station count.",
+      "aircraftCounts": [
+        100
+      ],
+      "stationCounts": [
+        8
+      ],
+      "speedHundredths": [
+        100,
+        1000,
+        10000
+      ],
+      "advanceNanoseconds": [
+        "100000000"
+      ]
+    },
+    {
+      "seed": "11",
+      "startTime": "2030-01-01T00:00:00Z",
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      },
+      "station": {
+        "id": "template",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      },
+      "stationVariants": [],
+      "expiry": {
+        "identityNanoseconds": "60000000000",
+        "positionNanoseconds": "30000000000",
+        "altitudeNanoseconds": "30000000000",
+        "velocityNanoseconds": "30000000000"
+      },
+      "retentionFillTarget": 0,
+      "callers": [
+        1
+      ],
+      "name": "catch-up",
+      "description": "Suspended driver catch-up at speed 10000: exactly 60 s of virtual work and exactly the one-hour maximum.",
+      "aircraftCounts": [
+        100
+      ],
+      "stationCounts": [
+        8
+      ],
+      "speedHundredths": [
+        10000
+      ],
+      "advanceNanoseconds": [
+        "60000000000",
+        "3600000000000"
+      ]
+    },
+    {
+      "seed": "11",
+      "startTime": "2030-01-01T00:00:00Z",
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      },
+      "station": {
+        "id": "template",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      },
+      "stationVariants": [],
+      "expiry": {
+        "identityNanoseconds": "60000000000",
+        "positionNanoseconds": "30000000000",
+        "altitudeNanoseconds": "30000000000",
+        "velocityNanoseconds": "30000000000"
+      },
+      "retentionFillTarget": 1000,
+      "callers": [
+        1,
+        4
+      ],
+      "name": "read-refresh",
+      "description": "Paused source with full reception rings: raw capture, conversion, serialization, transport and display refresh for 1 and 100 aircraft over 1, 2 and 8 selected stations.",
+      "aircraftCounts": [
+        1,
+        100
+      ],
+      "stationCounts": [
+        1,
+        2,
+        8
+      ],
+      "speedHundredths": [
+        0
+      ],
+      "advanceNanoseconds": [
+        "0"
+      ]
+    },
+    {
+      "seed": "11",
+      "startTime": "2030-01-01T00:00:00Z",
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      },
+      "station": {
+        "id": "template",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      },
+      "stationVariants": [],
+      "expiry": {
+        "identityNanoseconds": "60000000000",
+        "positionNanoseconds": "30000000000",
+        "altitudeNanoseconds": "30000000000",
+        "velocityNanoseconds": "30000000000"
+      },
+      "retentionFillTarget": 1000,
+      "callers": [
+        1
+      ],
+      "name": "source-cardinality",
+      "description": "A synthetic conforming source of 8000 records with 8000 distinct received addresses across eight stations. Not 8000 simultaneously active engine aircraft.",
+      "aircraftCounts": [
+        0
+      ],
+      "stationCounts": [
+        8
+      ],
+      "speedHundredths": [
+        0
+      ],
+      "advanceNanoseconds": [
+        "0"
+      ]
+    },
+    {
+      "seed": "11",
+      "startTime": "2030-01-01T00:00:00Z",
+      "spawn": {
+        "latitudeDegrees": {
+          "min": 50,
+          "max": 50
+        },
+        "longitudeDegrees": {
+          "min": 14,
+          "max": 14
+        },
+        "altitudeFeet": {
+          "min": 35000,
+          "max": 35000
+        },
+        "groundSpeedKnots": {
+          "min": 0,
+          "max": 0
+        },
+        "trackDegrees": {
+          "min": 0,
+          "max": 0
+        },
+        "verticalRateFeetPerMinute": {
+          "min": 0,
+          "max": 0
+        }
+      },
+      "station": {
+        "id": "template",
+        "enabled": true,
+        "latitudeDegrees": 50,
+        "longitudeDegrees": 14,
+        "siteElevationMetres": 100,
+        "antennaHeightMetres": 20,
+        "antennaGainDBi": 3,
+        "sensitivityDBm": -95,
+        "systemLossDB": 2,
+        "frameLossProbability": 0
+      },
+      "stationVariants": [],
+      "expiry": {
+        "identityNanoseconds": "60000000000",
+        "positionNanoseconds": "30000000000",
+        "altitudeNanoseconds": "30000000000",
+        "velocityNanoseconds": "30000000000"
+      },
+      "retentionFillTarget": 1000,
+      "callers": [
+        1,
+        4
+      ],
+      "name": "contention",
+      "description": "One and four concurrent callers against a paused maximum-cardinality source and one display gate.",
+      "aircraftCounts": [
+        100
+      ],
+      "stationCounts": [
+        8
+      ],
+      "speedHundredths": [
+        0
+      ],
+      "advanceNanoseconds": [
+        "0"
+      ]
+    }
+  ]
+}

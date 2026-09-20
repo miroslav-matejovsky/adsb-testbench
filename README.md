@@ -197,6 +197,22 @@ npx playwright install chromium
 traces of failing runs are kept below `.test-results/`. See
 [ui/browser](ui/browser/README.md) for the browser test layout.
 
+Capacity is measured separately, because repeated benchmarks do not belong in
+an ordinary test run:
+
+```text
+task capacity COUNT=5 BENCHTIME=1s CPU=1 OUT=.test-results/capacity-cpu1
+task capacity COUNT=5 BENCHTIME=1s CPU=4 OUT=.test-results/capacity-cpu4
+```
+
+Every input is required, the output must stay inside `.test-results/`, and
+each run stores an environment manifest with its raw output. The measured
+results and the supported profiles derived from them are published in the
+[capacity report](docs/evaluations/quality-capacity/README.md). An accepted
+speed, such as 100x, is an input the engine accepts; it is not a promise that
+a host sustains it in real time. The report states which profiles were
+measured to keep up on the recorded machine.
+
 New behavior requires deterministic tests and explicit, documented
 configuration without defaults.
 See [docs](docs/README.md) and [taskfile](taskfile/README.md) for supporting documentation.

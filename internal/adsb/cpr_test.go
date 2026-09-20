@@ -21,31 +21,37 @@ func sampleAt(t testing.TB, p adsb.Coordinates, odd bool, at time.Time) adsb.Pos
 }
 
 func TestPublishedCPRPositions(t *testing.T) {
-	even := adsb.PositionSample{Frame: frame(t, evenHex), At: instant}
-	odd := adsb.PositionSample{Frame: frame(t, oddHex), At: instant.Add(-2 * time.Second)}
-	for _, pair := range [][2]adsb.PositionSample{{even, odd}, {odd, even}} {
-		fix, err := adsb.DecodeGlobal(pair[0], pair[1], instant)
+	corpus := referenceFrames(t)
+	for _, pair := range corpus.CPRPairs {
+		even, err := corpus.Frame(pair.Even)
 		require.NoError(t, err)
-		require.Equal(t, uint32(0x40621d), fix.ICAO)
-		require.Equal(t, instant, fix.At)
-		require.InDelta(t, 52.2572021484375, fix.Coordinates.Latitude, 1e-10)
-		require.InDelta(t, 3.91937255859375, fix.Coordinates.Longitude, 1e-10)
+		odd, err := corpus.Frame(pair.Odd)
+		require.NoError(t, err)
+		for _, tc := range pair.Cases {
+			t.Run(pair.ID+"/"+tc.Name, func(t *testing.T) {
+				now := tc.EvenTime
+				if tc.OddTime.After(now) {
+					now = tc.OddTime
+				}
+				evenSample := adsb.PositionSample{Frame: even.Bytes, At: tc.EvenTime}
+				oddSample := adsb.PositionSample{Frame: odd.Bytes, At: tc.OddTime}
+				// Argument order must not matter; the newer half selects the solution.
+				for _, samples := range [][2]adsb.PositionSample{{evenSample, oddSample}, {oddSample, evenSample}} {
+					fix, err := adsb.DecodeGlobal(samples[0], samples[1], now)
+					require.NoError(t, err)
+					require.Equal(t, even.Expected.ICAO, fix.ICAO)
+					require.Equal(t, now, fix.At)
+					require.InDelta(t, tc.LatitudeDegrees, fix.Coordinates.Latitude, tc.ToleranceDegrees)
+					require.InDelta(t, tc.LongitudeDegrees, fix.Coordinates.Longitude, tc.ToleranceDegrees)
+				}
+			})
+		}
 	}
+
+	// The even-newer solution encodes back to the published even CPR fields.
 	c, err := adsb.EncodeCPR(adsb.Coordinates{Latitude: 52.2572021484375, Longitude: 3.91937255859375}, false)
 	require.NoError(t, err)
 	require.Equal(t, adsb.CPR{Latitude: 93000, Longitude: 51372}, c)
-
-	// The same pair selects the odd solution when the odd frame is newer.
-	odd.At = instant
-	even.At = instant.Add(-time.Second)
-	fix, err := adsb.DecodeGlobal(even, odd, instant)
-	require.NoError(t, err)
-	require.InDelta(t, 52.26578017412606, fix.Coordinates.Latitude, 1e-10)
-	require.InDelta(t, 3.938912527901786, fix.Coordinates.Longitude, 1e-10)
-	even.At = instant
-	fix, err = adsb.DecodeGlobal(odd, even, instant)
-	require.NoError(t, err)
-	require.InDelta(t, 52.2572021484375, fix.Coordinates.Latitude, 1e-10)
 }
 
 // Rational-input cases are independently calculated from the CPR grid equations:

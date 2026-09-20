@@ -1,6 +1,7 @@
 package simulator
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
@@ -67,12 +68,20 @@ type acceptanceBench struct {
 func newAcceptanceBench(t *testing.T, runID string) *acceptanceBench {
 	t.Helper()
 
+	config := runtimeTestConfig()
+	config.Simulation.ID = runID
+	return newAcceptanceBenchFor(t, config)
+}
+
+// newAcceptanceBenchFor builds the same bench over an explicit runtime
+// configuration.
+func newAcceptanceBenchFor(t *testing.T, config Config) *acceptanceBench {
+	t.Helper()
+
 	clock := &runtimeClock{
 		now:     time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC),
 		started: make(chan struct{}), ticks: make(chan time.Time), stopped: make(chan struct{}),
 	}
-	config := runtimeTestConfig()
-	config.Simulation.ID = runID
 	runtime, err := newSimulator(config, clock)
 	require.NoError(t, err)
 
@@ -639,4 +648,65 @@ func TestWarmAndColdDisplaysAgreeAfterEviction(t *testing.T) {
 
 	require.Equal(t, coldSnapshot.Observations, warmSnapshot.Observations,
 		"a warm display recovers nothing the retained evidence no longer holds")
+}
+
+// TestRejectedStationCommandsDoNotSettleOnEitherTransport reuses a removed
+// station ID after real time has passed. Directly and through the mounted
+// handler the command fails with the same category and run ID, and neither
+// truth nor retained receptions move: the pending time was not settled.
+func TestRejectedStationCommandsDoNotSettleOnEitherTransport(t *testing.T) {
+	t.Parallel()
+
+	for _, transport := range []string{"direct", "http"} {
+		t.Run(transport, func(t *testing.T) {
+			t.Parallel()
+
+			bench := newAcceptanceBench(t, "acceptance-rejected-"+transport)
+			bench.run(t, 0, 1)
+			bench.addStation(t, "bravo", true, -95)
+			alpha := bench.addStation(t, "alpha", true, -95)
+			_, err := bench.api.RemoveStation(t.Context(), "alpha", simulatorapi.RemoveStationCommand{
+				RunID: bench.api.RunID(), ExpectedRevision: alpha.Revision,
+			})
+			require.NoError(t, err)
+			bench.clock.Add(5 * time.Second)
+
+			selection := simulatorapi.ReceptionSnapshotRequest{StationIDs: []string{"bravo"}}
+			truthBefore, err := bench.api.Truth(t.Context())
+			require.NoError(t, err)
+			rawBefore, err := bench.api.ReceptionSnapshot(t.Context(), selection)
+			require.NoError(t, err)
+
+			command := simulatorapi.AddStationCommand{RunID: bench.api.RunID(), Station: alpha.StationSettings}
+			var failure simulatorapi.APIError
+			if transport == "direct" {
+				_, err := bench.api.AddStation(t.Context(), command)
+				require.ErrorIs(t, err, simulatorapi.CategoryInvalid)
+				var apiErr *simulatorapi.APIError
+				require.ErrorAs(t, err, &apiErr)
+				failure = *apiErr
+			} else {
+				body, err := json.Marshal(command)
+				require.NoError(t, err)
+				response, err := bench.server.Client().Post(bench.server.URL+acceptanceMount+"/stations",
+					"application/json", bytes.NewReader(body))
+				require.NoError(t, err)
+				defer func() { require.NoError(t, response.Body.Close()) }()
+				require.Equal(t, http.StatusBadRequest, response.StatusCode)
+				var envelope simulatorapi.ErrorResponse
+				require.NoError(t, json.NewDecoder(response.Body).Decode(&envelope))
+				failure = envelope.Error
+			}
+			require.Equal(t, simulatorapi.CategoryInvalid, failure.Code)
+			require.Equal(t, bench.api.RunID(), failure.RunID)
+
+			truthAfter, err := bench.api.Truth(t.Context())
+			require.NoError(t, err)
+			rawAfter, err := bench.api.ReceptionSnapshot(t.Context(), selection)
+			require.NoError(t, err)
+			require.Equal(t, truthBefore, truthAfter, "no elapsed time was settled")
+			require.Equal(t, "0", truthAfter.ElapsedNanoseconds)
+			require.Equal(t, rawBefore, rawAfter)
+		})
+	}
 }

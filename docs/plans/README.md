@@ -6,7 +6,7 @@ This directory contains implementation plans. A plan is an executable specificat
 
 | Plan | Status | Scope |
 | --- | --- | --- |
-| [Deterministic fixtures and measured capacity](11-quality-and-capacity/README.md) | Planned | Shared scenario corpus, discovered defect fixes, response budgets, retained-state bounds and reproducible capacity measurements |
+| _(none)_ | | |
 
 Implemented plans are removed; the code and its documentation record the result.
 

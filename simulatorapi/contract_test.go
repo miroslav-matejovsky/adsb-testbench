@@ -121,7 +121,7 @@ func TestMetadataPublishesEffectiveSettingsAndLimits(t *testing.T) {
 				TrackDegrees: simulatorapi.SpawnRange{Min: 0, Max: 360},
 			},
 		},
-		Limits: simulatorapi.EngineLimits{MaxAircraft: 100, MaxAdvanceNanoseconds: "60000000000"},
+		Limits: simulatorapi.EngineLimits{MaxAircraft: 100, MaxStationIDsPerRun: 1024, MaxAdvanceNanoseconds: "60000000000"},
 		Driver: simulatorapi.DriverLimits{
 			HeartbeatNanoseconds: "100000000", MaxCatchUpNanoseconds: "3600000000000",
 		},
@@ -136,6 +136,7 @@ func TestMetadataPublishesEffectiveSettingsAndLimits(t *testing.T) {
 	require.Contains(t, string(data), `"seed":"18446744073709551615"`)
 	require.Contains(t, string(data), `"coverageReferenceAltitudeFeet":0`)
 	require.Contains(t, string(data), `"trackDegrees":{"min":0,"max":360}`)
+	require.Contains(t, string(data), `"maxStationIdsPerRun":1024`)
 
 	var round simulatorapi.Metadata
 	require.NoError(t, json.Unmarshal(data, &round))

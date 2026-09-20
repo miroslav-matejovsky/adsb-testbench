@@ -92,7 +92,7 @@ func fixtureSnapshot(now time.Time, stationIDs []string, records []simulatorapi.
 	}
 }
 
-func identificationFrame(t *testing.T, icao uint32, callsign string) adsb.Frame {
+func identificationFrame(t testing.TB, icao uint32, callsign string) adsb.Frame {
 	t.Helper()
 
 	frame, err := adsb.EncodeIdentification(
@@ -103,7 +103,7 @@ func identificationFrame(t *testing.T, icao uint32, callsign string) adsb.Frame 
 	return frame
 }
 
-func positionFrame(t *testing.T, icao uint32, latitude, longitude float64, altitude *float64, odd bool) adsb.Frame {
+func positionFrame(t testing.TB, icao uint32, latitude, longitude float64, altitude *float64, odd bool) adsb.Frame {
 	t.Helper()
 
 	cpr, err := adsb.EncodeCPR(adsb.Coordinates{Latitude: latitude, Longitude: longitude}, odd)
@@ -116,7 +116,7 @@ func positionFrame(t *testing.T, icao uint32, latitude, longitude float64, altit
 	return frame
 }
 
-func velocityFrame(t *testing.T, icao uint32, velocity adsb.Velocity) adsb.Frame {
+func velocityFrame(t testing.TB, icao uint32, velocity adsb.Velocity) adsb.Frame {
 	t.Helper()
 
 	frame, err := adsb.EncodeVelocity(adsb.Header{ICAO: icao, Capability: 5}, velocity)

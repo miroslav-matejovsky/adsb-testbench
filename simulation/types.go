@@ -33,6 +33,13 @@ const (
 	// stations. Removing a station frees an active slot but never releases its
 	// identifier.
 	MaxStations = 8
+	// MaxStationIDsPerRun is the largest number of distinct station
+	// identifiers one run accepts. It counts every successfully created
+	// station, including removed ones, because a removed identifier stays
+	// reserved for the rest of the run. It bounds the retained reserved set.
+	// Updates and removals are never rejected by it; a restarted run with a
+	// fresh run ID starts with an empty budget.
+	MaxStationIDsPerRun = 1024
 	// MaxBatchReceptions is the largest number of receptions one mutation may
 	// return. Reception fan-out is at most one per active station per
 	// transmission, so this bound is a guard that MaxBatchFrames always

@@ -39,6 +39,10 @@ components:
   httpserver: { in: internal/httpserver }
   urlpath: { in: internal/urlpath }
   processtest: { in: internal/processtest }
+  # Test-only corpus loader; standard library only, imported by _test.go files.
+  qualitytest: { in: internal/qualitytest }
+  # Test-only builder of engines from capacity workloads, used by benchmarks.
+  capacitytest: { in: internal/capacitytest }
 
 deps:
   adsb:
@@ -49,6 +53,8 @@ deps:
     mayDependOn: [cli, testbench]
   cmd-display:
     mayDependOn: [cli, testbench]
+  capacitytest:
+    mayDependOn: [simulation, qualitytest]
   cli:
     mayDependOn: [testbench, simulator, display, ui, simulatorapi, httpserver, urlpath]
   simulation:

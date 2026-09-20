@@ -91,6 +91,7 @@ func TestMetadataPublishesEffectiveSettingsAndCurrentSpeed(t *testing.T) {
 	require.Equal(t, "1000000000", metadata.ElapsedNanoseconds)
 	require.Equal(t, "2030-01-02T03:04:06Z", metadata.Now)
 	require.Equal(t, simulation.MaxStations, metadata.Limits.MaxStations)
+	require.Equal(t, simulation.MaxStationIDsPerRun, metadata.Limits.MaxStationIDsPerRun)
 	require.Equal(t, simulatorapi.FormatDuration(simdriver.Heartbeat), metadata.Driver.HeartbeatNanoseconds)
 	require.Equal(t, 65536, metadata.Service.MaxRequestBytes)
 	require.Equal(t, 35000.0, metadata.Service.CoverageReferenceAltitudeFeet)
